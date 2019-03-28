@@ -8,81 +8,52 @@ library(jsonlite)
 
 new_connection <- function(host = "zoltardata.com") {
   # todo validate host - not NULL, proper URI structure
-  
+
   self = structure(environment(), class = "ZoltarConnection")
-  
+
   host <- host
   username <- NULL
   password <- NULL
   session <- NULL
-  
+
   self
 }
 
 
 print.ZoltarConnection <- function(zoltar_connection, ...) {
-  cat(
-    class(zoltar_connection),
-    " ",
-    zoltar_connection$host,
-    ". username, password=",
-    if (is.null(zoltar_connection$username))
-      "<no username>"
-    else
-      zoltar_connection$username,
-    ", ",
-    if (is.null(zoltar_connection$password))
-      "<no password>"
-    else
-      zoltar_connection$password,
-    ". session=",
-    if (is.null(zoltar_connection$session))
-      "<no session>"
-    else
-      zoltar_connection$session$token,
-    "\n",
-    sep = ''
-  )
+  cat(class(zoltar_connection), " ",
+  zoltar_connection$host,
+  ". username, password=", if (is.null(zoltar_connection$username)) "<no username>" else zoltar_connection$username,
+  ", ", if (is.null(zoltar_connection$password)) "<no password>" else zoltar_connection$password,
+  ". session=", if (is.null(zoltar_connection$session)) "<no session>" else zoltar_connection$session$token,
+  "\n", sep='')
 }
 
 
-z_authenticate <-
-  function(zoltar_connection,
-           username,
-           password,
-           ...) {
-    UseMethod("z_authenticate")
-  }
+z_authenticate <- function(zoltar_connection, username, password, ...) {
+  UseMethod("z_authenticate")
+}
 
-z_authenticate.default <-
-  function(zoltar_connection,
-           username,
-           password,
-           ...) {
-    zoltar_connection$username <- username
-    zoltar_connection$password <- password
-    zoltar_connection$session <- new_session(zoltar_connection)
-  }
+z_authenticate.default <- function(zoltar_connection, username, password, ...) {
+  zoltar_connection$username <- username
+  zoltar_connection$password <- password
+  zoltar_connection$session <- new_session(zoltar_connection)
+}
 
 
-json_for_uri <- function(zoltar_connection, uri, ...) {
-  # private
+json_for_uri <- function(zoltar_connection, uri, ...) {  # private
   UseMethod("json_for_uri")
 }
 
 json_for_uri.default <- function(zoltar_connection, uri, ...) {
   stopifnot(is(zoltar_connection$session, "ZoltarSession"))
-  
-  response <- httr::GET(
-    url = uri,
-    accept_json(),
-    add_headers(
-      "Accept" = "application/json; indent=4",
-      "Authorization" = paste0("JWT ", zoltar_connection$session$token)
-    )
-  )
+
+  response <- GET(url = uri,
+  accept_json(),
+  add_headers("Accept" = "application/json; indent=4",
+  "Authorization" = paste0("JWT ", zoltar_connection$session$token)))
   stop_for_status(response)
-  
+
   json_content <- content(response, "parsed")
   json_content
 }
@@ -93,13 +64,11 @@ projects <- function(zoltar_connection, ...) {
 }
 
 projects.default <- function(zoltar_connection, ...) {
-  projects_json <-
-    json_for_uri(zoltar_connection,
-                 paste0(zoltar_connection$host, '/api/projects/'))
+  projects_json <- json_for_uri(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
   projects <- lapply(projects_json,
-                     function(project_json) {
-                       new_project(zoltar_connection, project_json$url)
-                     })
+  function(project_json) {
+    new_project(zoltar_connection, project_json$url)
+  })
   projects
 }
 
@@ -108,13 +77,12 @@ projects.default <- function(zoltar_connection, ...) {
 # ZoltarSession class. used internally only
 #
 
-new_session <- function(zoltar_connection) {
-  # private
+new_session <- function(zoltar_connection) {  # private
   self = structure(environment(), class = "ZoltarSession")
-  
+
   zoltar_connection <- zoltar_connection
   token <- get_token(self)  # expects zoltar_connection
-  
+
   self
 }
 
@@ -124,15 +92,10 @@ get_token <- function(zoltar_session, ...) {
 }
 
 get_token.default <- function(zoltar_session, ...) {
-  response <-
-    httr::POST(
-      url = paste0(zoltar_session$zoltar_connection$host, '/api-token-auth/'),
-      accept_json(),
-      body = list(
-        username = zoltar_session$zoltar_connection$username,
-        password = zoltar_session$zoltar_connection$password
-      )
-    )
+  response <- POST(url = paste0(zoltar_session$zoltar_connection$host, '/api-token-auth/'),
+  accept_json(),
+  body = list(username = zoltar_session$zoltar_connection$username,
+  password = zoltar_session$zoltar_connection$password))
   json_content <- content(response, "parsed")
   token <- json_content$token
   token
@@ -145,32 +108,24 @@ get_token.default <- function(zoltar_session, ...) {
 
 new_resource <- function(zoltar_connection, uri) {
   # todo validate uri - not NULL, proper URI structure
-  
+
   self = structure(environment(), class = "ZoltarResource")
-  
+
   zoltar_connection <- zoltar_connection
   uri <- uri
   json = NULL
-  
+
   refresh(self)  # update json
-  
+
   self
 }
 
 
 print.ZoltarResource <- function(zoltar_resource, ...) {
-  cat(
-    class(zoltar_resource)[1],
-    " ",
-    zoltar_resource$uri,
-    " ",
-    if (is.null(zoltar_resource$json))
-      "<no JSON>"
-    else
-      paste0("len=", length(zoltar_resource$json)),
-    "\n",
-    sep = ''
-  )
+  cat(class(zoltar_resource)[1], " ",
+  zoltar_resource$uri, " ",
+  if (is.null(zoltar_resource$json)) "<no JSON>" else paste0("len=", length(zoltar_resource$json)),
+  "\n", sep='')
 }
 
 
@@ -179,8 +134,7 @@ refresh <- function(zoltar_resource, ...) {
 }
 
 refresh.default <- function(zoltar_resource, ...) {
-  zoltar_resource$json <-
-    json_for_uri(zoltar_resource$zoltar_connection, zoltar_resource$uri)
+  zoltar_resource$json <- json_for_uri(zoltar_resource$zoltar_connection, zoltar_resource$uri)
 }
 
 
@@ -189,14 +143,10 @@ delete <- function(zoltar_resource, ...) {
 }
 
 delete.default <- function(zoltar_resource, ...) {
-  response <- httr::DELETE(
-    url = zoltar_resource$uri,
-    accept_json(),
-    add_headers(
-      "Accept" = "application/json; indent=4",
-      "Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)
-    )
-  )
+  response <- DELETE(url = zoltar_resource$uri,
+  accept_json(),
+  add_headers("Accept" = "application/json; indent=4",
+  "Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)))
   stop_for_status(response)  # HTTP_204_NO_CONTENT
 }
 
@@ -228,9 +178,9 @@ models <- function(project, ...) {
 models.default <- function(project, ...) {
   models_uris <- project$json$models
   models <- lapply(models_uris,
-                   function(model_uri) {
-                     new_model(project$zoltar_connection, model_uri)
-                   })
+  function(model_uri) {
+    new_model(project$zoltar_connection, model_uri)
+  })
   models
 }
 
@@ -269,17 +219,14 @@ forecasts.default <- function(model, ...) {
   #
   # note that 'data_version_date' and 'forecast' might be None. in this method we only return Forecast objects
   # that are not None. (recall that a model's TimeZeros might not have associated forecast data yet.)
-  
-  forecasts_json <-
-    model$json$forecasts  # some may have no forecast, so filter next
-  cond <-
-    sapply(forecasts_json, function(forecast_json)
-      ! is.null(forecast_json$forecast))
+
+  forecasts_json <- model$json$forecasts  # some may have no forecast, so filter next
+  cond <- sapply(forecasts_json, function(forecast_json) !is.null(forecast_json$forecast))
   forecasts_json <- forecasts_json[cond]
   forecasts <- lapply(forecasts_json,
-                      function(forecast_json) {
-                        new_forecast(model$zoltar_connection, forecast_json$forecast)
-                      })
+  function(forecast_json) {
+    new_forecast(model$zoltar_connection, forecast_json$forecast)
+  })
   forecasts
 }
 
@@ -289,41 +236,24 @@ forecast_for_pk <- function(model, forecast_pk, ...) {
 }
 
 forecast_for_pk.default <- function(model, forecast_pk, ...) {
-  forecast_uri = paste0(model$zoltar_connection$host,
-                        '/api/forecast/',
-                        forecast_pk,
-                        '/')
+  forecast_uri = paste0(model$zoltar_connection$host, '/api/forecast/', forecast_pk, '/')
   new_forecast(model$zoltar_connection, forecast_uri)
 }
 
 
-upload_forecast <-
-  function(model,
-           timezero_date,
-           forecast_csv_file,
-           ...) {
-    UseMethod("upload_forecast")
-  }
+upload_forecast <- function(model, timezero_date, forecast_csv_file, ...) {
+  UseMethod("upload_forecast")
+}
 
-upload_forecast.default <-
-  function(model,
-           timezero_date,
-           forecast_csv_file,
-           ...) {
-    response <- httr::POST(
-      url = paste0(model$uri, 'forecasts/'),
-      add_headers(
-        "Authorization" = paste0("JWT ", model$zoltar_connection$session$token)
-      ),
-      body = list(
-        data_file = upload_file(forecast_csv_file),
-        timezero_date = timezero_date
-      )
-    )
-    stop_for_status(response)
-    json_content <- content(response, "parsed")
-    new_upload_file_job(model$zoltar_connection, json_content$url)  # throw away json and let refresh() reload it
-  }
+upload_forecast.default <- function(model, timezero_date, forecast_csv_file, ...) {
+  response <- POST(url = paste0(model$uri, 'forecasts/'),
+  add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
+  body = list(data_file = upload_file(forecast_csv_file),
+  timezero_date = timezero_date))
+  stop_for_status(response)
+  json_content <- content(response, "parsed")
+  new_upload_file_job(model$zoltar_connection, json_content$url)  # throw away json and let refresh() reload it
+}
 
 
 #
@@ -337,11 +267,11 @@ new_forecast <- function(zoltar_connection, uri) {
 }
 
 
-data <- function(forecast, is_json = True, ...) {
+data <- function(forecast, is_json=True, ...) {
   UseMethod("data")
 }
 
-data.default <- function(forecast, is_json = True, ...) {
+data.default <- function(forecast, is_json=True, ...) {
   NULL  # todo
 }
 
@@ -381,15 +311,7 @@ status_as_str <- function(upload_file_job, ...) {
 
 status_as_str.default <- function(upload_file_job, ...) {
   # to map status ints to strings, we simply index into a vector. recall status starts with zero
-  status_names <-
-    c(
-      'PENDING',
-      'CLOUD_FILE_UPLOADED',
-      'QUEUED',
-      'CLOUD_FILE_DOWNLOADED',
-      'SUCCESS',
-      'FAILED'
-    )
+  status_names <- c('PENDING', 'CLOUD_FILE_UPLOADED', 'QUEUED', 'CLOUD_FILE_DOWNLOADED', 'SUCCESS', 'FAILED')
   status_int <- upload_file_job$json$status  # an integer
   status_str <- status_names[status_int + 1]
   status_str
@@ -403,3 +325,4 @@ output_json <- function(upload_file_job, ...) {
 output_json.default <- function(upload_file_job, ...) {
   upload_file_job$json$output_json
 }
+
