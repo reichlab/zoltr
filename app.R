@@ -1,4 +1,3 @@
-# todo change to `library(ZoltR)` when made into a package
 setwd(getSrcDirectory(function(x) {x}))
 source("connection.r", chdir = TRUE)
 
@@ -6,6 +5,12 @@ source("connection.r", chdir = TRUE)
 #
 # example app
 #
+
+# todo:
+# - change `source()` to `library(ZoltR)` when made into a package
+# - pass args via command line and environment vars
+# - put into a main() function, passing args in standard R manner
+
 
 busy_poll_upload_file_job <- function(upload_file_job) {
     # get the updated status via polling (busy wait every 1 second)
@@ -26,14 +31,9 @@ busy_poll_upload_file_job <- function(upload_file_job) {
 }
 
 
-# conn = new_connection()
-conn = new_connection(host="http://127.0.0.1:8000")
-cat("* pre-authenticate\n")
-print(conn)
-
-# z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
+# connect to Zoltar and print all accessible projects
+conn = new_connection(host = "http://127.0.0.1:8000")  # todo: don't pass host
 z_authenticate(conn, "model_owner1", "mo1-asdf")
-cat("* post-authenticate\n")
 print(conn)
 
 the_projects <- projects(conn)
@@ -43,8 +43,9 @@ for (project in the_projects) {
     name(project), "'\n"))
 }
 
+# print a particular project's models
 cond <- sapply(the_projects, function(project) name(project) == "public project")
-project <- if (any(cond)) the_projects[cond][[1]] else NULL
+project <- if (any(cond))the_projects[cond][[1]] else NULL
 the_models <- models(project)
 cat(paste0("* models in " , project$uri, "\n"))
 for (model in the_models) {
@@ -54,7 +55,7 @@ for (model in the_models) {
 
 # for a particular TimeZero, delete existing Forecast, if any
 cond <- sapply(the_models, function(project) name(project) == "Test ForecastModel1")
-model <- if (any(cond)) the_models[cond][[1]] else NULL
+model <- if (any(cond))the_models[cond][[1]] else NULL
 cat(paste0("* working with " , model$uri, "\n"))
 cat(paste0("* pre-delete forecasts\n"))
 the_forecasts <- forecasts(model)
@@ -64,8 +65,8 @@ for (forecast in the_forecasts) {
 
 the_timezero_date = '20170117'  # YYYYMMDD_DATE_FORMAT
 cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == the_timezero_date)
-existing_forecast <- if (any(cond)) the_forecasts[cond][[1]] else NULL
-if (!is.null(existing_forecast)) {
+existing_forecast <- if (any(cond))the_forecasts[cond][[1]] else NULL
+if (! is.null(existing_forecast)) {
     cat(paste0("- deleting existing forecast", the_timezero_date, ", ", existing_forecast$uri, "\n"))
     delete(existing_forecast)
 } else {
@@ -80,9 +81,7 @@ for (forecast in the_forecasts) {
 }
 
 # upload a new forecast
-# forecast_csv_file <- Sys.getenv("FORECAST_CSV_FILE")
 forecast_csv_file <- "/Users/cornell/IdeaProjects/forecast-repository/forecast_app/tests/EW1-KoTsarima-2017-01-17-small.csv"
-cat(paste0("* uploading file: '", forecast_csv_file, "'\n"))
 upload_file_job <- upload_forecast(model, the_timezero_date, forecast_csv_file)
 busy_poll_upload_file_job(upload_file_job)
 
@@ -98,4 +97,13 @@ for (forecast in the_forecasts) {
     cat(paste0("- (", class(forecast)[1], ") ", forecast$uri, ", ", length(forecast$json), ", ", id(forecast), "\n"))
 }
 
-# todo remaining from /Users/cornell/IdeaProjects/zoltpy/examples/app.py
+# get its data
+cat(paste0("* data for forecast: ", the_new_forecast$uri, "\n"))
+
+data_json <- data(the_new_forecast, is_json=TRUE)
+cat(paste0("- data_json: # metadata: ", length(data_json$metadata), ", # locations: ", length(data_json$locations), "\n"))
+# str(data_json)
+
+data_csv <- data(the_new_forecast, is_json=FALSE)
+cat(paste0("- data_csv:\n"))
+str(data_csv)

@@ -1,5 +1,6 @@
 library(httr)
 library(jsonlite)
+library(readr)  # apparently required by httr
 
 
 #
@@ -7,8 +8,6 @@ library(jsonlite)
 #
 
 new_connection <- function(host = "zoltardata.com") {
-  # todo validate host - not NULL, proper URI structure
-
   self = structure(environment(), class = "ZoltarConnection")
 
   host <- host
@@ -48,10 +47,10 @@ json_for_uri <- function(zoltar_connection, uri, ...) {  # private
 json_for_uri.default <- function(zoltar_connection, uri, ...) {
   stopifnot(is(zoltar_connection$session, "ZoltarSession"))
 
-  response <- GET(url = uri,
-  accept_json(),
-  add_headers("Accept" = "application/json; indent=4",
-  "Authorization" = paste0("JWT ", zoltar_connection$session$token)))
+  response <- httr::GET(url = uri,
+                        accept_json(),
+                        add_headers("Accept" = "application/json; indent=4",
+                                    "Authorization" = paste0("JWT ", zoltar_connection$session$token)))
   stop_for_status(response)
 
   json_content <- content(response, "parsed")
@@ -92,10 +91,10 @@ get_token <- function(zoltar_session, ...) {
 }
 
 get_token.default <- function(zoltar_session, ...) {
-  response <- POST(url = paste0(zoltar_session$zoltar_connection$host, '/api-token-auth/'),
-  accept_json(),
-  body = list(username = zoltar_session$zoltar_connection$username,
-  password = zoltar_session$zoltar_connection$password))
+  response <- httr::POST(url = paste0(zoltar_session$zoltar_connection$host, '/api-token-auth/'),
+                         accept_json(),
+                         body = list(username = zoltar_session$zoltar_connection$username,
+                                     password = zoltar_session$zoltar_connection$password))
   json_content <- content(response, "parsed")
   token <- json_content$token
   token
@@ -107,8 +106,6 @@ get_token.default <- function(zoltar_session, ...) {
 #
 
 new_resource <- function(zoltar_connection, uri) {
-  # todo validate uri - not NULL, proper URI structure
-
   self = structure(environment(), class = "ZoltarResource")
 
   zoltar_connection <- zoltar_connection
@@ -143,10 +140,11 @@ delete <- function(zoltar_resource, ...) {
 }
 
 delete.default <- function(zoltar_resource, ...) {
-  response <- DELETE(url = zoltar_resource$uri,
-  accept_json(),
-  add_headers("Accept" = "application/json; indent=4",
-  "Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)))
+  response <- httr::DELETE(url = zoltar_resource$uri,
+                           accept_json(),
+                           add_headers("Accept" = "application/json; indent=4",
+                                       "Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)
+                           ))
   stop_for_status(response)  # HTTP_204_NO_CONTENT
 }
 
@@ -246,10 +244,10 @@ upload_forecast <- function(model, timezero_date, forecast_csv_file, ...) {
 }
 
 upload_forecast.default <- function(model, timezero_date, forecast_csv_file, ...) {
-  response <- POST(url = paste0(model$uri, 'forecasts/'),
-  add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
-  body = list(data_file = upload_file(forecast_csv_file),
-  timezero_date = timezero_date))
+  response <- httr::POST(url = paste0(model$uri, 'forecasts/'),
+                         add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
+                         body = list(data_file = upload_file(forecast_csv_file),
+                                     timezero_date = timezero_date))
   stop_for_status(response)
   json_content <- content(response, "parsed")
   new_upload_file_job(model$zoltar_connection, json_content$url)  # throw away json and let refresh() reload it
@@ -267,12 +265,22 @@ new_forecast <- function(zoltar_connection, uri) {
 }
 
 
-data <- function(forecast, is_json=True, ...) {
+data <- function(forecast, is_json=TRUE, ...) {
   UseMethod("data")
 }
 
-data.default <- function(forecast, is_json=True, ...) {
-  NULL  # todo
+data.default <- function(forecast, is_json=TRUE, ...) {
+  data_uri <- forecast$json$forecast_data
+  if (is_json) {
+    json_for_uri(forecast$zoltar_connection, data_uri)
+  } else {  # CSV
+    # todo fix api_views.forecast_data() to use proper accept type rather than 'format' query parameter
+    response <- httr::GET(url = data_uri,
+                          add_headers("Authorization" = paste0("JWT ", forecast$zoltar_connection$session$token)),
+                          query = list(format = "csv"))
+    stop_for_status(response)
+    content(response)
+  }
 }
 
 

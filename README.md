@@ -5,10 +5,12 @@ API.
 
 
 ## todo
-- tests!
+- write tests
+- add function documentation - http://r-pkgs.had.co.nz/man.html#man-functions
 - think accessors that just go directly to json - id(), name(), etc. instead more general 'attribute' or similar?
-- session optional (public resources don't require authentication)
-- export
+- make `authenticate()` optional (public resources don't require authentication)
+- make into actual package
+- export public functions
 
 
 ## User notes
