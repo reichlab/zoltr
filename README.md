@@ -11,6 +11,7 @@ API.
 - make `authenticate()` optional (public resources don't require authentication)
 - make into actual package
 - export public functions
+- change app to a vignette - http://r-pkgs.had.co.nz/misc.html
 
 
 ## User notes
