@@ -1,0 +1,19 @@
+Package: zoltr
+Title: R Interface To Zoltar API
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com")
+Description: This package provides an R interface for working with the Zoltar (https://www.zoltardata.com/) forecast
+             repository's API.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Suggests: 
+    testthat
+Imports: 
+    httr,
+    jsonlite,
+    readr
