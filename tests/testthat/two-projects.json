@@ -1,8 +1,8 @@
 [
   {
     "id": 1,
-    "url": "http://127.0.0.1:8000/api/project/1/?format=json",
-    "owner": "http://127.0.0.1:8000/api/user/2/?format=json",
+    "url": "http://example.com/api/project/1/",
+    "owner": "http://example.com/api/user/2/",
     "is_public": true,
     "name": "public project",
     "description": "d",
@@ -11,15 +11,15 @@
     "config_dict": {
       "visualization-y-label": "Weighted ILI (%)"
     },
-    "template": "http://127.0.0.1:8000/api/project/1/template/?format=json",
-    "truth": "http://127.0.0.1:8000/api/project/1/truth/?format=json",
+    "template": "http://example.com/api/project/1/template/",
+    "truth": "http://example.com/api/project/1/truth/",
     "model_owners": [
-      "http://127.0.0.1:8000/api/user/3/?format=json"
+      "http://example.com/api/user/3/"
     ],
-    "score_data": "http://127.0.0.1:8000/api/project/1/score_data/?format=json",
+    "score_data": "http://example.com/api/project/1/score_data/",
     "models": [
-      "http://127.0.0.1:8000/api/model/1/?format=json",
-      "http://127.0.0.1:8000/api/model/2/?format=json"
+      "http://example.com/api/model/1/",
+      "http://example.com/api/model/2/"
     ],
     "locations": [
       {
@@ -103,8 +103,8 @@
   },
   {
     "id": 2,
-    "url": "http://127.0.0.1:8000/api/project/2/?format=json",
-    "owner": "http://127.0.0.1:8000/api/user/2/?format=json",
+    "url": "http://example.com/api/project/2/",
+    "owner": "http://example.com/api/user/2/",
     "is_public": false,
     "name": "private project",
     "description": "",
@@ -113,15 +113,15 @@
     "config_dict": {
       "visualization-y-label": "Weighted ILI (%)"
     },
-    "template": "http://127.0.0.1:8000/api/project/2/template/?format=json",
-    "truth": "http://127.0.0.1:8000/api/project/2/truth/?format=json",
+    "template": "http://example.com/api/project/2/template/",
+    "truth": "http://example.com/api/project/2/truth/",
     "model_owners": [
-      "http://127.0.0.1:8000/api/user/3/?format=json"
+      "http://example.com/api/user/3/"
     ],
-    "score_data": "http://127.0.0.1:8000/api/project/2/score_data/?format=json",
+    "score_data": "http://example.com/api/project/2/score_data/",
     "models": [
-      "http://127.0.0.1:8000/api/model/3/?format=json",
-      "http://127.0.0.1:8000/api/model/4/?format=json"
+      "http://example.com/api/model/3/",
+      "http://example.com/api/model/4/"
     ],
     "locations": [
       {

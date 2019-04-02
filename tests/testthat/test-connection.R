@@ -35,7 +35,7 @@ test_that("json_for_uri(zoltar_connection) builds correct requests", {
   # refresh(zoltar_resource)
   # data(forecast)
   # ...
-  fail("todo")
+  skip("todo")
 })
 
 
@@ -70,35 +70,64 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
 
   expect_equal(length(the_projects), 2)
   for (idx in 1:2) {  # NB: assumes order is preserved from json
-    project_json <- two_projects_json[[idx]]
     project <- the_projects[[idx]]
+    project_json <- two_projects_json[[idx]]
     expect_is(project, "Project")
-    expect_equal(project$url, project_json$uri)
+    expect_equal(project$uri, project_json$url)
   }
 })
 
 
 test_that("models(project) returns a list of Model objects", {
-  fail("todo")
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+
+  two_projects_json <- jsonlite::read_json("two-projects.json")
+  project_json <- two_projects_json[[1]]
+  project <- with_mock(
+    "json_for_uri" = function(...) {
+      project_json
+    },
+    new_project(zoltar_connection, project_json$url)
+  )
+
+  the_models <- with_mock(
+    "refresh" = function(...) {
+    },
+    models(project)
+  )
+  expect_equal(length(the_models), 2)
+
+  for (idx in 1:2) {  # NB: assumes order is preserved from json
+    model <- the_models[[idx]]
+    model_uri <- project_json$models[[idx]]
+    expect_is(model, "Model")
+    browser()
+    expect_equal(model$uri, model_uri)
+  }
 })
 
 
 test_that("name(project) returns the name", {
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("forecasts(model) returns a list of Forecast objects", {
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("forecast_for_pk(model) returns a Forecast object", {
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("upload_forecast(model) returns an UploadFileJob object", {
+  skip("todo")
   fail("todo")
 })
 
@@ -106,26 +135,31 @@ test_that("upload_forecast(model) returns an UploadFileJob object", {
 test_that("data(forecast) returns JSON or CSV data", {
   # is_json=TRUE
   # is_json=FALSE
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("timezero_date(forecast) returns the timezero_date", {
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("csv_filename(forecast) returns the csv_filename", {
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("status_as_str(upload_file_job) returns the status_as_str", {
+  skip("todo")
   fail("todo")
 })
 
 
 test_that("output_json(upload_file_job) returns the output_json", {
+  skip("todo")
   fail("todo")
 })
 
