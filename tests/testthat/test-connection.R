@@ -2,9 +2,10 @@ context("connection")
 library(jsonlite)
 
 
+#
 # ---- todos ----
-
 # REF: expect_equal(actual, expected)
+#
 
 # todo need to mock anything that hits the net:
 # - data(forecast, is_json=TRUE)
@@ -14,7 +15,12 @@ library(jsonlite)
 # - upload_forecast(model, timezero_date, forecast_csv_file)
 
 
+#
 # ---- utilities ----
+# NB: these assume that this file is loaded in order, i.e., that they are called before any tests
+#
+
+two_projects_json <- jsonlite::read_json("two-projects.json")
 
 mock_token <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
@@ -23,12 +29,13 @@ mock_authenticate <- function(zoltar_connection) {
   "get_token" = function(...) {
     mock_token
   },
-  z_authenticate(zoltar_connection, "username", "password")
-  )
+  z_authenticate(zoltar_connection, "username", "password"))
 }
 
 
+#
 # ---- tests ----
+#
 
 test_that("json_for_uri(zoltar_connection) builds correct requests", {
   # projects(zoltar_connection)
@@ -60,13 +67,11 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
 
-  two_projects_json <- jsonlite::read_json("two-projects.json")
   the_projects <- with_mock(
     "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
         two_projects_json
     },
-    projects(zoltar_connection)
-  )
+    projects(zoltar_connection))
 
   expect_equal(length(the_projects), 2)
   for (idx in 1:2) {  # NB: assumes order is preserved from json
@@ -82,25 +87,22 @@ test_that("models(project) returns a list of Model objects", {
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
 
-  two_projects_json <- jsonlite::read_json("two-projects.json")
-  project_json <- two_projects_json[[1]]
-  project <- with_mock(
+  project1_json <- two_projects_json[[1]]
+  project1 <- with_mock(
     "json_for_uri" = function(...) {
-      project_json
+      project1_json
     },
-    new_project(zoltar_connection, project_json$url)
-  )
+    new_project(zoltar_connection, project1_json$url))
 
   the_models <- with_mock(
     "refresh" = function(...) {
     },
-    models(project)
-  )
+    models(project1))
   expect_equal(length(the_models), 2)
 
   for (idx in 1:2) {  # NB: assumes order is preserved from json
     model <- the_models[[idx]]
-    model_uri <- project_json$models[[idx]]
+    model_uri <- project1_json$models[[idx]]
     expect_is(model, "Model")
     browser()
     expect_equal(model$uri, model_uri)
@@ -109,26 +111,31 @@ test_that("models(project) returns a list of Model objects", {
 
 
 test_that("name(project) returns the name", {
-  skip("todo")
-  fail("todo")
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+
+  project1_json <- two_projects_json[[1]]
+  project1 <- with_mock(
+    "json_for_uri" = function(...) {
+      project1_json
+    },
+    new_project(zoltar_connection, project1_json$url))
+  expect_equal(name(project1), project1_json$name)
 })
 
 
 test_that("forecasts(model) returns a list of Forecast objects", {
   skip("todo")
-  fail("todo")
 })
 
 
 test_that("forecast_for_pk(model) returns a Forecast object", {
   skip("todo")
-  fail("todo")
 })
 
 
 test_that("upload_forecast(model) returns an UploadFileJob object", {
   skip("todo")
-  fail("todo")
 })
 
 
@@ -136,30 +143,25 @@ test_that("data(forecast) returns JSON or CSV data", {
   # is_json=TRUE
   # is_json=FALSE
   skip("todo")
-  fail("todo")
 })
 
 
 test_that("timezero_date(forecast) returns the timezero_date", {
   skip("todo")
-  fail("todo")
 })
 
 
 test_that("csv_filename(forecast) returns the csv_filename", {
   skip("todo")
-  fail("todo")
 })
 
 
 test_that("status_as_str(upload_file_job) returns the status_as_str", {
   skip("todo")
-  fail("todo")
 })
 
 
 test_that("output_json(upload_file_job) returns the output_json", {
   skip("todo")
-  fail("todo")
 })
 
