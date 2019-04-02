@@ -1,5 +1,64 @@
-context("test-connection")
+context("connection")
+library(jsonlite)
 
-test_that("multiplication works", {
-  expect_equal(2 * 2, 4)
+# expect_equal(actual, expected)
+
+test_that("new_connection() returns a ZoltarConnection object", {
+  zoltar_connection <- new_connection("http://example.com")
+  expect_is(zoltar_connection, "ZoltarConnection")
 })
+
+
+# todo need to mock anything that hits the net:
+# - data(forecast, is_json=TRUE)
+# - delete(zoltar_resource)
+# - get_token(zoltar_session)
+# - json_for_uri(zoltar_connection)
+# - upload_forecast(model, timezero_date, forecast_csv_file)
+
+# todo Q: test json_for_uri(zoltar_connection) builds correct request? ditto for all others that hit the net (see above)
+
+
+mock_token <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+
+mock_authenticate <- function(zoltar_connection) {
+  with_mock(
+  "get_token" = function(...) {
+    mock_token
+  },
+  z_authenticate(zoltar_connection, "username", "password")
+  )
+}
+
+test_that("z_authenticate() saves username, password, and session", {
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+  expect_equal(zoltar_connection$username, "username")
+  expect_equal(zoltar_connection$password, "password")
+  expect_is(zoltar_connection$session, "ZoltarSession")
+  expect_equal(zoltar_connection$session$token, mock_token)
+})
+
+
+# todo re: loading the expected json: save as R data file? https://www.mango-solutions.com/blog/testing-without-the-internet-using-mock-functions
+test_that("projects() returns a list of Project objects", {
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+
+  two_projects_json <- jsonlite::read_json("two-projects.json")
+  the_projects <- with_mock(
+    "json_for_uri" = function(...) {
+        two_projects_json
+    },
+    projects(zoltar_connection)
+  )
+
+  expect_equal(length(the_projects), 2)
+  for (idx in 1:2) {  # NB: assumes order is preserved from json
+    project_json <- two_projects_json[[idx]]
+    project <- the_projects[[idx]]
+    expect_is(project, "Project")
+    expect_equal(project$url, project_json$uri)
+  }
+})
+

@@ -32,7 +32,7 @@ busy_poll_upload_file_job <- function(upload_file_job) {
 
 
 # connect to Zoltar and print all accessible projects
-conn = new_connection(host = "http://127.0.0.1:8000")  # todo: don't pass host
+conn <- new_connection(host = "http://127.0.0.1:8000")  # todo: don't pass host
 z_authenticate(conn, "model_owner1", "mo1-asdf")
 print(conn)
 
@@ -63,7 +63,7 @@ for (forecast in the_forecasts) {
     cat(paste0("- (", class(forecast)[1], ") ", forecast$uri, ", ", length(forecast$json), ", ", id(forecast), "\n"))
 }
 
-the_timezero_date = '20170117'  # YYYYMMDD_DATE_FORMAT
+the_timezero_date <- '20170117'  # YYYYMMDD_DATE_FORMAT
 cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == the_timezero_date)
 existing_forecast <- if (any(cond))the_forecasts[cond][[1]] else NULL
 if (! is.null(existing_forecast)) {
@@ -86,8 +86,8 @@ upload_file_job <- upload_forecast(model, the_timezero_date, forecast_csv_file)
 busy_poll_upload_file_job(upload_file_job)
 
 # get the new forecast from the upload_file_job by parsing the generic 'output_json' field
-new_forecast_pk = upload_file_job$json$output_json$forecast_pk
-the_new_forecast = forecast_for_pk(model, new_forecast_pk)
+new_forecast_pk <- upload_file_job$json$output_json$forecast_pk
+the_new_forecast <- forecast_for_pk(model, new_forecast_pk)
 cat(paste0("* new_forecast: ", the_new_forecast$uri, "\n"))
 
 refresh(model)

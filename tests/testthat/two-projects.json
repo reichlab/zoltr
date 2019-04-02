@@ -1,0 +1,202 @@
+[
+  {
+    "id": 1,
+    "url": "http://127.0.0.1:8000/api/project/1/?format=json",
+    "owner": "http://127.0.0.1:8000/api/user/2/?format=json",
+    "is_public": true,
+    "name": "public project",
+    "description": "d",
+    "home_url": "http://example.com",
+    "core_data": "http://example.com",
+    "config_dict": {
+      "visualization-y-label": "Weighted ILI (%)"
+    },
+    "template": "http://127.0.0.1:8000/api/project/1/template/?format=json",
+    "truth": "http://127.0.0.1:8000/api/project/1/truth/?format=json",
+    "model_owners": [
+      "http://127.0.0.1:8000/api/user/3/?format=json"
+    ],
+    "score_data": "http://127.0.0.1:8000/api/project/1/score_data/?format=json",
+    "models": [
+      "http://127.0.0.1:8000/api/model/1/?format=json",
+      "http://127.0.0.1:8000/api/model/2/?format=json"
+    ],
+    "locations": [
+      {
+        "name": "HHS Region 1"
+      },
+      {
+        "name": "HHS Region 2"
+      },
+      {
+        "name": "HHS Region 3"
+      },
+      {
+        "name": "HHS Region 4"
+      },
+      {
+        "name": "HHS Region 5"
+      },
+      {
+        "name": "HHS Region 6"
+      },
+      {
+        "name": "HHS Region 7"
+      },
+      {
+        "name": "HHS Region 8"
+      },
+      {
+        "name": "HHS Region 9"
+      },
+      {
+        "name": "HHS Region 10"
+      },
+      {
+        "name": "US National"
+      }
+    ],
+    "targets": [
+      {
+        "name": "Season onset",
+        "description": "The onset of the season is defined as the MMWR surveillance week (http://wwwn.cdc.gov/nndss/script/downloads.aspx) when the percentage of visits for influenza-like illness (ILI) reported through ILINet reaches or exceeds the baseline value for three consecutive weeks (updated 2016-2017 ILINet baseline values for the US and each HHS region will be available at http://www.cdc.gov/flu/weekly/overview.htm the week of October 10, 2016). Forecasted 'onset' week values should be for the first week of that three week period."
+      },
+      {
+        "name": "Season peak week",
+        "description": "The peak week will be defined as the MMWR surveillance week that the weighted ILINet percentage is the highest for the 2016-2017 influenza season."
+      },
+      {
+        "name": "Season peak percentage",
+        "description": "The intensity will be defined as the highest numeric value that the weighted ILINet percentage reaches during the 2016-2017 influenza season."
+      },
+      {
+        "name": "1 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      },
+      {
+        "name": "2 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      },
+      {
+        "name": "3 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      },
+      {
+        "name": "4 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      }
+    ],
+    "timezeros": [
+      {
+        "timezero_date": "20170101",
+        "data_version_date": null
+      },
+      {
+        "timezero_date": "20170124",
+        "data_version_date": null
+      },
+      {
+        "timezero_date": "20170117",
+        "data_version_date": "20170117"
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "url": "http://127.0.0.1:8000/api/project/2/?format=json",
+    "owner": "http://127.0.0.1:8000/api/user/2/?format=json",
+    "is_public": false,
+    "name": "private project",
+    "description": "",
+    "home_url": "",
+    "core_data": "",
+    "config_dict": {
+      "visualization-y-label": "Weighted ILI (%)"
+    },
+    "template": "http://127.0.0.1:8000/api/project/2/template/?format=json",
+    "truth": "http://127.0.0.1:8000/api/project/2/truth/?format=json",
+    "model_owners": [
+      "http://127.0.0.1:8000/api/user/3/?format=json"
+    ],
+    "score_data": "http://127.0.0.1:8000/api/project/2/score_data/?format=json",
+    "models": [
+      "http://127.0.0.1:8000/api/model/3/?format=json",
+      "http://127.0.0.1:8000/api/model/4/?format=json"
+    ],
+    "locations": [
+      {
+        "name": "HHS Region 1"
+      },
+      {
+        "name": "HHS Region 2"
+      },
+      {
+        "name": "HHS Region 3"
+      },
+      {
+        "name": "HHS Region 4"
+      },
+      {
+        "name": "HHS Region 5"
+      },
+      {
+        "name": "HHS Region 6"
+      },
+      {
+        "name": "HHS Region 7"
+      },
+      {
+        "name": "HHS Region 8"
+      },
+      {
+        "name": "HHS Region 9"
+      },
+      {
+        "name": "HHS Region 10"
+      },
+      {
+        "name": "US National"
+      }
+    ],
+    "targets": [
+      {
+        "name": "Season onset",
+        "description": "The onset of the season is defined as the MMWR surveillance week (http://wwwn.cdc.gov/nndss/script/downloads.aspx) when the percentage of visits for influenza-like illness (ILI) reported through ILINet reaches or exceeds the baseline value for three consecutive weeks (updated 2016-2017 ILINet baseline values for the US and each HHS region will be available at http://www.cdc.gov/flu/weekly/overview.htm the week of October 10, 2016). Forecasted 'onset' week values should be for the first week of that three week period."
+      },
+      {
+        "name": "Season peak week",
+        "description": "The peak week will be defined as the MMWR surveillance week that the weighted ILINet percentage is the highest for the 2016-2017 influenza season."
+      },
+      {
+        "name": "Season peak percentage",
+        "description": "The intensity will be defined as the highest numeric value that the weighted ILINet percentage reaches during the 2016-2017 influenza season."
+      },
+      {
+        "name": "1 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      },
+      {
+        "name": "2 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      },
+      {
+        "name": "3 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      },
+      {
+        "name": "4 wk ahead",
+        "description": "One- to four-week ahead forecasts will be defined as the weighted ILINet percentage for the target week."
+      }
+    ],
+    "timezeros": [
+      {
+        "timezero_date": "20170117",
+        "data_version_date": null
+      },
+      {
+        "timezero_date": "20170124",
+        "data_version_date": null
+      }
+    ]
+  }
+]
