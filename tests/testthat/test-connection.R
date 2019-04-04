@@ -26,12 +26,43 @@ two_projects_json <- jsonlite::read_json("projects-list.json")
 
 mock_token <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
+
 mock_authenticate <- function(zoltar_connection) {
   with_mock(
   "get_token" = function(...) {
     mock_token
   },
   z_authenticate(zoltar_connection, "username", "password"))
+}
+
+
+mock_project <- function() {
+  # helper that returns a list of two items: project: a mock Project, and json: the test json used to create the project
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+  project1_json <- two_projects_json[[1]]
+  project1 <- with_mock(
+  "json_for_uri" = function(...) {
+    project1_json
+  },
+  new_project(zoltar_connection, project1_json$url))
+  project_and_json <- list(project=project1, json=project1_json)
+  project_and_json
+}
+
+
+mock_model <- function() {
+  # helper that returns a list of two items: model: a mock Model, and json: the test json used to create the model
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+  model1_json <- jsonlite::read_json("model-1.json")
+  model1 <- with_mock(
+    "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Model's json, but we don't care here
+      model1_json
+    },
+    new_model(zoltar_connection, model1_json$url))
+  model_and_json <- list(model=model1, json=model1_json)
+  model_and_json
 }
 
 
@@ -73,8 +104,8 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
         two_projects_json
     },
     projects(zoltar_connection))
-
   expect_equal(length(the_projects), 2)
+
   for (idx in 1:2) {  # NB: assumes order is preserved from json
     the_project <- the_projects[[idx]]
     project_json <- two_projects_json[[idx]]
@@ -85,22 +116,15 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
 
 
 test_that("models(project) returns a list of Model objects", {
-  zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
-  project1_json <- two_projects_json[[1]]
-  project1 <- with_mock(
-    "json_for_uri" = function(...) {
-      project1_json
-    },
-    new_project(zoltar_connection, project1_json$url))
-
+  project_and_json <- mock_project()
+  project1 <- project_and_json[['project']]
+  project1_json <- project_and_json[['json']]
   the_models <- with_mock(
     "refresh" = function(...) {  # we don't care about the model's json, just its uri
     },
     models(project1))
-
   expect_equal(length(the_models), 2)
+
   for (idx in 1:2) {  # NB: assumes order is preserved from json
     the_model <- the_models[[idx]]
     model_uri <- project1_json$models[[idx]]
@@ -111,37 +135,22 @@ test_that("models(project) returns a list of Model objects", {
 
 
 test_that("name(project) returns the name", {
-  zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
-  project1_json <- two_projects_json[[1]]
-  project1 <- with_mock(
-    "json_for_uri" = function(...) {
-      project1_json
-    },
-    new_project(zoltar_connection, project1_json$url))
-
+  project_and_json <- mock_project()
+  project1 <- project_and_json[['project']]
+  project1_json <- project_and_json[['json']]
   expect_equal(name(project1), project1_json$name)
 })
 
 
 test_that("forecasts(model) returns a list of Forecast objects", {
   # note that model-1.json has three 'forecasts' entries, but only one of those has a non-null "forecast" (a URI)
-  zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
-  model1_json <- jsonlite::read_json("model-1.json")
-  model1 <- with_mock(
-    "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Model's json, but we don't care here
-      model1_json
-    },
-    new_model(zoltar_connection, model1_json$url))
-
+  model_and_json <- mock_model()
+  model1 <- model_and_json[['model']]
+  model1_json <- model_and_json[['json']]
   the_forecasts <- with_mock(
     "refresh" = function(...) {  # we don't care about the model's json, just its uri
     },
     forecasts(model1))
-
   expect_equal(length(the_forecasts), 1)
 
   the_forecast <- the_forecasts[[1]]
@@ -151,23 +160,13 @@ test_that("forecasts(model) returns a list of Forecast objects", {
 
 
 test_that("forecast_for_pk(model) returns a Forecast object", {
-  zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
-  model1_json <- jsonlite::read_json("model-1.json")
-  model1 <- with_mock(
-    "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Model's json, but we don't care here
-      model1_json
-    },
-    new_model(zoltar_connection, model1_json$url))
-
-
+  model_and_json <- mock_model()
+  model1 <- model_and_json[['model']]
+  model1_json <- model_and_json[['json']]
   the_forecast <- with_mock(
     "refresh" = function(...) {  # we don't care about the model's json, just its uri
     },
     forecast_for_pk(model1, 71))  # forecast_pk from model1_json$forecasts[[2]]$forecast
-
-  browser()
   expect_is(the_forecast, "Forecast")
   expect_equal(the_forecast$uri, model1_json$forecasts[[2]]$forecast)
 })
