@@ -43,9 +43,9 @@ mock_project <- function() {
   project1_json <- two_projects_json[[1]]
   project1 <- with_mock(
   "json_for_uri" = function(...) {
-    project1_json
-  },
-  new_project(zoltar_connection, project1_json$url))
+      project1_json
+    },
+    new_project(zoltar_connection, project1_json$url))
   project_and_json <- list(project=project1, json=project1_json)
   project_and_json
 }
@@ -57,7 +57,7 @@ mock_model <- function() {
   mock_authenticate(zoltar_connection)
   model1_json <- jsonlite::read_json("model-1.json")
   model1 <- with_mock(
-    "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Model's json, but we don't care here
+    "json_for_uri" = function(...) {
       model1_json
     },
     new_model(zoltar_connection, model1_json$url))
@@ -101,7 +101,7 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
 
   the_projects <- with_mock(
     "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
-        two_projects_json
+      two_projects_json
     },
     projects(zoltar_connection))
   expect_equal(length(the_projects), 2)
@@ -172,8 +172,26 @@ test_that("forecast_for_pk(model) returns a Forecast object", {
 })
 
 
-test_that("upload_forecast(model) returns an UploadFileJob object", {
-  skip("todo")
+test_that("upload_forecast(model) returns an UploadFileJob object, and status_as_str() works", {
+  model_and_json <- mock_model()
+  model1 <- model_and_json[['model']]
+  upload_file_job_2_json <- jsonlite::read_json("upload-file-job-2.json")
+  the_upload_file_job <- with_mock(
+    "post_forecast" = function(...) {
+      upload_file_job_2_json
+    },
+    with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
+      "json_for_uri" = function(...) {
+        upload_file_job_2_json
+      },
+      upload_forecast(model1, NULL, NULL)  # timezero_date, forecast_csv_file
+    )
+  )
+
+  expect_is(the_upload_file_job, "UploadFileJob")
+  expect_equal(the_upload_file_job$uri, upload_file_job_2_json$url)
+  expect_equal(status_as_str(the_upload_file_job), "SUCCESS")
+  expect_equal(output_json(the_upload_file_job), list("forecast_pk" = 3))
 })
 
 
@@ -193,13 +211,4 @@ test_that("csv_filename(forecast) returns the csv_filename", {
   skip("todo")
 })
 
-
-test_that("status_as_str(upload_file_job) returns the status_as_str", {
-  skip("todo")
-})
-
-
-test_that("output_json(upload_file_job) returns the output_json", {
-  skip("todo")
-})
 

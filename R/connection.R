@@ -235,14 +235,21 @@ upload_forecast <- function(model, timezero_date, forecast_csv_file, ...) {
   UseMethod("upload_forecast")
 }
 
-upload_forecast.default <- function(model, timezero_date, forecast_csv_file, ...) {
+
+post_forecast <- function(model, forecast_csv_file, timezero_date) {
+  # upload_forecast() helper that enables testing
   response <- httr::POST(url = paste0(model$uri, 'forecasts/'),
                          add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
                          body = list(data_file = upload_file(forecast_csv_file),
                                      timezero_date = timezero_date))
   stop_for_status(response)
-  json_content <- content(response, "parsed")
-  new_upload_file_job(model$zoltar_connection, json_content$url)  # throw away json and let refresh() reload it
+  content(response, "parsed")
+}
+
+
+upload_forecast.default <- function(model, timezero_date, forecast_csv_file, ...) {
+  upload_file_job_json <- post_forecast(model, forecast_csv_file, timezero_date)
+  new_upload_file_job(model$zoltar_connection, upload_file_job_json$url)  # throw away json and let refresh() reload it
 }
 
 
@@ -311,7 +318,7 @@ status_as_str <- function(upload_file_job, ...) {
 
 status_as_str.default <- function(upload_file_job, ...) {
   # to map status ints to strings, we simply index into a vector. recall status starts with zero
-  status_names <- c('PENDING', 'CLOUD_FILE_UPLOADED', 'QUEUED', 'CLOUD_FILE_DOWNLOADED', 'SUCCESS', 'FAILED')
+  status_names <- c("PENDING", "CLOUD_FILE_UPLOADED", "QUEUED", "CLOUD_FILE_DOWNLOADED", "SUCCESS", "FAILED")
   status_int <- upload_file_job$json$status  # an integer
   status_str <- status_names[status_int + 1]
   status_str
