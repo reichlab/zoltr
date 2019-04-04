@@ -147,9 +147,19 @@ test_that("functions calling constructors should pass correct uris to new_resour
 
 
 test_that("new_session() calls get_token() correctly", {
-  # new_session()
-  #   get_token()
-  skip("todo")
+  zoltar_connection <- new_connection("http://example.com")
+  called_args <- list()
+  with_mock(
+    "httr::POST" = function(...) {
+      called_args <<- append(called_args, list(...))
+      load("get_token_response.rda")  # 'get_token_response' contains response from sample z_authenticate() call
+      get_token_response
+    },
+    z_authenticate(zoltar_connection, "username", "password"))
+
+  expect_equal(called_args$url, "http://example.com/api-token-auth/")
+  expect_equal(called_args$body$username, zoltar_connection$username)
+  expect_equal(called_args$body$password, zoltar_connection$password)
 })
 
 
