@@ -3,20 +3,6 @@ library(jsonlite)
 
 
 #
-# ---- todos ----
-#
-# REF: expect_equal(actual, expected)
-#
-
-# todo need to mock anything that hits the net:
-# - data(forecast, is_json=TRUE)
-# - delete(zoltar_resource)
-# - get_token(zoltar_session)
-# - json_for_uri(zoltar_connection)
-# - upload_forecast(model, timezero_date, forecast_csv_file)
-
-
-#
 # ---- utilities ----
 #
 # NB: these assume that this file is loaded in order, i.e., that they are called before any tests
@@ -79,17 +65,112 @@ mock_forecast <- function() {
 
 
 #
-# ---- tests ----
+# ---- lower-level net-oriented tests ----
 #
 
-test_that("json_for_uri(zoltar_connection) builds correct requests", {
-  # projects(zoltar_connection)
-  # refresh(zoltar_resource)
-  # data(forecast) - is_json=TRUE , is_json=FALSE
-  # ...
+test_that("functions calling constructors should pass correct uris to new_resource()", {
+  # projects()
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)
+  called_uris <- list()
+  the_projects <- with_mock(
+    "json_for_uri" = function(zoltar_connection, uri, ...) {
+      called_uris <<- append(called_uris, uri)
+      two_projects_json
+    },
+    projects(zoltar_connection))
+
+  expected_called_uris <- list(
+    "http://example.com/api/projects/",
+    "http://example.com/api/project/1/",
+    "http://example.com/api/project/2/")
+  expect_equal(called_uris, expected_called_uris)
+
+
+  # models()
+  project_and_json <- mock_project()
+  the_project <- project_and_json[['project']]
+  called_uris <- list()
+  with_mock(
+    "json_for_uri" = function(zoltar_connection, uri, ...) {
+      called_uris <<- append(called_uris, uri)
+    },
+    models(the_project))
+
+  expected_called_uris <- list(
+    "http://example.com/api/model/1/",
+    "http://example.com/api/model/2/")
+  expect_equal(called_uris, expected_called_uris)
+
+
+  # forecasts()
+  model_and_json <- mock_model()
+  the_model <- model_and_json[['model']]
+  called_uris <- list()
+  with_mock(
+    "json_for_uri" = function(zoltar_connection, uri, ...) {
+      called_uris <<- append(called_uris, uri)
+    },
+    forecasts(the_model))
+  expected_called_uris <- list("http://example.com/api/forecast/71/")
+  expect_equal(called_uris, expected_called_uris)
+
+
+  # forecast_for_pk()
+  called_uris <- list()
+  with_mock(
+    "json_for_uri" = function(zoltar_connection, uri, ...) {
+      called_uris <<- append(called_uris, uri)
+    },
+    forecast_for_pk(the_model, 71))  # forecast_pk from model1_json$forecasts[[2]]$forecast
+  expected_called_uris <- list("http://example.com/api/forecast/71/")
+  expect_equal(called_uris, expected_called_uris)
+
+
+  # upload_forecast()
+  upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
+  called_uris <- list()
+  with_mock(
+    "post_forecast" = function(...) {
+      upload_file_job_json
+    },
+    with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
+    "json_for_uri" = function(zoltar_connection, uri, ...) {
+        called_uris <<- append(called_uris, uri)
+      },
+      upload_forecast(the_model, NULL, NULL)  # timezero_date, forecast_csv_file
+    )
+  )
+  expected_called_uris <- list("http://example.com/api/uploadfilejob/2/")
+  expect_equal(called_uris, expected_called_uris)
+})
+
+
+test_that("new_session() calls get_token() correctly", {
+  # new_session()
+  #   get_token()
   skip("todo")
 })
 
+
+test_that("post_forecast() passes correct URI to POST()", {
+  # post_forecast()
+  #   httr::POST()    # paste0(model$uri, 'forecasts/')
+  skip("todo")
+})
+
+
+test_that("data() passes correct URI to json_for_uri() and GET()", {
+  #   data()
+  #     json_for_uri(forecast$zoltar_connection, data_uri)
+  #     httr::GET()     # data_uri
+  skip("todo")
+})
+
+
+#
+# ---- OO-level tests ----
+#
 
 test_that("new_connection() returns a ZoltarConnection object", {
   zoltar_connection <- new_connection("http://example.com")
@@ -110,7 +191,6 @@ test_that("z_authenticate(zoltar_connection) saves username, password, and sessi
 test_that("projects(zoltar_connection) returns a list of Project objects", {
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
-
   the_projects <- with_mock(
     "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
       two_projects_json

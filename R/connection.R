@@ -1,5 +1,4 @@
 library(httr)
-# library(jsonlite)
 library(readr)  # apparently required by httr
 
 
@@ -46,8 +45,7 @@ json_for_uri.default <- function(zoltar_connection, uri, ...) {
   stopifnot(is(zoltar_connection$session, "ZoltarSession"))
   response <- httr::GET(url = uri,
                         accept_json(),
-                        add_headers("Accept" = "application/json; indent=4",
-                                    "Authorization" = paste0("JWT ", zoltar_connection$session$token)))
+                        add_headers("Authorization" = paste0("JWT ", zoltar_connection$session$token)))
   stop_for_status(response)
   json_content <- content(response, "parsed")
   json_content
@@ -134,9 +132,7 @@ delete <- function(zoltar_resource, ...) {
 delete.default <- function(zoltar_resource, ...) {
   response <- httr::DELETE(url = zoltar_resource$uri,
                            accept_json(),
-                           add_headers("Accept" = "application/json; indent=4",
-                                       "Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)
-                           ))
+                           add_headers("Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)))
   stop_for_status(response)
 }
 
