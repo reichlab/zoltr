@@ -1,0 +1,27 @@
+{
+  "id": 1,
+  "url": "http://example.com/api/model/1/",
+  "project": "http://example.com/api/project/1/",
+  "owner": "http://example.com/api/user/3/",
+  "name": "Test ForecastModel1",
+  "description": "a ForecastModel for testing",
+  "home_url": "http://example.com",
+  "aux_data_url": null,
+  "forecasts": [
+    {
+      "timezero_date": "20170101",
+      "data_version_date": null,
+      "forecast": null
+    },
+    {
+      "timezero_date": "20170117",
+      "data_version_date": "20170117",
+      "forecast": "http://example.com/api/forecast/71/"
+    },
+    {
+      "timezero_date": "20170124",
+      "data_version_date": null,
+      "forecast": null
+    }
+  ]
+}
