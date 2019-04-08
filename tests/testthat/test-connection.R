@@ -148,10 +148,10 @@ test_that("functions calling constructors should pass correct uris to new_resour
 
 test_that("new_session() calls get_token() correctly", {
   zoltar_connection <- new_connection("http://example.com")
-  called_args <- list()
+  called_args <- NULL
   with_mock(
     "httr::POST" = function(...) {
-      called_args <<- append(called_args, list(...))
+      called_args <<- list(...)
       load("get_token_response.rda")  # 'get_token_response' contains response from sample z_authenticate() call
       get_token_response
     },
@@ -164,17 +164,23 @@ test_that("new_session() calls get_token() correctly", {
 
 
 test_that("post_forecast() passes correct URI to POST()", {
-  # post_forecast()
-  #   httr::POST()    # paste0(model$uri, 'forecasts/')
-  skip("todo")
-})
+  model_and_json <- mock_model()
+  the_model <- model_and_json[['model']]
+  called_args <- NULL
+  with_mock(
+    "upload_file" = function(...) {
+      NULL
+    },
+    with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
+      "httr::POST" = function(...) {
+        called_args <<- list(...)
+        load("upload_response.rda")  # 'upload_response' contains response from sample upload_forecast() call
+        upload_response
+      },
+    post_forecast(the_model, NULL, NULL))  # timezero_date, forecast_csv_file
+  )
 
-
-test_that("data() passes correct URI to json_for_uri() and GET()", {
-  #   data()
-  #     json_for_uri(forecast$zoltar_connection, data_uri)
-  #     httr::GET()     # data_uri
-  skip("todo")
+  expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
 })
 
 
@@ -318,13 +324,16 @@ test_that("data(forecast) returns CSV data", {
   forecast_and_json <- mock_forecast()
   the_forecast <- forecast_and_json[['forecast']]
 
+  called_args <- NULL
   the_data <- with_mock(
     "httr::GET" = function(...) {
+      called_args <<- list(...)
       load("data_response.rda")  # 'data_response' contains response from EW1-KoTsarima-2017-01-17-small.csv
       data_response
     },
     data(the_forecast, is_json=FALSE))
 
+  expect_equal(called_args$url, "http://example.com/api/forecast/71/data/")
   expect_equal(dim(the_data), c(154, 7))
   expect_equal(names(the_data), c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))
 })

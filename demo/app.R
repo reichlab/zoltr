@@ -63,7 +63,7 @@ for (forecast in the_forecasts) {
     cat(paste0("- (", class(forecast)[1], ") ", forecast$uri, ", ", length(forecast$json), ", ", id(forecast), "\n"))
 }
 
-the_timezero_date <- '20170117'  # YYYYMMDD_DATE_FORMAT
+the_timezero_date <- "20170117"  # YYYYMMDD_DATE_FORMAT
 cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == the_timezero_date)
 existing_forecast <- if (any(cond))the_forecasts[cond][[1]] else NULL
 if (! is.null(existing_forecast)) {
