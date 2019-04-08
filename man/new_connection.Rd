@@ -2,9 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{new_connection}
 \alias{new_connection}
-\title{Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-connection you can call \code{\link{z_authenticate}} on it, and then call \code{\link{projects}} to get a list of
-\code{\link{Project}} objects to start working with.}
+\title{create a new connection to a Zoltar host}
 \usage{
 new_connection(host = "zoltardata.com")
 }

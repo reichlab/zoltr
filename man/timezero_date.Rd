@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{timezero_date}
 \alias{timezero_date}
-\title{A \emph{getter} function that returns the timezero_date of the passed \code{\link{Forecast}}.}
+\title{get a forecast's timezero_date}
 \usage{
 timezero_date(forecast, ...)
 }

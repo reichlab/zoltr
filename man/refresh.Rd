@@ -2,12 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{refresh}
 \alias{refresh}
-\title{Updates the internal (JSON) data associated with a \code{\link{Project}}, \code{\link{Model}}, \code{\link{Forecast}},
-or \code{\link{UploadFileJob}} object. Refreshing is required when you've changed something on the server that would
-change what the API would return after the change. For example, creating a new Project on the site means the list
-that \code{\link{projects}} returns would be stale and need updating. You'll also need to refresh after changing an
-object's contents on the site, such as a model name or its forecasts. The API works this way, instead of
-auto-refresh, because the latter would require querying the server every time.}
+\title{update a resource}
 \usage{
 refresh(zoltar_resource, ...)
 }

@@ -2,8 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{new_model}
 \alias{new_model}
-\title{Constructor that returns a new \code{\link{Model}} object for a particular model's uri. Not normally called
-directly.}
+\title{make a new model (lower level function)}
 \usage{
 new_model(zoltar_connection, uri)
 }

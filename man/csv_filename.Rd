@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{csv_filename}
 \alias{csv_filename}
-\title{A \emph{getter} function that returns the csv_filename of the passed \code{\link{Forecast}}.}
+\title{get a forecast's csv_filename}
 \usage{
 csv_filename(forecast, ...)
 }

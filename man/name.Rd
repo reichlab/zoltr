@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{name}
 \alias{name}
-\title{A \emph{getter} function that returns the name of the passed \code{\link{Project}}.}
+\title{get a resource's name}
 \usage{
 name(project, ...)
 }

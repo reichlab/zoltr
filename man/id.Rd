@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{id}
 \alias{id}
-\title{A \emph{getter} function that returns the id of the passed \code{\link{Project}}, \code{\link{Model}}, or}
+\title{get a resource's id}
 \usage{
 id(zoltar_resource, ...)
 }

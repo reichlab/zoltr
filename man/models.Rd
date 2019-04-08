@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{models}
 \alias{models}
-\title{Returns a list of \code{\link{Model}} objects in the passed project.}
+\title{get a project's models}
 \usage{
 models(project, ...)
 }

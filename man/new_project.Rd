@@ -2,8 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{new_project}
 \alias{new_project}
-\title{Constructor that returns a new \code{\link{Project}} object for a particular project's uri. Not normally called
-directly - most users use the \code{\link{projects}} function.}
+\title{make a new project (lower level function)}
 \usage{
 new_project(zoltar_connection, uri)
 }

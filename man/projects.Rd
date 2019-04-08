@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{projects}
 \alias{projects}
-\title{Returns a list of \code{\link{Project}} objects, which are the starting point for working with the API.}
+\title{get a list of all projects}
 \usage{
 projects(zoltar_connection, ...)
 }

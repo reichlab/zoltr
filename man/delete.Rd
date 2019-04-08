@@ -2,9 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{delete}
 \alias{delete}
-\title{Deletes the passed \code{\link{Project}}, \code{\link{Model}}, or \code{\link{Forecast}} object. This is permanent
-and cannot be undone. Also, it will \emph{cascade} the delete to any related data in the database, such as what would
-happen when you delete a model, which would delete all of its forecasts and their data.}
+\title{delete a resource}
 \usage{
 delete(zoltar_resource, ...)
 }

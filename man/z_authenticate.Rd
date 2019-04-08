@@ -2,9 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{z_authenticate}
 \alias{z_authenticate}
-\title{Returns a new \code{\link{ZoltarConnection}} object, which is the starting point for working with the Zoltar API.
-Once you have the connection you can call z_authenticate() on it, and call projects() to get a list of objects to
-start working with.}
+\title{log in to a Zoltar host}
 \usage{
 z_authenticate(zoltar_connection, username, password, ...)
 }

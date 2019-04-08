@@ -2,10 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{output_json}
 \alias{output_json}
-\title{A \emph{getter} function that returns the output_json field of the passed \code{\link{UploadFileJob}}. This JSON
-is a 'catch call' data structure that contains output that varies according to the kind of upload that was done.
-Currently the only use is when uploading a forecast via \code{\link{upload_forecast}}, which results in a
-\code{forecast_pk} key of the new forecast.}
+\title{get an upload_file_job's output_json}
 \usage{
 output_json(upload_file_job, ...)
 }

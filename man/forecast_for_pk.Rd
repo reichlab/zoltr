@@ -2,10 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{forecast_for_pk}
 \alias{forecast_for_pk}
-\title{Utility function that returns the \code{\link{Forecast}} object with the passed primary key (AKA id). Used for
-example in the case where you've called \code{\link{upload_forecast}} to get an \code{\link{UploadFileJob}} object,
-from which you then want to obtain the newly-uploaded Forecast (see the demo app) - once the upload is successfully
-complete.}
+\title{get the forecast for an id}
 \usage{
 forecast_for_pk(model, forecast_pk, ...)
 }

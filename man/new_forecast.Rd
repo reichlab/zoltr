@@ -2,8 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{new_forecast}
 \alias{new_forecast}
-\title{Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's uri. Not normally called
-directly.}
+\title{make a new forecast (lower level function)}
 \usage{
 new_forecast(zoltar_connection, uri)
 }
