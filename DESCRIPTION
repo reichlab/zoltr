@@ -17,3 +17,4 @@ Imports:
     httr,
     jsonlite,
     readr
+RoxygenNote: 6.1.1
