@@ -65,12 +65,12 @@ json_for_url <- function(zoltar_connection, url, ...) {  # private
 }
 
 json_for_url.default <- function(zoltar_connection, url, ...) {
-  stopifnot(is(zoltar_connection$session, "ZoltarSession"))
+  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
   response <- httr::GET(url = url,
-                        accept_json(),
-                        add_headers("Authorization" = paste0("JWT ", zoltar_connection$session$token)))
-  stop_for_status(response)
-  json_content <- content(response, "parsed")
+                        httr::accept_json(),
+                        httr::add_headers("Authorization" = paste0("JWT ", zoltar_connection$session$token)))
+  httr::stop_for_status(response)
+  json_content <- httr::content(response, "parsed")
   json_content
 }
 
@@ -116,11 +116,11 @@ get_token <- function(zoltar_session, ...) {
 
 get_token.default <- function(zoltar_session, ...) {
   response <- httr::POST(url = paste0(zoltar_session$zoltar_connection$host, '/api-token-auth/'),
-                         accept_json(),
+                         httr::accept_json(),
                          body = list(username = zoltar_session$zoltar_connection$username,
                                      password = zoltar_session$zoltar_connection$password))
-  stop_for_status(response)
-  json_content <- content(response, "parsed")
+  httr::stop_for_status(response)
+  json_content <- httr::content(response, "parsed")
   token <- json_content$token
   token
 }
@@ -188,9 +188,9 @@ delete <- function(zoltar_resource, ...) {
 #' @export
 delete.default <- function(zoltar_resource, ...) {
   response <- httr::DELETE(url = zoltar_resource$url,
-                           accept_json(),
-                           add_headers("Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)))
-  stop_for_status(response)
+                           httr::accept_json(),
+                           httr::add_headers("Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)))
+  httr::stop_for_status(response)
 }
 
 
@@ -288,9 +288,9 @@ scores <- function(project, ...) {
 scores.default <- function(project, ...) {
   scores_url <- paste0(project$url, 'score_data/')
   response <- httr::GET(url = scores_url,
-                        add_headers("Authorization" = paste0("JWT ", project$zoltar_connection$session$token)))
-  stop_for_status(response)
-  content(response, encoding="UTF-8")
+                        httr::add_headers("Authorization" = paste0("JWT ", project$zoltar_connection$session$token)))
+  httr::stop_for_status(response)
+  httr::content(response, encoding="UTF-8")
 }
 
 
@@ -390,11 +390,11 @@ upload_forecast <- function(model, timezero_date, forecast_csv_file, ...) {
 post_forecast <- function(model, forecast_csv_file, timezero_date) {
   # upload_forecast() helper that enables testing
   response <- httr::POST(url = paste0(model$url, 'forecasts/'),
-                         add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
-                         body = list(data_file = upload_file(forecast_csv_file),
+                         httr::add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
+                         body = list(data_file = httr::upload_file(forecast_csv_file),
                                      timezero_date = timezero_date))
-  stop_for_status(response)
-  content(response, "parsed")
+  httr::stop_for_status(response)
+  httr::content(response, "parsed")
 }
 
 
@@ -444,10 +444,10 @@ forecast_data.default <- function(forecast, is_json=TRUE, ...) {
   } else {  # CSV
     # todo fix api_views.forecast_data() to use proper accept type rather than 'format' query parameter
     response <- httr::GET(url = data_url,
-                          add_headers("Authorization" = paste0("JWT ", forecast$zoltar_connection$session$token)),
+                          httr::add_headers("Authorization" = paste0("JWT ", forecast$zoltar_connection$session$token)),
                           query = list(format = "csv"))
-    stop_for_status(response)
-    content(response, encoding="UTF-8")
+    httr::stop_for_status(response)
+    httr::content(response, encoding="UTF-8")
   }
 }
 
