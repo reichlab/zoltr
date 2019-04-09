@@ -267,6 +267,24 @@ name.default <- function(project, ...) {
 }
 
 
+#' get a project's scores
+#'
+#' @return score data associated for all models in the passed \code{\link{Project}} object in CSV format
+#' @export
+scores <- function(project, ...) {
+  UseMethod("scores")
+}
+
+#' @export
+scores.default <- function(project, ...) {
+  scores_uri <- paste0(project$uri, 'score_data/')
+  response <- httr::GET(url = scores_uri,
+                        add_headers("Authorization" = paste0("JWT ", project$zoltar_connection$session$token)))
+  stop_for_status(response)
+  content(response)
+}
+
+
 #
 # Model class - ZoltarResource subclass
 #

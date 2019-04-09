@@ -1,5 +1,6 @@
 context("connection")
 library(jsonlite)
+library(zoltr)
 
 
 #
@@ -250,6 +251,27 @@ test_that("name(project) returns the name", {
 })
 
 
+# url(r'^project/(?P<project_pk>\d+)/score_data/$', api_views.score_data, name='api-score-data'),
+test_that("scores(project) returns the scores in a data frame", {
+  project_and_json <- mock_project()
+  the_project <- project_and_json[['project']]
+
+  called_args <- NULL
+  the_scores <- with_mock(
+    "httr::GET" = function(...) {
+      called_args <<- list(...)
+      load("scores_response.rda")  # 'scores_response' contains partial response from Impetus_Province_Forecasts-scores.csv
+      scores_response
+    },
+    scores(the_project))
+
+  expect_equal(called_args$url, "http://example.com/api/project/1/score_data/")
+  expect_equal(dim(the_scores), c(380, 10))
+  expect_equal(names(the_scores), c("model", "timezero", "season", "location", "target", "error", "abs_error",
+                                    "log_single_bin", "log_multi_bin", "pit"))
+})
+
+
 test_that("forecasts(model) returns a list of Forecast objects", {
   # note that model-1.json has three 'forecasts' entries, but only one of those has a non-null "forecast" (a URI)
   model_and_json <- mock_model()
@@ -303,7 +325,7 @@ test_that("upload_forecast(model) returns an UploadFileJob object, with correct 
 })
 
 
-test_that("data(forecast) returns JSON data", {
+test_that("data(forecast) returns JSON data as a list", {
   # to test json format we simply test that json_for_uri() is called with the correct URI
   forecast_and_json <- mock_forecast()
   the_forecast <- forecast_and_json[['forecast']]
@@ -320,7 +342,7 @@ test_that("data(forecast) returns JSON data", {
 })
 
 
-test_that("data(forecast) returns CSV data", {
+test_that("data(forecast) returns CSV data as a data frame", {
   forecast_and_json <- mock_forecast()
   the_forecast <- forecast_and_json[['forecast']]
 

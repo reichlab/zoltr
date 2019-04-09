@@ -45,7 +45,7 @@ for (project in the_projects) {
 
 # print a particular project's models
 cond <- sapply(the_projects, function(project) name(project) == "public project")
-project <- if (any(cond))the_projects[cond][[1]] else NULL
+project <- if (any(cond)) the_projects[cond][[1]] else NULL
 the_models <- models(project)
 cat(paste0("* models in " , project$uri, "\n"))
 for (model in the_models) {
