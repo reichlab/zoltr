@@ -7,11 +7,13 @@
 projects(zoltar_connection, ...)
 }
 \arguments{
-\item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+
+\item{...}{ignored}
 }
 \value{
-a list of \code{\link{Project}} objects
+a list of Project objects
 }
 \description{
-Returns a list of \code{\link{Project}} objects, which are the starting point for working with the API.
+Returns a list of Project objects, which are the starting point for working with the API.
 }

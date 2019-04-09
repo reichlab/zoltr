@@ -7,14 +7,14 @@
 new_model(zoltar_connection, url)
 }
 \arguments{
-\item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
 \item{url}{host address of the Model, e.g., \emph{http://example.com/api/model/1/}.}
 }
 \value{
-a \code{\link{Model}} object
+a Model object
 }
 \description{
-Constructor that returns a new \code{\link{Model}} object for a particular model's url. Not normally called
+Constructor that returns a new Model object for a particular model's url. Not normally called
 directly.
 }

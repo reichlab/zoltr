@@ -7,14 +7,14 @@
 new_project(zoltar_connection, url)
 }
 \arguments{
-\item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
 \item{url}{host address of the Project, e.g., \emph{http://example.com/api/project/1/}.}
 }
 \value{
-a \code{\link{Project}} object
+a Project object
 }
 \description{
-Constructor that returns a new \code{\link{Project}} object for a particular project's url. Not normally called
+Constructor that returns a new Project object for a particular project's url. Not normally called
 directly - most users use the \code{\link{projects}} function.
 }

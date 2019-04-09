@@ -7,14 +7,14 @@
 new_forecast(zoltar_connection, url)
 }
 \arguments{
-\item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
 \item{url}{host address of the Forecast, e.g., \emph{http://example.com/api/forecast/71/}.}
 }
 \value{
-a \code{\link{Forecast}} object
+a Forecast object
 }
 \description{
-Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's url. Not normally called
+Constructor that returns a new Forecast object for a particular forecast's url. Not normally called
 directly.
 }

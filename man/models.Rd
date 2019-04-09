@@ -7,11 +7,13 @@
 models(project, ...)
 }
 \arguments{
-\item{project}{a \code{\link{Project}} object}
+\item{project}{a Project object}
+
+\item{...}{ignored}
 }
 \value{
-a list of \code{\link{Model}} objects
+a list of Model objects
 }
 \description{
-Returns a list of \code{\link{Model}} objects in the passed project.
+Returns a list of Model objects in the passed project.
 }

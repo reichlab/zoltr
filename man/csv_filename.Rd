@@ -7,11 +7,13 @@
 csv_filename(forecast, ...)
 }
 \arguments{
-\item{forecast}{a \code{\link{Forecast}} object}
+\item{forecast}{a Forecast object}
+
+\item{...}{ignored}
 }
 \value{
 filename string
 }
 \description{
-A \emph{getter} function that returns the csv_filename of the passed \code{\link{Forecast}}.
+A \emph{getter} function that returns the csv_filename of the passed Forecast.
 }

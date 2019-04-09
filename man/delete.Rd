@@ -8,12 +8,14 @@ delete(zoltar_resource, ...)
 }
 \arguments{
 \item{zoltar_resource}{the object to refresh}
+
+\item{...}{ignored}
 }
 \value{
 none
 }
 \description{
-Deletes the passed \code{\link{Project}}, \code{\link{Model}}, or \code{\link{Forecast}} object. This is permanent
+Deletes the passed Project, Model, or Forecast object. This is permanent
 and cannot be undone. Also, it will \emph{cascade} the delete to any related data in the database, such as what would
 happen when you delete a model, which would delete all of its forecasts and their data.
 }

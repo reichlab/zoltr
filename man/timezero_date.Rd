@@ -7,11 +7,13 @@
 timezero_date(forecast, ...)
 }
 \arguments{
-\item{forecast}{a \code{\link{Forecast}} object}
+\item{forecast}{a Forecast object}
+
+\item{...}{ignored}
 }
 \value{
-string formatted as \code{YYYYMMDD}
+string formatted as YYYYMMDD
 }
 \description{
-A \emph{getter} function that returns the timezero_date of the passed \code{\link{Forecast}}.
+A \emph{getter} function that returns the timezero_date of the passed Forecast.
 }

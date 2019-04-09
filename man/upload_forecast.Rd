@@ -7,17 +7,19 @@
 upload_forecast(model, timezero_date, forecast_csv_file, ...)
 }
 \arguments{
-\item{model}{a \code{Model} object}
+\item{model}{a Model object}
 
-\item{timezero_date}{the date of the project timezero you are uploading for. it is a string in format \code{YYYYMMDD}}
+\item{timezero_date}{the date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
 \item{forecast_csv_file}{a CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}}
+
+\item{...}{ignored}
 }
 \value{
-the \code{\link{UploadFileJob}} object for the upload process
+the UploadFileJob object for the upload process
 }
 \description{
-Function submits a forecast file to the server for uploading. returns an \code{\link{UploadFileJob}} object that can
+Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
 be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
 turn comes up, which depends on the number of current uploads in the queue.)
 }

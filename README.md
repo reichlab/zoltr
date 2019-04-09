@@ -6,7 +6,7 @@ API.
 
 ## todo
 - add UploadFileJob getter for: upload_file_job$json$output_json$forecast_pk
-- document data() return formats - JSON, CSV
+- document forecast_data() return formats - JSON, CSV
 - add function documentation - http://r-pkgs.had.co.nz/man.html#man-functions
 - think getters that just go directly to json - id(), name(), etc. E.g., get_attribute(zoltar_resource, attr_name).
   then include a table of all defined classes and their attributes

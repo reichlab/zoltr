@@ -1,3 +1,5 @@
 ^LICENSE\.md$
 ^zoltr\.Rproj$
 ^\.Rproj\.user$
+^\.idea$
+^zoltr\.iml$

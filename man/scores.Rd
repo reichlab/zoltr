@@ -6,8 +6,13 @@
 \usage{
 scores(project, ...)
 }
+\arguments{
+\item{project}{the Project to get the id of}
+
+\item{...}{ignored}
+}
 \value{
-score data associated for all models in the passed \code{\link{Project}} object in CSV format
+score data associated for all models in the passed Project object in CSV format
 }
 \description{
 get a project's scores

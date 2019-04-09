@@ -7,17 +7,19 @@
 forecast_for_pk(model, forecast_pk, ...)
 }
 \arguments{
-\item{model}{a \code{Model} object}
+\item{model}{a Model object}
 
 \item{forecast_pk}{the id of a forecast on the host. for example, the id for the model with the url
 \emph{http://example.com/api/forecast/71/} is 71.}
+
+\item{...}{ignored}
 }
 \value{
-a \code{\link{Forecast}} object
+a Forecast object
 }
 \description{
-Utility function that returns the \code{\link{Forecast}} object with the passed primary key (AKA id). Used for
-example in the case where you've called \code{\link{upload_forecast}} to get an \code{\link{UploadFileJob}} object,
+Utility function that returns the Forecast object with the passed primary key (AKA id). Used for
+example in the case where you've called \code{\link{upload_forecast}} to get an UploadFileJob object,
 from which you then want to obtain the newly-uploaded Forecast (see the demo app) - once the upload is successfully
 complete.
 }

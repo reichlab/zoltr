@@ -100,10 +100,10 @@ for (forecast in the_forecasts) {
 # get its data
 cat(paste0("* data for forecast: ", the_new_forecast$url, "\n"))
 
-data_json <- data(the_new_forecast, is_json=TRUE)
+data_json <- forecast_data(the_new_forecast, is_json=TRUE)
 cat(paste0("- data_json: # metadata: ", length(data_json$metadata), ", # locations: ", length(data_json$locations), "\n"))
 # str(data_json)
 
-data_csv <- data(the_new_forecast, is_json=FALSE)
+data_csv <- forecast_data(the_new_forecast, is_json=FALSE)
 cat(paste0("- data_csv:\n"))
 str(data_csv)

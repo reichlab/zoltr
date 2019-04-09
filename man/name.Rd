@@ -7,11 +7,13 @@
 name(project, ...)
 }
 \arguments{
-\item{zoltar_resource}{the object to get the id of}
+\item{project}{the Project to get the id of}
+
+\item{...}{ignored}
 }
 \value{
 none
 }
 \description{
-A \emph{getter} function that returns the name of the passed \code{\link{Project}}.
+A \emph{getter} function that returns the name of the passed Project.
 }

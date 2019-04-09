@@ -8,10 +8,12 @@ id(zoltar_resource, ...)
 }
 \arguments{
 \item{zoltar_resource}{the object to get the id of}
+
+\item{...}{ignored}
 }
 \value{
 none
 }
 \description{
-A \emph{getter} function that returns the id of the passed \code{\link{Project}}, \code{\link{Model}}, or
+A \emph{getter} function that returns the id of the passed Project, Model, or
 }

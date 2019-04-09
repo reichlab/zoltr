@@ -10,9 +10,9 @@ library(readr)  # apparently required by httr
 #'
 #' Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
 #' connection you can call \code{\link{z_authenticate}} on it, and then call \code{\link{projects}} to get a list of
-#' \code{\link{Project}} objects to start working with.
+#' Project objects to start working with.
 #'
-#' @return a \code{\link{ZoltarConnection}} object
+#' @return a ZoltarConnection object
 #' @param host The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}
 #' @export
 new_connection <- function(host = "zoltardata.com") {
@@ -26,26 +26,27 @@ new_connection <- function(host = "zoltardata.com") {
 
 
 #' @export
-print.ZoltarConnection <- function(zoltar_connection, ...) {
-  cat(class(zoltar_connection), " ",
-  zoltar_connection$host,
-  ". username, password=", if (is.null(zoltar_connection$username)) "<no username>" else zoltar_connection$username,
-  ", ", if (is.null(zoltar_connection$password)) "<no password>" else zoltar_connection$password,
-  ". session=", if (is.null(zoltar_connection$session)) "<no session>" else zoltar_connection$session$token,
+print.ZoltarConnection <- function(x, ...) {  # x is a ZoltarConnection
+  cat(class(x), " ",
+  x$host,
+  ". username, password=", if (is.null(x$username)) "<no username>" else x$username,
+  ", ", if (is.null(x$password)) "<no password>" else x$password,
+  ". session=", if (is.null(x$session)) "<no session>" else x$session$token,
   "\n", sep='')
 }
 
 
 #' log in to a Zoltar host
 #'
-#' Returns a new \code{\link{ZoltarConnection}} object, which is the starting point for working with the Zoltar API.
+#' Returns a new ZoltarConnection object, which is the starting point for working with the Zoltar API.
 #' Once you have the connection you can call z_authenticate() on it, and call projects() to get a list of objects to
 #' start working with.
 #'
 #' @return none
-#' @param zoltar_connection a \code{\link{ZoltarConnection}} object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection a ZoltarConnection object as returned by \code{\link{new_connection}}
 #' @param username username for the account to use on the connection's host
 #' @param password password ""
+#' @param ... ignored
 #' @export
 z_authenticate <- function(zoltar_connection, username, password, ...) {
   UseMethod("z_authenticate")
@@ -76,10 +77,11 @@ json_for_url.default <- function(zoltar_connection, url, ...) {
 
 #' get a list of all projects
 #'
-#' Returns a list of \code{\link{Project}} objects, which are the starting point for working with the API.
+#' Returns a list of Project objects, which are the starting point for working with the API.
 #'
-#' @return a list of \code{\link{Project}} objects
-#' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
+#' @return a list of Project objects
+#' @param zoltar_connection a ZoltarConnection object as returned by \code{\link{new_connection}}
+#' @param ... ignored
 #' @export
 projects <- function(zoltar_connection, ...) {
   UseMethod("projects")
@@ -148,8 +150,8 @@ print.ZoltarResource <- function(zoltar_resource, ...) {
 
 #' update a resource
 #'
-#' Updates the internal (JSON) data associated with a \code{\link{Project}}, \code{\link{Model}}, \code{\link{Forecast}},
-#' or \code{\link{UploadFileJob}} object. Refreshing is required when you've changed something on the server that would
+#' Updates the internal (JSON) data associated with a Project, Model, Forecast,
+#' or UploadFileJob object. Refreshing is required when you've changed something on the server that would
 #' change what the API would return after the change. For example, creating a new Project on the site means the list
 #' that \code{\link{projects}} returns would be stale and need updating. You'll also need to refresh after changing an
 #' object's contents on the site, such as a model name or its forecasts. The API works this way, instead of
@@ -157,6 +159,7 @@ print.ZoltarResource <- function(zoltar_resource, ...) {
 #'
 #' @return none
 #' @param zoltar_resource the object to refresh
+#' @param ... ignored
 #' @export
 refresh <- function(zoltar_resource, ...) {
   UseMethod("refresh")
@@ -170,12 +173,13 @@ refresh.default <- function(zoltar_resource, ...) {
 
 #' delete a resource
 #'
-#' Deletes the passed \code{\link{Project}}, \code{\link{Model}}, or \code{\link{Forecast}} object. This is permanent
+#' Deletes the passed Project, Model, or Forecast object. This is permanent
 #' and cannot be undone. Also, it will \emph{cascade} the delete to any related data in the database, such as what would
 #' happen when you delete a model, which would delete all of its forecasts and their data.
 #'
 #' @return none
 #' @param zoltar_resource the object to refresh
+#' @param ... ignored
 #' @export
 delete <- function(zoltar_resource, ...) {
   UseMethod("delete")
@@ -192,11 +196,12 @@ delete.default <- function(zoltar_resource, ...) {
 
 #' get a resource's id
 #'
-#' A \emph{getter} function that returns the id of the passed \code{\link{Project}}, \code{\link{Model}}, or
-# \code{\link{Forecast}} object.
+#' A \emph{getter} function that returns the id of the passed Project, Model, or
+# Forecast object.
 #'
 #' @return none
 #' @param zoltar_resource the object to get the id of
+#' @param ... ignored
 #' @export
 id <- function(zoltar_resource, ...) {
   UseMethod("id")
@@ -214,11 +219,11 @@ id.default <- function(zoltar_resource, ...) {
 
 #' make a new project (lower level function)
 #'
-#' Constructor that returns a new \code{\link{Project}} object for a particular project's url. Not normally called
+#' Constructor that returns a new Project object for a particular project's url. Not normally called
 #' directly - most users use the \code{\link{projects}} function.
 #'
-#' @return a \code{\link{Project}} object
-#' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
+#' @return a Project object
+#' @param zoltar_connection a ZoltarConnection object as returned by \code{\link{new_connection}}
 #' @param url host address of the Project, e.g., \emph{http://example.com/api/project/1/}.
 #' @export
 new_project <- function(zoltar_connection, url) {
@@ -230,10 +235,11 @@ new_project <- function(zoltar_connection, url) {
 
 #' get a project's models
 #'
-#' Returns a list of \code{\link{Model}} objects in the passed project.
+#' Returns a list of Model objects in the passed project.
 #'
-#' @return a list of \code{\link{Model}} objects
-#' @param project a \code{\link{Project}} object
+#' @return a list of Model objects
+#' @param project a Project object
+#' @param ... ignored
 #' @export
 models <- function(project, ...) {
   UseMethod("models")
@@ -252,10 +258,11 @@ models.default <- function(project, ...) {
 
 #' get a resource's name
 #'
-#' A \emph{getter} function that returns the name of the passed \code{\link{Project}}.
+#' A \emph{getter} function that returns the name of the passed Project.
 #'
 #' @return none
-#' @param zoltar_resource the object to get the id of
+#' @param project the Project to get the id of
+#' @param ... ignored
 #' @export
 name <- function(project, ...) {
   UseMethod("name")
@@ -269,7 +276,9 @@ name.default <- function(project, ...) {
 
 #' get a project's scores
 #'
-#' @return score data associated for all models in the passed \code{\link{Project}} object in CSV format
+#' @return score data associated for all models in the passed Project object in CSV format
+#' @param project the Project to get the id of
+#' @param ... ignored
 #' @export
 scores <- function(project, ...) {
   UseMethod("scores")
@@ -291,11 +300,11 @@ scores.default <- function(project, ...) {
 
 #' make a new model (lower level function)
 #'
-#' Constructor that returns a new \code{\link{Model}} object for a particular model's url. Not normally called
+#' Constructor that returns a new Model object for a particular model's url. Not normally called
 #' directly.
 #'
-#' @return a \code{\link{Model}} object
-#' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
+#' @return a Model object
+#' @param zoltar_connection a ZoltarConnection object as returned by \code{\link{new_connection}}
 #' @param url host address of the Model, e.g., \emph{http://example.com/api/model/1/}.
 #' @export
 new_model <- function(zoltar_connection, url) {
@@ -307,8 +316,9 @@ new_model <- function(zoltar_connection, url) {
 
 #' get a model's forecasts
 #'
-#' @return a list of \code{\link{Forecast}} objects in the passed model.
-#' @param model a \code{Model} object
+#' @return a list of Forecast objects in the passed model.
+#' @param model a Model object
+#' @param ... ignored
 #' @export
 forecasts <- function(model, ...) {
   UseMethod("forecasts")
@@ -338,15 +348,16 @@ forecasts.default <- function(model, ...) {
 
 #' get the forecast for an id
 #'
-#' Utility function that returns the \code{\link{Forecast}} object with the passed primary key (AKA id). Used for
-#' example in the case where you've called \code{\link{upload_forecast}} to get an \code{\link{UploadFileJob}} object,
+#' Utility function that returns the Forecast object with the passed primary key (AKA id). Used for
+#' example in the case where you've called \code{\link{upload_forecast}} to get an UploadFileJob object,
 #' from which you then want to obtain the newly-uploaded Forecast (see the demo app) - once the upload is successfully
 #' complete.
 #'
-#' @return a \code{\link{Forecast}} object
-#' @param model a \code{Model} object
+#' @return a Forecast object
+#' @param model a Model object
 #' @param forecast_pk the id of a forecast on the host. for example, the id for the model with the url
 #'   \emph{http://example.com/api/forecast/71/} is 71.
+#' @param ... ignored
 #' @export
 forecast_for_pk <- function(model, forecast_pk, ...) {
   UseMethod("forecast_for_pk")
@@ -361,14 +372,15 @@ forecast_for_pk.default <- function(model, forecast_pk, ...) {
 
 #' upload a forecast
 #'
-#' Function submits a forecast file to the server for uploading. returns an \code{\link{UploadFileJob}} object that can
+#' Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
 #' be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
 #' turn comes up, which depends on the number of current uploads in the queue.)
 #'
-#' @return the \code{\link{UploadFileJob}} object for the upload process
-#' @param model a \code{Model} object
-#' @param timezero_date the date of the project timezero you are uploading for. it is a string in format \code{YYYYMMDD}
+#' @return the UploadFileJob object for the upload process
+#' @param model a Model object
+#' @param timezero_date the date of the project timezero you are uploading for. it is a string in format YYYYMMDD
 #' @param forecast_csv_file a CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
+#' @param ... ignored
 #' @export
 upload_forecast <- function(model, timezero_date, forecast_csv_file, ...) {
   UseMethod("upload_forecast")
@@ -399,11 +411,11 @@ upload_forecast.default <- function(model, timezero_date, forecast_csv_file, ...
 
 #' make a new forecast (lower level function)
 #'
-#' Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's url. Not normally called
+#' Constructor that returns a new Forecast object for a particular forecast's url. Not normally called
 #' directly.
 #'
-#' @return a \code{\link{Forecast}} object
-#' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
+#' @return a Forecast object
+#' @param zoltar_connection a ZoltarConnection object as returned by \code{\link{new_connection}}
 #' @param url host address of the Forecast, e.g., \emph{http://example.com/api/forecast/71/}.
 #' @export
 new_forecast <- function(zoltar_connection, url) {
@@ -415,15 +427,17 @@ new_forecast <- function(zoltar_connection, url) {
 
 #' get a forecast's data
 #'
-#' @return forecast data associated with the passed \code{\link{Forecast}} object based on the requested format
+#' @return forecast data associated with the passed Forecast object based on the requested format
+#' @param forecast a Forecast object
 #' @param is_json a boolean specifying whether the forecast is in JSON (the default) or CSV format
+#' @param ... ignored
 #' @export
-data <- function(forecast, is_json=TRUE, ...) {
-  UseMethod("data")
+forecast_data <- function(forecast, is_json=TRUE, ...) {
+  UseMethod("forecast_data")
 }
 
 #' @export
-data.default <- function(forecast, is_json=TRUE, ...) {
+forecast_data.default <- function(forecast, is_json=TRUE, ...) {
   data_url <- forecast$json$forecast_data
   if (is_json) {
     json_for_url(forecast$zoltar_connection, data_url)
@@ -440,10 +454,11 @@ data.default <- function(forecast, is_json=TRUE, ...) {
 
 #' get a forecast's timezero_date
 #'
-#' A \emph{getter} function that returns the timezero_date of the passed \code{\link{Forecast}}.
+#' A \emph{getter} function that returns the timezero_date of the passed Forecast.
 #'
-#' @return string formatted as \code{YYYYMMDD}
-#' @param forecast a \code{\link{Forecast}} object
+#' @return string formatted as YYYYMMDD
+#' @param forecast a Forecast object
+#' @param ... ignored
 #' @export
 timezero_date <- function(forecast, ...) {
   UseMethod("timezero_date")
@@ -457,10 +472,11 @@ timezero_date.default <- function(forecast, ...) {
 
 #' get a forecast's csv_filename
 #'
-#' A \emph{getter} function that returns the csv_filename of the passed \code{\link{Forecast}}.
+#' A \emph{getter} function that returns the csv_filename of the passed Forecast.
 #'
 #' @return filename string
-#' @param forecast a \code{\link{Forecast}} object
+#' @param forecast a Forecast object
+#' @param ... ignored
 #' @export
 csv_filename <- function(forecast, ...) {
   UseMethod("csv_filename")
@@ -485,10 +501,11 @@ new_upload_file_job <- function(zoltar_connection, url) {
 
 #' get an upload_file_job's int status as a string
 #'
-#' @return the passed \code{\link{UploadFileJob}}'s status as a human-readable string (rather than the internal int).
+#' @return the passed UploadFileJob's status as a human-readable string (rather than the internal int).
 #'  the possible values are: "PENDING", "CLOUD_FILE_UPLOADED", "QUEUED", "CLOUD_FILE_DOWNLOADED", "SUCCESS", or
 #'  "FAILED".
-#' @param upload_file_job an \code{\link{UploadFileJob}} object
+#' @param upload_file_job an UploadFileJob object
+#' @param ... ignored
 #' @export
 status_as_str <- function(upload_file_job, ...) {
   UseMethod("status_as_str")
@@ -506,13 +523,14 @@ status_as_str.default <- function(upload_file_job, ...) {
 
 #' get an upload_file_job's output_json
 #'
-#' A \emph{getter} function that returns the output_json field of the passed \code{\link{UploadFileJob}}. This JSON
+#' A \emph{getter} function that returns the output_json field of the passed UploadFileJob. This JSON
 #' is a 'catch call' data structure that contains output that varies according to the kind of upload that was done.
 #' Currently the only use is when uploading a forecast via \code{\link{upload_forecast}}, which results in a
 #' \code{forecast_pk} key of the new forecast.
 #'
 #' @return output_json field (JSON) as a string
-#' @param upload_file_job a \code{\link{UploadFileJob}} object
+#' @param upload_file_job a UploadFileJob object
+#' @param ... ignored
 #' @export
 output_json <- function(upload_file_job, ...) {
   UseMethod("output_json")

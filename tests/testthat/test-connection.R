@@ -1,5 +1,6 @@
 context("connection")
 library(jsonlite)
+library(httr)
 library(zoltr)
 
 
@@ -16,7 +17,7 @@ mock_token <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwi
 
 mock_authenticate <- function(zoltar_connection) {
   with_mock(
-  "get_token" = function(...) {
+  "zoltr::get_token" = function(...) {
     mock_token
   },
   z_authenticate(zoltar_connection, "username", "password"))
@@ -29,7 +30,7 @@ mock_project <- function() {
   mock_authenticate(zoltar_connection)
   project1_json <- two_projects_json[[1]]
   project1 <- with_mock(
-  "json_for_url" = function(...) {
+  "zoltr::json_for_url" = function(...) {
       project1_json
     },
     new_project(zoltar_connection, project1_json$url))
@@ -43,7 +44,7 @@ mock_model <- function() {
   mock_authenticate(zoltar_connection)
   model1_json <- jsonlite::read_json("model-1.json")
   model1 <- with_mock(
-    "json_for_url" = function(...) {
+    "zoltr::json_for_url" = function(...) {
       model1_json
     },
     new_model(zoltar_connection, model1_json$url))
@@ -57,7 +58,7 @@ mock_forecast <- function() {
   mock_authenticate(zoltar_connection)
   forecast_json <- jsonlite::read_json("forecast-71.json")
   the_forecast <- with_mock(
-    "json_for_url" = function(...) {
+    "zoltr::json_for_url" = function(...) {
       forecast_json
     },
   new_forecast(zoltar_connection, forecast_json$url))
@@ -75,7 +76,7 @@ test_that("functions calling constructors should pass correct urls to new_resour
   mock_authenticate(zoltar_connection)
   called_urls <- list()
   the_projects <- with_mock(
-    "json_for_url" = function(zoltar_connection, url, ...) {
+    "zoltr::json_for_url" = function(zoltar_connection, url, ...) {
       called_urls <<- append(called_urls, url)
       two_projects_json
     },
@@ -93,7 +94,7 @@ test_that("functions calling constructors should pass correct urls to new_resour
   the_project <- project_and_json[['project']]
   called_urls <- list()
   with_mock(
-    "json_for_url" = function(zoltar_connection, url, ...) {
+    "zoltr::json_for_url" = function(zoltar_connection, url, ...) {
       called_urls <<- append(called_urls, url)
     },
     models(the_project))
@@ -109,7 +110,7 @@ test_that("functions calling constructors should pass correct urls to new_resour
   the_model <- model_and_json[['model']]
   called_urls <- list()
   with_mock(
-    "json_for_url" = function(zoltar_connection, url, ...) {
+    "zoltr::json_for_url" = function(zoltar_connection, url, ...) {
       called_urls <<- append(called_urls, url)
     },
     forecasts(the_model))
@@ -120,7 +121,7 @@ test_that("functions calling constructors should pass correct urls to new_resour
   # forecast_for_pk()
   called_urls <- list()
   with_mock(
-    "json_for_url" = function(zoltar_connection, url, ...) {
+    "zoltr::json_for_url" = function(zoltar_connection, url, ...) {
       called_urls <<- append(called_urls, url)
     },
     forecast_for_pk(the_model, 71))  # forecast_pk from model1_json$forecasts[[2]]$forecast
@@ -132,11 +133,11 @@ test_that("functions calling constructors should pass correct urls to new_resour
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
   called_urls <- list()
   with_mock(
-    "post_forecast" = function(...) {
+    "zoltr::post_forecast" = function(...) {
       upload_file_job_json
     },
     with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
-    "json_for_url" = function(zoltar_connection, url, ...) {
+    "zoltr::json_for_url" = function(zoltar_connection, url, ...) {
         called_urls <<- append(called_urls, url)
       },
       upload_forecast(the_model, NULL, NULL)  # timezero_date, forecast_csv_file
@@ -178,7 +179,7 @@ test_that("post_forecast() passes correct url to POST()", {
         load("upload_response.rda")  # 'upload_response' contains response from sample upload_forecast() call
         upload_response
       },
-    post_forecast(the_model, NULL, NULL))  # timezero_date, forecast_csv_file
+    zoltr:::post_forecast(the_model, NULL, NULL))  # timezero_date, forecast_csv_file
   )
 
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
@@ -209,7 +210,7 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
   the_projects <- with_mock(
-    "json_for_url" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
+    "zoltr::json_for_url" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
       two_projects_json
     },
     projects(zoltar_connection))
@@ -307,11 +308,11 @@ test_that("upload_forecast(model) returns an UploadFileJob object, with correct 
   the_model <- model_and_json[['model']]
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
   the_upload_file_job <- with_mock(
-    "post_forecast" = function(...) {
+    "zoltr::post_forecast" = function(...) {
       upload_file_job_json
     },
     with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
-      "json_for_url" = function(...) {
+      "zoltr::json_for_url" = function(...) {
         upload_file_job_json
       },
       upload_forecast(the_model, NULL, NULL)  # timezero_date, forecast_csv_file
@@ -325,24 +326,24 @@ test_that("upload_forecast(model) returns an UploadFileJob object, with correct 
 })
 
 
-test_that("data(forecast) returns JSON data as a list", {
+test_that("forecast_data(forecast) returns JSON data as a list", {
   # to test json format we simply test that json_for_url() is called with the correct url
   forecast_and_json <- mock_forecast()
   the_forecast <- forecast_and_json[['forecast']]
 
   called_url <- NULL
   the_data <- with_mock(
-    "json_for_url" = function(zoltar_connection, url, ...) {
+    "zoltr::json_for_url" = function(zoltar_connection, url, ...) {
       called_url <<- url
       NULL  # don't care about return value
     },
-    data(the_forecast, is_json=TRUE))
+    forecast_data(the_forecast, is_json=TRUE))
 
   expect_equal(called_url, "http://example.com/api/forecast/71/data/")
 })
 
 
-test_that("data(forecast) returns CSV data as a data frame", {
+test_that("forecast_data(forecast) returns CSV data as a data frame", {
   forecast_and_json <- mock_forecast()
   the_forecast <- forecast_and_json[['forecast']]
 
@@ -353,7 +354,7 @@ test_that("data(forecast) returns CSV data as a data frame", {
       load("data_response.rda")  # 'data_response' contains response from EW1-KoTsarima-2017-01-17-small.csv
       data_response
     },
-    data(the_forecast, is_json=FALSE))
+    forecast_data(the_forecast, is_json=FALSE))
 
   expect_equal(called_args$url, "http://example.com/api/forecast/71/data/")
   expect_equal(dim(the_data), c(154, 7))

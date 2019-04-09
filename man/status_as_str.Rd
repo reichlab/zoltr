@@ -7,10 +7,12 @@
 status_as_str(upload_file_job, ...)
 }
 \arguments{
-\item{upload_file_job}{an \code{\link{UploadFileJob}} object}
+\item{upload_file_job}{an UploadFileJob object}
+
+\item{...}{ignored}
 }
 \value{
-the passed \code{\link{UploadFileJob}}'s status as a human-readable string (rather than the internal int).
+the passed UploadFileJob's status as a human-readable string (rather than the internal int).
  the possible values are: "PENDING", "CLOUD_FILE_UPLOADED", "QUEUED", "CLOUD_FILE_DOWNLOADED", "SUCCESS", or
  "FAILED".
 }

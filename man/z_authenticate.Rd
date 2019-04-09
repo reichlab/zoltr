@@ -7,17 +7,19 @@
 z_authenticate(zoltar_connection, username, password, ...)
 }
 \arguments{
-\item{zoltar_connection}{a \code{\link{ZoltarConnection}} object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
 \item{username}{username for the account to use on the connection's host}
 
 \item{password}{password ""}
+
+\item{...}{ignored}
 }
 \value{
 none
 }
 \description{
-Returns a new \code{\link{ZoltarConnection}} object, which is the starting point for working with the Zoltar API.
+Returns a new ZoltarConnection object, which is the starting point for working with the Zoltar API.
 Once you have the connection you can call z_authenticate() on it, and call projects() to get a list of objects to
 start working with.
 }

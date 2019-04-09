@@ -7,13 +7,15 @@
 output_json(upload_file_job, ...)
 }
 \arguments{
-\item{upload_file_job}{a \code{\link{UploadFileJob}} object}
+\item{upload_file_job}{a UploadFileJob object}
+
+\item{...}{ignored}
 }
 \value{
 output_json field (JSON) as a string
 }
 \description{
-A \emph{getter} function that returns the output_json field of the passed \code{\link{UploadFileJob}}. This JSON
+A \emph{getter} function that returns the output_json field of the passed UploadFileJob. This JSON
 is a 'catch call' data structure that contains output that varies according to the kind of upload that was done.
 Currently the only use is when uploading a forecast via \code{\link{upload_forecast}}, which results in a
 \code{forecast_pk} key of the new forecast.

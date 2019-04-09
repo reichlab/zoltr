@@ -7,10 +7,12 @@
 forecasts(model, ...)
 }
 \arguments{
-\item{model}{a \code{Model} object}
+\item{model}{a Model object}
+
+\item{...}{ignored}
 }
 \value{
-a list of \code{\link{Forecast}} objects in the passed model.
+a list of Forecast objects in the passed model.
 }
 \description{
 get a model's forecasts
