@@ -1,5 +1,4 @@
-setwd(getSrcDirectory(function(x) {x}))
-source("connection.r", chdir = TRUE)
+library(zoltr)
 
 
 #
