@@ -4,17 +4,17 @@
 \alias{new_model}
 \title{make a new model (lower level function)}
 \usage{
-new_model(zoltar_connection, uri)
+new_model(zoltar_connection, url)
 }
 \arguments{
 \item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
 
-\item{uri}{host address of the Model, e.g., \emph{http://example.com/api/model/1/}.}
+\item{url}{host address of the Model, e.g., \emph{http://example.com/api/model/1/}.}
 }
 \value{
 a \code{\link{Model}} object
 }
 \description{
-Constructor that returns a new \code{\link{Model}} object for a particular model's uri. Not normally called
+Constructor that returns a new \code{\link{Model}} object for a particular model's url. Not normally called
 directly.
 }

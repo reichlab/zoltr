@@ -59,13 +59,13 @@ z_authenticate.default <- function(zoltar_connection, username, password, ...) {
 }
 
 
-json_for_uri <- function(zoltar_connection, uri, ...) {  # private
-  UseMethod("json_for_uri")
+json_for_url <- function(zoltar_connection, url, ...) {  # private
+  UseMethod("json_for_url")
 }
 
-json_for_uri.default <- function(zoltar_connection, uri, ...) {
+json_for_url.default <- function(zoltar_connection, url, ...) {
   stopifnot(is(zoltar_connection$session, "ZoltarSession"))
-  response <- httr::GET(url = uri,
+  response <- httr::GET(url = url,
                         accept_json(),
                         add_headers("Authorization" = paste0("JWT ", zoltar_connection$session$token)))
   stop_for_status(response)
@@ -87,7 +87,7 @@ projects <- function(zoltar_connection, ...) {
 
 #' @export
 projects.default <- function(zoltar_connection, ...) {
-  projects_json <- json_for_uri(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
+  projects_json <- json_for_url(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
   projects <- lapply(projects_json,
     function(project_json) {
       new_project(zoltar_connection, project_json$url)
@@ -128,10 +128,10 @@ get_token.default <- function(zoltar_session, ...) {
 # ZoltarResource abstract class. used internally only
 #
 
-new_resource <- function(zoltar_connection, uri) {
+new_resource <- function(zoltar_connection, url) {
   self <- structure(environment(), class = "ZoltarResource")
   zoltar_connection <- zoltar_connection
-  uri <- uri
+  url <- url
   json <- NULL
   refresh(self)  # update json
   self
@@ -140,7 +140,7 @@ new_resource <- function(zoltar_connection, uri) {
 
 print.ZoltarResource <- function(zoltar_resource, ...) {
   cat(class(zoltar_resource)[1], " ",
-  zoltar_resource$uri, " ",
+  zoltar_resource$url, " ",
   if (is.null(zoltar_resource$json)) "<no JSON>" else paste0("len=", length(zoltar_resource$json)),
   "\n", sep='')
 }
@@ -164,7 +164,7 @@ refresh <- function(zoltar_resource, ...) {
 
 #' @export
 refresh.default <- function(zoltar_resource, ...) {
-  zoltar_resource$json <- json_for_uri(zoltar_resource$zoltar_connection, zoltar_resource$uri)
+  zoltar_resource$json <- json_for_url(zoltar_resource$zoltar_connection, zoltar_resource$url)
 }
 
 
@@ -183,7 +183,7 @@ delete <- function(zoltar_resource, ...) {
 
 #' @export
 delete.default <- function(zoltar_resource, ...) {
-  response <- httr::DELETE(url = zoltar_resource$uri,
+  response <- httr::DELETE(url = zoltar_resource$url,
                            accept_json(),
                            add_headers("Authorization" = paste0("JWT ", zoltar_resource$zoltar_connection$session$token)))
   stop_for_status(response)
@@ -214,15 +214,15 @@ id.default <- function(zoltar_resource, ...) {
 
 #' make a new project (lower level function)
 #'
-#' Constructor that returns a new \code{\link{Project}} object for a particular project's uri. Not normally called
+#' Constructor that returns a new \code{\link{Project}} object for a particular project's url. Not normally called
 #' directly - most users use the \code{\link{projects}} function.
 #'
 #' @return a \code{\link{Project}} object
 #' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
-#' @param uri host address of the Project, e.g., \emph{http://example.com/api/project/1/}.
+#' @param url host address of the Project, e.g., \emph{http://example.com/api/project/1/}.
 #' @export
-new_project <- function(zoltar_connection, uri) {
-  self <- new_resource(zoltar_connection, uri)
+new_project <- function(zoltar_connection, url) {
+  self <- new_resource(zoltar_connection, url)
   class(self) <- append("Project", class(self))
   self
 }
@@ -241,10 +241,10 @@ models <- function(project, ...) {
 
 #' @export
 models.default <- function(project, ...) {
-  models_uris <- project$json$models
-  models <- lapply(models_uris,
-    function(model_uri) {
-      new_model(project$zoltar_connection, model_uri)
+  models_urls <- project$json$models
+  models <- lapply(models_urls,
+    function(model_url) {
+      new_model(project$zoltar_connection, model_url)
     })
   models
 }
@@ -277,8 +277,8 @@ scores <- function(project, ...) {
 
 #' @export
 scores.default <- function(project, ...) {
-  scores_uri <- paste0(project$uri, 'score_data/')
-  response <- httr::GET(url = scores_uri,
+  scores_url <- paste0(project$url, 'score_data/')
+  response <- httr::GET(url = scores_url,
                         add_headers("Authorization" = paste0("JWT ", project$zoltar_connection$session$token)))
   stop_for_status(response)
   content(response, encoding="UTF-8")
@@ -291,15 +291,15 @@ scores.default <- function(project, ...) {
 
 #' make a new model (lower level function)
 #'
-#' Constructor that returns a new \code{\link{Model}} object for a particular model's uri. Not normally called
+#' Constructor that returns a new \code{\link{Model}} object for a particular model's url. Not normally called
 #' directly.
 #'
 #' @return a \code{\link{Model}} object
 #' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
-#' @param uri host address of the Model, e.g., \emph{http://example.com/api/model/1/}.
+#' @param url host address of the Model, e.g., \emph{http://example.com/api/model/1/}.
 #' @export
-new_model <- function(zoltar_connection, uri) {
-  self <- new_resource(zoltar_connection, uri)
+new_model <- function(zoltar_connection, url) {
+  self <- new_resource(zoltar_connection, url)
   class(self) <- append("Model", class(self))
   self
 }
@@ -316,7 +316,7 @@ forecasts <- function(model, ...) {
 
 #' @export
 forecasts.default <- function(model, ...) {
-  # unlike other resources that are a list of URIs, model each model forecast is a dict with three keys:
+  # unlike other resources that are a list of URLs, model each model forecast is a dict with three keys:
   #   'timezero_date', 'data_version_date', 'forecast'
   #
   # for example:
@@ -345,7 +345,7 @@ forecasts.default <- function(model, ...) {
 #'
 #' @return a \code{\link{Forecast}} object
 #' @param model a \code{Model} object
-#' @param forecast_pk the id of a forecast on the host. for example, the id for the model with the uri
+#' @param forecast_pk the id of a forecast on the host. for example, the id for the model with the url
 #'   \emph{http://example.com/api/forecast/71/} is 71.
 #' @export
 forecast_for_pk <- function(model, forecast_pk, ...) {
@@ -354,8 +354,8 @@ forecast_for_pk <- function(model, forecast_pk, ...) {
 
 #' @export
 forecast_for_pk.default <- function(model, forecast_pk, ...) {
-  forecast_uri <- paste0(model$zoltar_connection$host, '/api/forecast/', forecast_pk, '/')
-  new_forecast(model$zoltar_connection, forecast_uri)
+  forecast_url <- paste0(model$zoltar_connection$host, '/api/forecast/', forecast_pk, '/')
+  new_forecast(model$zoltar_connection, forecast_url)
 }
 
 
@@ -377,7 +377,7 @@ upload_forecast <- function(model, timezero_date, forecast_csv_file, ...) {
 
 post_forecast <- function(model, forecast_csv_file, timezero_date) {
   # upload_forecast() helper that enables testing
-  response <- httr::POST(url = paste0(model$uri, 'forecasts/'),
+  response <- httr::POST(url = paste0(model$url, 'forecasts/'),
                          add_headers("Authorization" = paste0("JWT ", model$zoltar_connection$session$token)),
                          body = list(data_file = upload_file(forecast_csv_file),
                                      timezero_date = timezero_date))
@@ -399,15 +399,15 @@ upload_forecast.default <- function(model, timezero_date, forecast_csv_file, ...
 
 #' make a new forecast (lower level function)
 #'
-#' Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's uri. Not normally called
+#' Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's url. Not normally called
 #' directly.
 #'
 #' @return a \code{\link{Forecast}} object
 #' @param zoltar_connection a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}
-#' @param uri host address of the Forecast, e.g., \emph{http://example.com/api/forecast/71/}.
+#' @param url host address of the Forecast, e.g., \emph{http://example.com/api/forecast/71/}.
 #' @export
-new_forecast <- function(zoltar_connection, uri) {
-  self <- new_resource(zoltar_connection, uri)
+new_forecast <- function(zoltar_connection, url) {
+  self <- new_resource(zoltar_connection, url)
   class(self) <- append("Forecast", class(self))
   self
 }
@@ -424,12 +424,12 @@ data <- function(forecast, is_json=TRUE, ...) {
 
 #' @export
 data.default <- function(forecast, is_json=TRUE, ...) {
-  data_uri <- forecast$json$forecast_data
+  data_url <- forecast$json$forecast_data
   if (is_json) {
-    json_for_uri(forecast$zoltar_connection, data_uri)
+    json_for_url(forecast$zoltar_connection, data_url)
   } else {  # CSV
     # todo fix api_views.forecast_data() to use proper accept type rather than 'format' query parameter
-    response <- httr::GET(url = data_uri,
+    response <- httr::GET(url = data_url,
                           add_headers("Authorization" = paste0("JWT ", forecast$zoltar_connection$session$token)),
                           query = list(format = "csv"))
     stop_for_status(response)
@@ -476,8 +476,8 @@ csv_filename.default <- function(forecast, ...) {
 # UploadFileJob class - ZoltarResource subclass
 #
 
-new_upload_file_job <- function(zoltar_connection, uri) {
-  self <- new_resource(zoltar_connection, uri)
+new_upload_file_job <- function(zoltar_connection, url) {
+  self <- new_resource(zoltar_connection, url)
   class(self) <- append("UploadFileJob", class(self))
   self
 }

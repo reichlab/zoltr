@@ -4,17 +4,17 @@
 \alias{new_project}
 \title{make a new project (lower level function)}
 \usage{
-new_project(zoltar_connection, uri)
+new_project(zoltar_connection, url)
 }
 \arguments{
 \item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
 
-\item{uri}{host address of the Project, e.g., \emph{http://example.com/api/project/1/}.}
+\item{url}{host address of the Project, e.g., \emph{http://example.com/api/project/1/}.}
 }
 \value{
 a \code{\link{Project}} object
 }
 \description{
-Constructor that returns a new \code{\link{Project}} object for a particular project's uri. Not normally called
+Constructor that returns a new \code{\link{Project}} object for a particular project's url. Not normally called
 directly - most users use the \code{\link{projects}} function.
 }

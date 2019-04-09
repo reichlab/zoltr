@@ -29,7 +29,7 @@ mock_project <- function() {
   mock_authenticate(zoltar_connection)
   project1_json <- two_projects_json[[1]]
   project1 <- with_mock(
-  "json_for_uri" = function(...) {
+  "json_for_url" = function(...) {
       project1_json
     },
     new_project(zoltar_connection, project1_json$url))
@@ -43,7 +43,7 @@ mock_model <- function() {
   mock_authenticate(zoltar_connection)
   model1_json <- jsonlite::read_json("model-1.json")
   model1 <- with_mock(
-    "json_for_uri" = function(...) {
+    "json_for_url" = function(...) {
       model1_json
     },
     new_model(zoltar_connection, model1_json$url))
@@ -57,7 +57,7 @@ mock_forecast <- function() {
   mock_authenticate(zoltar_connection)
   forecast_json <- jsonlite::read_json("forecast-71.json")
   the_forecast <- with_mock(
-    "json_for_uri" = function(...) {
+    "json_for_url" = function(...) {
       forecast_json
     },
   new_forecast(zoltar_connection, forecast_json$url))
@@ -69,81 +69,81 @@ mock_forecast <- function() {
 # ---- lower-level net-oriented tests ----
 #
 
-test_that("functions calling constructors should pass correct uris to new_resource()", {
+test_that("functions calling constructors should pass correct urls to new_resource()", {
   # projects()
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
-  called_uris <- list()
+  called_urls <- list()
   the_projects <- with_mock(
-    "json_for_uri" = function(zoltar_connection, uri, ...) {
-      called_uris <<- append(called_uris, uri)
+    "json_for_url" = function(zoltar_connection, url, ...) {
+      called_urls <<- append(called_urls, url)
       two_projects_json
     },
     projects(zoltar_connection))
 
-  expected_called_uris <- list(
+  expected_called_urls <- list(
     "http://example.com/api/projects/",
     "http://example.com/api/project/1/",
     "http://example.com/api/project/2/")
-  expect_equal(called_uris, expected_called_uris)
+  expect_equal(called_urls, expected_called_urls)
 
 
   # models()
   project_and_json <- mock_project()
   the_project <- project_and_json[['project']]
-  called_uris <- list()
+  called_urls <- list()
   with_mock(
-    "json_for_uri" = function(zoltar_connection, uri, ...) {
-      called_uris <<- append(called_uris, uri)
+    "json_for_url" = function(zoltar_connection, url, ...) {
+      called_urls <<- append(called_urls, url)
     },
     models(the_project))
 
-  expected_called_uris <- list(
+  expected_called_urls <- list(
     "http://example.com/api/model/1/",
     "http://example.com/api/model/2/")
-  expect_equal(called_uris, expected_called_uris)
+  expect_equal(called_urls, expected_called_urls)
 
 
   # forecasts()
   model_and_json <- mock_model()
   the_model <- model_and_json[['model']]
-  called_uris <- list()
+  called_urls <- list()
   with_mock(
-    "json_for_uri" = function(zoltar_connection, uri, ...) {
-      called_uris <<- append(called_uris, uri)
+    "json_for_url" = function(zoltar_connection, url, ...) {
+      called_urls <<- append(called_urls, url)
     },
     forecasts(the_model))
-  expected_called_uris <- list("http://example.com/api/forecast/71/")
-  expect_equal(called_uris, expected_called_uris)
+  expected_called_urls <- list("http://example.com/api/forecast/71/")
+  expect_equal(called_urls, expected_called_urls)
 
 
   # forecast_for_pk()
-  called_uris <- list()
+  called_urls <- list()
   with_mock(
-    "json_for_uri" = function(zoltar_connection, uri, ...) {
-      called_uris <<- append(called_uris, uri)
+    "json_for_url" = function(zoltar_connection, url, ...) {
+      called_urls <<- append(called_urls, url)
     },
     forecast_for_pk(the_model, 71))  # forecast_pk from model1_json$forecasts[[2]]$forecast
-  expected_called_uris <- list("http://example.com/api/forecast/71/")
-  expect_equal(called_uris, expected_called_uris)
+  expected_called_urls <- list("http://example.com/api/forecast/71/")
+  expect_equal(called_urls, expected_called_urls)
 
 
   # upload_forecast()
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
-  called_uris <- list()
+  called_urls <- list()
   with_mock(
     "post_forecast" = function(...) {
       upload_file_job_json
     },
     with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
-    "json_for_uri" = function(zoltar_connection, uri, ...) {
-        called_uris <<- append(called_uris, uri)
+    "json_for_url" = function(zoltar_connection, url, ...) {
+        called_urls <<- append(called_urls, url)
       },
       upload_forecast(the_model, NULL, NULL)  # timezero_date, forecast_csv_file
     )
   )
-  expected_called_uris <- list("http://example.com/api/uploadfilejob/2/")
-  expect_equal(called_uris, expected_called_uris)
+  expected_called_urls <- list("http://example.com/api/uploadfilejob/2/")
+  expect_equal(called_urls, expected_called_urls)
 })
 
 
@@ -164,7 +164,7 @@ test_that("new_session() calls get_token() correctly", {
 })
 
 
-test_that("post_forecast() passes correct URI to POST()", {
+test_that("post_forecast() passes correct url to POST()", {
   model_and_json <- mock_model()
   the_model <- model_and_json[['model']]
   called_args <- NULL
@@ -209,7 +209,7 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
   the_projects <- with_mock(
-    "json_for_uri" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
+    "json_for_url" = function(...) {  # also incorrectly used to refresh() each Project's json, but we don't care here
       two_projects_json
     },
     projects(zoltar_connection))
@@ -219,7 +219,7 @@ test_that("projects(zoltar_connection) returns a list of Project objects", {
     the_project <- the_projects[[idx]]
     project_json <- two_projects_json[[idx]]
     expect_is(the_project, "Project")
-    expect_equal(the_project$uri, project_json$url)
+    expect_equal(the_project$url, project_json$url)
   }
 })
 
@@ -229,16 +229,16 @@ test_that("models(project) returns a list of Model objects", {
   the_project <- project_and_json[['project']]
   project_json <- project_and_json[['json']]
   the_models <- with_mock(
-    "refresh" = function(...) {  # we don't care about the model's json, just its uri
+    "refresh" = function(...) {  # we don't care about the model's json, just its url
     },
     models(the_project))
   expect_equal(length(the_models), 2)
 
   for (idx in 1:2) {  # NB: assumes order is preserved from json
     the_model <- the_models[[idx]]
-    model_uri <- project_json$models[[idx]]
+    model_url <- project_json$models[[idx]]
     expect_is(the_model, "Model")
-    expect_equal(the_model$uri, model_uri)
+    expect_equal(the_model$url, model_url)
   }
 })
 
@@ -273,19 +273,19 @@ test_that("scores(project) returns the scores in a data frame", {
 
 
 test_that("forecasts(model) returns a list of Forecast objects", {
-  # note that model-1.json has three 'forecasts' entries, but only one of those has a non-null "forecast" (a URI)
+  # note that model-1.json has three 'forecasts' entries, but only one of those has a non-null "forecast" (a url)
   model_and_json <- mock_model()
   the_model <- model_and_json[['model']]
   model_json <- model_and_json[['json']]
   the_forecasts <- with_mock(
-    "refresh" = function(...) {  # we don't care about the model's json, just its uri
+    "refresh" = function(...) {  # we don't care about the model's json, just its url
     },
     forecasts(the_model))
   expect_equal(length(the_forecasts), 1)
 
   the_forecast <- the_forecasts[[1]]
   expect_is(the_forecast, "Forecast")
-  expect_equal(the_forecast$uri, model_json$forecasts[[2]]$forecast)
+  expect_equal(the_forecast$url, model_json$forecasts[[2]]$forecast)
 })
 
 
@@ -294,11 +294,11 @@ test_that("forecast_for_pk(model) returns a Forecast object", {
   the_model <- model_and_json[['model']]
   model_json <- model_and_json[['json']]
   the_forecast <- with_mock(
-    "refresh" = function(...) {  # we don't care about the forecast's json, just its uri
+    "refresh" = function(...) {  # we don't care about the forecast's json, just its url
     },
     forecast_for_pk(the_model, 71))  # forecast_pk from model1_json$forecasts[[2]]$forecast
   expect_is(the_forecast, "Forecast")
-  expect_equal(the_forecast$uri, model_json$forecasts[[2]]$forecast)
+  expect_equal(the_forecast$url, model_json$forecasts[[2]]$forecast)
 })
 
 
@@ -311,7 +311,7 @@ test_that("upload_forecast(model) returns an UploadFileJob object, with correct 
       upload_file_job_json
     },
     with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
-      "json_for_uri" = function(...) {
+      "json_for_url" = function(...) {
         upload_file_job_json
       },
       upload_forecast(the_model, NULL, NULL)  # timezero_date, forecast_csv_file
@@ -319,26 +319,26 @@ test_that("upload_forecast(model) returns an UploadFileJob object, with correct 
   )
 
   expect_is(the_upload_file_job, "UploadFileJob")
-  expect_equal(the_upload_file_job$uri, upload_file_job_json$url)
+  expect_equal(the_upload_file_job$url, upload_file_job_json$url)
   expect_equal(status_as_str(the_upload_file_job), "SUCCESS")
   expect_equal(output_json(the_upload_file_job), list("forecast_pk" = 3))
 })
 
 
 test_that("data(forecast) returns JSON data as a list", {
-  # to test json format we simply test that json_for_uri() is called with the correct URI
+  # to test json format we simply test that json_for_url() is called with the correct url
   forecast_and_json <- mock_forecast()
   the_forecast <- forecast_and_json[['forecast']]
 
-  called_uri <- NULL
+  called_url <- NULL
   the_data <- with_mock(
-    "json_for_uri" = function(zoltar_connection, uri, ...) {
-      called_uri <<- uri
+    "json_for_url" = function(zoltar_connection, url, ...) {
+      called_url <<- url
       NULL  # don't care about return value
     },
     data(the_forecast, is_json=TRUE))
 
-  expect_equal(called_uri, "http://example.com/api/forecast/71/data/")
+  expect_equal(called_url, "http://example.com/api/forecast/71/data/")
 })
 
 

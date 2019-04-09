@@ -4,17 +4,17 @@
 \alias{new_forecast}
 \title{make a new forecast (lower level function)}
 \usage{
-new_forecast(zoltar_connection, uri)
+new_forecast(zoltar_connection, url)
 }
 \arguments{
 \item{zoltar_connection}{a \code{ZoltarConnection} object as returned by \code{\link{new_connection}}}
 
-\item{uri}{host address of the Forecast, e.g., \emph{http://example.com/api/forecast/71/}.}
+\item{url}{host address of the Forecast, e.g., \emph{http://example.com/api/forecast/71/}.}
 }
 \value{
 a \code{\link{Forecast}} object
 }
 \description{
-Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's uri. Not normally called
+Constructor that returns a new \code{\link{Forecast}} object for a particular forecast's url. Not normally called
 directly.
 }

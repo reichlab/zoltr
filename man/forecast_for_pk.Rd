@@ -9,7 +9,7 @@ forecast_for_pk(model, forecast_pk, ...)
 \arguments{
 \item{model}{a \code{Model} object}
 
-\item{forecast_pk}{the id of a forecast on the host. for example, the id for the model with the uri
+\item{forecast_pk}{the id of a forecast on the host. for example, the id for the model with the url
 \emph{http://example.com/api/forecast/71/} is 71.}
 }
 \value{
