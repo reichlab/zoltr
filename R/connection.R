@@ -281,7 +281,7 @@ scores.default <- function(project, ...) {
   response <- httr::GET(url = scores_uri,
                         add_headers("Authorization" = paste0("JWT ", project$zoltar_connection$session$token)))
   stop_for_status(response)
-  content(response)
+  content(response, encoding="UTF-8")
 }
 
 
@@ -433,7 +433,7 @@ data.default <- function(forecast, is_json=TRUE, ...) {
                           add_headers("Authorization" = paste0("JWT ", forecast$zoltar_connection$session$token)),
                           query = list(format = "csv"))
     stop_for_status(response)
-    content(response)
+    content(response, encoding="UTF-8")
   }
 }
 
