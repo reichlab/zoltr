@@ -5,12 +5,6 @@ library(zoltr)
 # example app
 #
 
-# todo:
-# - change `source()` to `library(ZoltR)` when made into a package
-# - pass args via command line and environment vars
-# - put into a main() function, passing args in standard R manner
-
-
 busy_poll_upload_file_job <- function(upload_file_job) {
     # get the updated status via polling (busy wait every 1 second)
     cat(paste0("- polling for status change. upload_file_job: ", upload_file_job$url, "\n"))

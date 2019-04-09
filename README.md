@@ -1,16 +1,7 @@
-# zoltr-temp
+# zoltr
 
 This package provides an R interface for working with the (https://www.zoltardata.com/)[Zoltar] forecast repository's
 API.
-
-
-## todo
-- add UploadFileJob getter for: upload_file_job$json$output_json$forecast_pk
-- document forecast_data() return formats - JSON, CSV
-- think getters that just go directly to json - id(), name(), etc. E.g., get_attribute(zoltar_resource, attr_name).
-  then include a table of all defined classes and their attributes
-- make `authenticate()` optional (public resources don't require authentication)
-- change app.R to a vignette
 
 
 ## User notes
@@ -36,4 +27,14 @@ This file combines two approaches to writing a library:
 - using environments (not the more traditional lists) for class instances
   = https://rstudio-pubs-static.s3.amazonaws.com/150296_904158e070594471864e89c10c0d14f9.html
 - using generic functions vs. OO-style functions definined within objects
+
+
+## todo
+- add UploadFileJob getter for: upload_file_job$json$output_json$forecast_pk
+- document forecast_data() return formats - JSON, CSV
+- think getters that just go directly to json - id(), name(), etc. E.g., get_attribute(zoltar_resource, attr_name).
+  then include a table of all defined classes and their attributes
+- make `authenticate()` optional (public resources don't require authentication)
+- change app.R to a vignette
+  = put into a main() function, passing args in standard R manner, and loading environment vars
 
