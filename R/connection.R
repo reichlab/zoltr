@@ -27,12 +27,7 @@ new_connection <- function(host = "zoltardata.com") {
 
 #' @export
 print.ZoltarConnection <- function(x, ...) {  # x is a ZoltarConnection
-  cat(class(x), " ",
-  x$host,
-  ". username, password=", if (is.null(x$username)) "<no username>" else x$username,
-  ", ", if (is.null(x$password)) "<no password>" else x$password,
-  ". session=", if (is.null(x$session)) "<no session>" else x$session$token,
-  "\n", sep='')
+  cat(class(x), " '", x$host, "' ", if (is.null(x$session)) "(no session)" else "(authenticated)", "\n", sep='')
 }
 
 

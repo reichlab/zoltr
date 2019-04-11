@@ -1,0 +1,212 @@
+---
+title: "Introduction to ZoltR"
+author: "Matthew Cornell"
+date: "2019-04-11"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to ZoltR}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Welcome
+Welcome to the ZoltR introduction vignette. Here we demonstrate the package's main features. Note that before starting
+you should:
+
+- create an account on [zoltardata.com](https://www.zoltardata.com/)
+- create a 'sandbox' project with a timezero for testing
+- create a model in that project
+- edit the `.Renviron` file:
+    - `USERNAME` and `PASSWORD`: should match your account settings
+    - `PROJECT_NAME` and `MODEL_NAME`: should match your project and model
+    - `TIMEZERO_DATE`: should match your project
+    - `FORECAST_CSV_FILE`: the path of a forecast data file in the format documented in
+      [Zoltar documentation](https://www.zoltardata.com/docs)
+
+
+## Connect to the host and authenticate
+
+The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection` 
+function. Here we explicitly pass the HOST address, but you can not pass it, which will use the default of
+[zoltardata.com](https://www.zoltardata.com/).
+
+Currently, all API activity first requires authenticating via the `z_authenticate()` function. Pass it the username and 
+password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under 
+the hood, which means you'll have to re-authenticate after that time. Later some kind of auto-re-authenticate might be 
+written. <- todo verify
+
+```{r setup}
+library(zoltr)
+```
+
+
+```{r}
+conn <- new_connection(host = Sys.getenv("HOST"))
+z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
+conn
+```
+
+
+## Get a list of all projects on the host
+
+Use the `projects()` function to list a connection's `Project` objects. Note that it will only list those that you are
+authenticated to access.
+
+```{r}
+the_projects <- projects(conn)
+lapply(the_projects, function(project) {c(project$url, name(project))})
+```
+
+
+## Get the sandbox project to work with, and list its models
+
+Filter the list of projects to get the one specified by PROJECT_NAME and then pass it to the `models()` function to list
+its `Model` objects.
+
+```{r}
+cond <- sapply(the_projects, function(project) name(project) == Sys.getenv("PROJECT_NAME"))
+project <- if (any(cond)) the_projects[cond][[1]] else NULL
+inherits(project, "Project")
+
+the_models <- models(project)
+lapply(the_models, function(model) {c(model$url, name(model))})
+```
+
+
+## Get a sandbox model to work with, and list its forecasts, if any
+
+Filter the list of models to get the one specified by MODEL_NAME and then pass it to the `forecasts()` function to list
+its `Forecast` objects.
+
+```{r}
+cond <- sapply(the_models, function(project) name(project) == Sys.getenv("MODEL_NAME"))
+model <- if (any(cond)) the_models[cond][[1]] else NULL
+inherits(model, "Model")
+
+the_forecasts <- forecasts(model)
+lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast), csv_filename(forecast))})
+```
+
+
+## Delete the model's existing forecast for TIMEZERO_DATE, if any
+
+Get the forecast for the timezero date specified by TIMEZERO_DATE and then call `delete()` to delete it, if one was
+found.
+
+```{r}
+the_timezero_date <- Sys.getenv("TIMEZERO_DATE")
+cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == the_timezero_date)
+existing_forecast <- if (any(cond))the_forecasts[cond][[1]] else NULL
+if (! is.null(existing_forecast)) {
+    cat(paste0("deleting existing forecast: ", the_timezero_date, ", ", existing_forecast$url, "\n"))
+    delete(existing_forecast)
+} else {
+    cat(paste0("no existing forecast: ", the_timezero_date, "\n"))
+}
+```
+
+
+## Refresh the model's forecast list and print the post-delete forecasts
+
+Again call `forecasts()` and notice that the deleted forecast (if there was one) is no longer listed.
+
+Note: Regarding the `refresh()` call, we need to do this because the just-deleted forecast is still cached in the model
+object's internal data that was loaded from the host prior to forecast deletion. <- todo more rationale 
+
+```{r}
+refresh(model)
+the_forecasts <- forecasts(model)
+lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast), csv_filename(forecast))})
+```
+
+
+## Upload a forecast
+
+Now let's upload the forecast data file FORECAST_CSV_FILE for TIMEZERO_DATE via the `upload_forecast()` function.
+
+Keep in mind that Zoltar queues long operations like forecast uploading, which makes the Zoltar API a little more
+complicated. Rather than having the `upload_forecast()` function _block_ until the upload is done, you instead get a
+quick response in the form of an `UploadFileJob` object whose status you can check to find out when the upload is done
+(or failed). This is done via _polling_ the host to ask the status. Here we poll every second using a helper function,
+which uses the `refresh()` function we saw above.
+
+```{r}
+busy_poll_upload_file_job <- function(upload_file_job) {
+    cat(paste0("polling for status change. upload_file_job: ", upload_file_job$url, "\n"))
+    while (TRUE) {
+        status <- status_as_str(upload_file_job)
+        cat(paste0(status, "\n"))
+        if (status == 'FAILED') {
+            cat(paste0("x failed\n"))
+            break
+        }
+        if (status == 'SUCCESS') {
+            break
+        }
+        Sys.sleep(1)
+        refresh(upload_file_job)
+    }
+}
+```
+
+
+```{r}
+forecast_csv_file <- Sys.getenv("FORECAST_CSV_FILE")
+upload_file_job <- upload_forecast(model, the_timezero_date, forecast_csv_file)
+busy_poll_upload_file_job(upload_file_job)
+```
+
+
+## Print information about the newly-uploaded forecast
+
+Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. Now let's get ahold of the new
+Forecast object you just uploaded.
+
+Due to there being multiple kinds of files you might upload to Zoltar (including project truth, project template, and
+model forecasts), the API requires us to do a little extra work to get the new `Forecast` object. We do this by
+parsing the UploadFileJob's multi-use 'output_json' field. We use the `forecast_for_pk()` convenience function to help.
+<- todo add UploadFileJob getter for this
+
+```{r}
+new_forecast_pk <- upload_file_job$json$output_json$forecast_pk
+the_new_forecast <- forecast_for_pk(model, new_forecast_pk)
+c(the_new_forecast$url, timezero_date(the_new_forecast), csv_filename(the_new_forecast))
+```
+
+
+## Refresh the model's forecast list and print the post-upload forecasts
+
+Let's again have a look at the model's forecasts and notice the new one is there, making sure to first `refresh()`.
+
+```{r}
+refresh(model)
+the_forecasts <- forecasts(model)
+lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast), csv_filename(forecast))})
+```
+
+
+## Finally, let's download the new forecast's data in two different formats
+
+You can get forecast data using the `data()` function in either JSON (as an R list) or CSV (as an R data frame).
+
+First as jSON:
+
+```{r}
+data_json <- forecast_data(the_new_forecast, is_json=TRUE)
+cat(paste0("data_json: # metadata: ", length(data_json$metadata), ", # locations: ", length(data_json$locations), "\n"))
+```
+
+And as CSV:
+
+```{r}
+data_csv <- suppressMessages(forecast_data(the_new_forecast, is_json=FALSE))
+str(data_csv)
+```
