@@ -11,15 +11,3 @@ MODEL_NAME="<model name>"
 TIMEZERO_DATE="<YYYYMMDD>"
 FORECAST_CSV_FILE="</path/to/forecast.cdc.csv>"
 
-
-# todo xx dev only - delete!:
-HOST="127.0.0.1:8000"
-USERNAME="model_owner1"
-PASSWORD="mo1-asdf"
-
-PROJECT_NAME="public project"
-MODEL_NAME="Test ForecastModel1"
-
-TIMEZERO_DATE="20170117"
-FORECAST_CSV_FILE="/Users/cornell/IdeaProjects/forecast-repository/forecast_app/tests/EW1-KoTsarima-2017-01-17-small.csv"
-

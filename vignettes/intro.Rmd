@@ -36,7 +36,8 @@ you should:
 
 The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection` 
 function. Here we explicitly pass the HOST address, but you can not pass it, which will use the default of
-[zoltardata.com](https://www.zoltardata.com/).
+[zoltardata.com](https://www.zoltardata.com/). (Note: You will see the host shown as _127.0.0.1:8000_ - this is a
+temporary one used to run this documentation against.)
 
 Currently, all API activity first requires authenticating via the `z_authenticate()` function. Pass it the username and 
 password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under 
@@ -197,7 +198,7 @@ lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast
 
 You can get forecast data using the `data()` function in either JSON (as an R list) or CSV (as an R data frame).
 
-First as jSON:
+First as JSON:
 
 ```{r}
 data_json <- forecast_data(the_new_forecast, is_json=TRUE)
