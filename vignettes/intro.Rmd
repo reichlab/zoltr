@@ -49,6 +49,7 @@ written. <- todo verify
 
 ```{r setup}
 library(zoltr)
+library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
 ```
 
 <!-- run but don't show -->
@@ -83,7 +84,7 @@ Get the project by named by PROJECT_NAME and then pass its ID to the `models()` 
 models.
 
 ```{r}
-project_id <- subset(the_projects, name == Sys.getenv("PROJECT_NAME"))$id
+project_id <- the_projects[the_projects$name == Sys.getenv("PROJECT_NAME"), 'id']  # integer(0) if not found, which is an invalid project ID
 the_models <- models(conn, project_id)
 str(the_models)
 ```
@@ -95,18 +96,9 @@ Get the model ID specified by MODEL_NAME and then pass it to the `forecasts()` f
 forecasts.
 
 ```{r}
-model_id <- subset(the_models, name == Sys.getenv("MODEL_NAME"))$id
+model_id <- the_models[the_models$name == Sys.getenv("MODEL_NAME"), 'id']  # integer(0) if not found, which is an invalid model ID
 the_forecasts <- forecasts(conn, model_id)
 str(the_forecasts)
-```
-
-
-## Get information about the first forecast, if any
-
-```{r}
-forecast_id <- the_forecasts[1, 'id']
-the_forecast_info <- forecast_info(conn, forecast_id)  # you will get `Not Found (HTTP 404)` this if it doesn't exist 
-str(the_forecast_info)
 ```
 
 
@@ -116,29 +108,12 @@ Get the forecast for the timezero date specified by TIMEZERO_DATE and then call 
 one was found.
 
 ```{r}
-timezero_date <- Sys.getenv("TIMEZERO_DATE")
-cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == timezero_date)
-existing_forecast <- if (any(cond))the_forecasts[cond][[1]] else NULL
-if (! is.null(existing_forecast)) {
-    cat(paste0("deleting existing forecast: ", timezero_date, ", ", existing_forecast$url, "\n"))
-    delete(existing_forecast)
-} else {
-    cat(paste0("no existing forecast: ", timezero_date, "\n"))
-}
-```
-
-
-## Refresh the model's forecast list and print the post-delete forecasts
-
-Again call `forecasts()` and notice that the deleted forecast (if there was one) is no longer listed.
-
-Note: Regarding the `refresh()` call, we need to do this because the just-deleted forecast is still cached in the model
-object's internal data that was loaded from the host prior to forecast deletion. <- todo more rationale 
-
-```{r}
-refresh(model)
-the_forecasts <- forecasts(model)
-lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast), csv_filename(forecast))})
+timezero_date_str <- Sys.getenv("TIMEZERO_DATE")
+timezero_date <- as.Date(timezero_date_str, format = "%Y%m%d")  # YYYYMMDD
+existing_forecast_id <- the_forecasts[the_forecasts$timezero_date == timezero_date, 'id']
+the_forecast_info <- forecast_info(conn, existing_forecast_id)  # `Not Found (HTTP 404)` this if forecast doesn't exist 
+str(the_forecast_info)
+delete_forecast(conn, the_forecast_info$id)
 ```
 
 
@@ -148,25 +123,24 @@ Now let's upload the forecast data file FORECAST_CSV_FILE for TIMEZERO_DATE via 
 
 Keep in mind that Zoltar queues long operations like forecast uploading, which makes the Zoltar API a little more
 complicated. Rather than having the `upload_forecast()` function _block_ until the upload is done, you instead get a
-quick response in the form of an `UploadFileJob` object whose status you can check to find out when the upload is done
-(or failed). This is done via _polling_ the host to ask the status. Here we poll every second using a helper function,
-which uses the `refresh()` function we saw above.
+quick response in the form of an `UploadFileJob` ID that you can pass to the `upload_info()` function to check its 
+status to find out when the upload is done (or failed). (This is called _polling_ the host to ask the status.) Here we 
+poll every second using a helper function.s
 
 ```{r}
-busy_poll_upload_file_job <- function(upload_file_job) {
-    cat(paste0("polling for status change. upload_file_job: ", upload_file_job$url, "\n"))
+busy_poll_upload_file_job <- function(upload_file_job_id) {
+    cat(paste0("polling for status change. upload_file_job: ", upload_file_job_id, "\n"))
     while (TRUE) {
-        status <- status_as_str(upload_file_job)
+        status <- upload_info(conn, upload_file_job_id)$status
         cat(paste0(status, "\n"))
-        if (status == 'FAILED') {
+        if (status == "FAILED") {
             cat(paste0("x failed\n"))
             break
         }
-        if (status == 'SUCCESS') {
+        if (status == "SUCCESS") {
             break
         }
         Sys.sleep(1)
-        refresh(upload_file_job)
     }
 }
 ```
@@ -174,53 +148,55 @@ busy_poll_upload_file_job <- function(upload_file_job) {
 
 ```{r}
 forecast_csv_file <- Sys.getenv("FORECAST_CSV_FILE")
-upload_file_job <- upload_forecast(model, timezero_date, forecast_csv_file)
-busy_poll_upload_file_job(upload_file_job)
+upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_csv_file)
+busy_poll_upload_file_job(upload_file_job_id)
 ```
 
 
 ## Print information about the newly-uploaded forecast
 
-Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. Now let's get ahold of the new
-Forecast object you just uploaded.
+Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. Now let's get the new forecast's
+information.
 
 Due to there being multiple kinds of files you might upload to Zoltar (including project truth, project template, and
-model forecasts), the API requires us to do a little extra work to get the new `Forecast` object. We do this by
-parsing the UploadFileJob's multi-use 'output_json' field. We use the `forecast_for_pk()` convenience function to help.
-<- todo add UploadFileJob getter for this
+model forecasts), the API returns information about uploaded files in the `$output_json` field of successful upload
+job's info. For new forecasts, that field contains a `$forecast_pk` field.
 
 ```{r}
-new_forecast_pk <- upload_file_job$json$output_json$forecast_pk
-the_new_forecast <- forecast_for_pk(model, new_forecast_pk)
-c(the_new_forecast$url, timezero_date(the_new_forecast), csv_filename(the_new_forecast))
+
+new_forecast_id <- upload_info(conn, upload_file_job_id)$output_json$forecast_pk
+the_forecast_info <- forecast_info(conn, new_forecast_id)
+str(the_forecast_info)
 ```
 
 
-## Refresh the model's forecast list and print the post-upload forecasts
+## Look at the model's forecast list to see the new forecast
 
-Let's again have a look at the model's forecasts and notice the new one is there, making sure to first `refresh()`.
+Let's again examine the model's forecasts and notice the new one is there.
 
 ```{r}
-refresh(model)
-the_forecasts <- forecasts(model)
-lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast), csv_filename(forecast))})
+the_forecasts <- forecasts(conn, model_id)
+str(the_forecasts)
 ```
 
 
-## Finally, let's download the new forecast's data in two different formats
+## Finally, download the new forecast's data in two different formats
 
-You can get forecast data using the `data()` function in either JSON (as an R list) or CSV (as an R data frame).
+You can get forecast data using the `forecast_data()` function, which supports `list` (nested) or `data.table` (tabular)
+formats.
 
-First as JSON:
+First as a `list`. (Please see [here](http://127.0.0.1:8000/docs#forecast-data-format) for JSON format details.) 
 
 ```{r}
-data_json <- forecast_data(the_new_forecast, is_json=TRUE)
-cat(paste0("data_json: # metadata: ", length(data_json$metadata), ", # locations: ", length(data_json$locations), "\n"))
+forecast_data <- forecast_data(conn, new_forecast_id, is_json=TRUE)
+forecast_data$locations[[1]]$name
+forecast_data$locations[[1]]$targets[[1]]$name
+forecast_data$locations[[1]]$targets[[1]]$bins
 ```
 
-And as CSV:
+And as a `data.frame`:
 
 ```{r}
-data_csv <- suppressMessages(forecast_data(the_new_forecast, is_json=FALSE))
-str(data_csv)
+forecast_data <- suppressMessages(forecast_data(conn, new_forecast_id, is_json=FALSE))
+str(forecast_data)
 ```

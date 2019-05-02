@@ -15,15 +15,21 @@ id_for_url <- function(url) {
 }
 
 
+stopifnot_authenticated <- function(zoltar_connection) {
+  stopifnot(inherits(zoltar_connection, "ZoltarConnection"))
+  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+}
+
+
 # returns an API URL for the passed project_id, sans trailing slash
 url_for_project_id <- function(zoltar_connection, project_id) {
-  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+  stopifnot_authenticated(zoltar_connection)
   paste0(zoltar_connection$host, '/api/project/', project_id)
 }
 
 
 url_for_model_id <- function(zoltar_connection, model_id) {
-  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+  stopifnot_authenticated(zoltar_connection)
   paste0(zoltar_connection$host, '/api/model/', model_id)
 }
 
@@ -34,13 +40,13 @@ url_for_model_forecasts_id <- function(zoltar_connection, model_id) {
 
 
 url_for_upload_file_job_id <- function(zoltar_connection, upload_file_job_id) {
-  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+  stopifnot_authenticated(zoltar_connection)
   paste0(zoltar_connection$host, '/api/uploadfilejob/', upload_file_job_id)
 }
 
 
 url_for_forecast_id <- function(zoltar_connection, forecast_id) {
-  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+  stopifnot_authenticated(zoltar_connection)
   paste0(zoltar_connection$host, '/api/forecast/', forecast_id)
 }
 
@@ -56,16 +62,15 @@ url_for_token_auth <- function(zoltar_connection) {
 
 
 add_auth_headers <- function(zoltar_connection) {
-    stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+  stopifnot_authenticated(zoltar_connection)
     httr::add_headers("Authorization"=paste0("JWT ", zoltar_connection$session$token))
 }
 
 
 # deletes the resource at the passed URL
 delete_resource <- function(zoltar_connection, url) {
-  stopifnot(inherits(zoltar_connection$session, "ZoltarSession"))
+  stopifnot_authenticated(zoltar_connection)
   response <- httr::DELETE(url=url, httr::accept_json(), add_auth_headers(zoltar_connection))
-  x <<- response
   httr::stop_for_status(response)
 }
 
@@ -287,8 +292,14 @@ post_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_c
     url=url_for_model_forecasts_id(zoltar_connection, model_id),
     add_auth_headers(zoltar_connection),
     body=list(data_file=httr::upload_file(forecast_csv_file), timezero_date=timezero_date))
-  httr::stop_for_status(response)
-  httr::content(response, "parsed")
+  # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
+  # error message
+  if (response$status_code == 400) {
+    json_response <- httr::content(response, "parsed")
+    stop(json_response$error, call. = FALSE)
+  } else {
+    httr::content(response, "parsed")
+  }
 }
 
 
@@ -414,7 +425,7 @@ get_token <- function(zoltar_session, ...) {
 
 get_token.default <- function(zoltar_session, ...) {
   response <-
-    POST(  # NB: would like to use `httr::POST`, but a mockery bug means we cannot reference the namespace here
+    httr::POST(
       url=url_for_token_auth(zoltar_session$zoltar_connection),
       httr::accept_json(),
       body=list(
