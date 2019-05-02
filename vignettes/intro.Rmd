@@ -1,7 +1,7 @@
 ---
 title: "Introduction to ZoltR"
 author: "Matthew Cornell"
-date: "2019-04-11"
+date: "2019-05-02"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to ZoltR}
@@ -22,9 +22,9 @@ Welcome to the ZoltR introduction vignette. Here we demonstrate the package's ma
 you should:
 
 - create an account on [zoltardata.com](https://www.zoltardata.com/)
-- create a 'sandbox' project with a timezero for testing
+- create a 'sandbox' project with one timezero for testing
 - create a model in that project
-- edit the `.Renviron` file:
+- edit the [`.Renviron`](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron) file:
     - `USERNAME` and `PASSWORD`: should match your account settings
     - `PROJECT_NAME` and `MODEL_NAME`: should match your project and model
     - `TIMEZERO_DATE`: should match your project
@@ -35,9 +35,12 @@ you should:
 ## Connect to the host and authenticate
 
 The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection` 
-function. Here we explicitly pass the HOST address, but you can not pass it, which will use the default of
-[zoltardata.com](https://www.zoltardata.com/). (Note: You will see the host shown as _127.0.0.1:8000_ - this is a
+function. Here we explicitly pass the HOST address, but you can omit it, which will use the default of
+[zoltardata.com](https://www.zoltardata.com/). (Note: Below you will see the host shown as _127.0.0.1:8000_ - this is a
 temporary one used to run this documentation against.)
+
+Most functions take a `ZoltarConnection` along with the ID of the thing of interest, e.g., a project, model, or forecast
+ID. You can obtain the ID using one of the `*_info` functions.
 
 Currently, all API activity first requires authenticating via the `z_authenticate()` function. Pass it the username and 
 password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under 
@@ -48,9 +51,16 @@ written. <- todo verify
 library(zoltr)
 ```
 
-
-```{r}
+<!-- run but don't show -->
+```{r, include=FALSE}
 conn <- new_connection(host = Sys.getenv("HOST"))
+z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
+conn
+```
+
+<!-- show but don't run-->
+```{r, eval=FALSE}
+conn <- new_connection()
 z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
 conn
 ```
@@ -58,59 +68,62 @@ conn
 
 ## Get a list of all projects on the host
 
-Use the `projects()` function to list a connection's `Project` objects. Note that it will only list those that you are
-authenticated to access.
+Use the `projects()` function to get a connection's projects as a data.frame. Note that it will only list those that you
+are authenticated to access.
 
 ```{r}
 the_projects <- projects(conn)
-lapply(the_projects, function(project) {c(project$url, name(project))})
+str(the_projects)
 ```
 
 
 ## Get the sandbox project to work with, and list its models
 
-Filter the list of projects to get the one specified by PROJECT_NAME and then pass it to the `models()` function to list
-its `Model` objects.
+Get the project by named by PROJECT_NAME and then pass its ID to the `models()` function to get a data.frame of its
+models.
 
 ```{r}
-cond <- sapply(the_projects, function(project) name(project) == Sys.getenv("PROJECT_NAME"))
-project <- if (any(cond)) the_projects[cond][[1]] else NULL
-inherits(project, "Project")
-
-the_models <- models(project)
-lapply(the_models, function(model) {c(model$url, name(model))})
+project_id <- subset(the_projects, name == Sys.getenv("PROJECT_NAME"))$id
+the_models <- models(conn, project_id)
+str(the_models)
 ```
 
 
 ## Get a sandbox model to work with, and list its forecasts, if any
 
-Filter the list of models to get the one specified by MODEL_NAME and then pass it to the `forecasts()` function to list
-its `Forecast` objects.
+Get the model ID specified by MODEL_NAME and then pass it to the `forecasts()` function to get a data.frame of it
+forecasts.
 
 ```{r}
-cond <- sapply(the_models, function(project) name(project) == Sys.getenv("MODEL_NAME"))
-model <- if (any(cond)) the_models[cond][[1]] else NULL
-inherits(model, "Model")
+model_id <- subset(the_models, name == Sys.getenv("MODEL_NAME"))$id
+the_forecasts <- forecasts(conn, model_id)
+str(the_forecasts)
+```
 
-the_forecasts <- forecasts(model)
-lapply(the_forecasts, function(forecast) {c(forecast$url, timezero_date(forecast), csv_filename(forecast))})
+
+## Get information about the first forecast, if any
+
+```{r}
+forecast_id <- the_forecasts[1, 'id']
+the_forecast_info <- forecast_info(conn, forecast_id)  # you will get `Not Found (HTTP 404)` this if it doesn't exist 
+str(the_forecast_info)
 ```
 
 
 ## Delete the model's existing forecast for TIMEZERO_DATE, if any
 
-Get the forecast for the timezero date specified by TIMEZERO_DATE and then call `delete()` to delete it, if one was
-found.
+Get the forecast for the timezero date specified by TIMEZERO_DATE and then call `delete_forecast()` to delete it, if
+one was found.
 
 ```{r}
-the_timezero_date <- Sys.getenv("TIMEZERO_DATE")
-cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == the_timezero_date)
+timezero_date <- Sys.getenv("TIMEZERO_DATE")
+cond <- sapply(the_forecasts, function(forecast) timezero_date(forecast) == timezero_date)
 existing_forecast <- if (any(cond))the_forecasts[cond][[1]] else NULL
 if (! is.null(existing_forecast)) {
-    cat(paste0("deleting existing forecast: ", the_timezero_date, ", ", existing_forecast$url, "\n"))
+    cat(paste0("deleting existing forecast: ", timezero_date, ", ", existing_forecast$url, "\n"))
     delete(existing_forecast)
 } else {
-    cat(paste0("no existing forecast: ", the_timezero_date, "\n"))
+    cat(paste0("no existing forecast: ", timezero_date, "\n"))
 }
 ```
 
@@ -161,7 +174,7 @@ busy_poll_upload_file_job <- function(upload_file_job) {
 
 ```{r}
 forecast_csv_file <- Sys.getenv("FORECAST_CSV_FILE")
-upload_file_job <- upload_forecast(model, the_timezero_date, forecast_csv_file)
+upload_file_job <- upload_forecast(model, timezero_date, forecast_csv_file)
 busy_poll_upload_file_job(upload_file_job)
 ```
 

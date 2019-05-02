@@ -4,7 +4,7 @@
 \alias{z_authenticate}
 \title{log in to a Zoltar host}
 \usage{
-z_authenticate(zoltar_connection, username, password, ...)
+z_authenticate(zoltar_connection, username, password)
 }
 \arguments{
 \item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
@@ -12,8 +12,6 @@ z_authenticate(zoltar_connection, username, password, ...)
 \item{username}{username for the account to use on the connection's host}
 
 \item{password}{password ""}
-
-\item{...}{ignored}
 }
 \value{
 none

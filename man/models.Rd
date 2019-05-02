@@ -4,16 +4,16 @@
 \alias{models}
 \title{get a project's models}
 \usage{
-models(project, ...)
+models(zoltar_connection, project_id)
 }
 \arguments{
-\item{project}{a Project object}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
-\item{...}{ignored}
+\item{project_id}{id of a project in zoltar_connection's projects}
 }
 \value{
-a list of Model objects
+a data.frame of model contents for all models in the passed project
 }
 \description{
-Returns a list of Model objects in the passed project.
+get a project's models
 }

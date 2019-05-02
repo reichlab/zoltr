@@ -2,18 +2,16 @@
 % Please edit documentation in R/connection.R
 \name{projects}
 \alias{projects}
-\title{get a list of all projects}
+\title{get a data.frame of all projects' metadata}
 \usage{
-projects(zoltar_connection, ...)
+projects(zoltar_connection)
 }
 \arguments{
 \item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
-
-\item{...}{ignored}
 }
 \value{
-a list of Project objects
+a data.frame of project contents
 }
 \description{
-Returns a list of Project objects, which are the starting point for working with the API.
+Returns a data.frame of all projects' contents.
 }

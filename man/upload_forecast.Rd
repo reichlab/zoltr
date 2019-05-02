@@ -4,19 +4,20 @@
 \alias{upload_forecast}
 \title{upload a forecast}
 \usage{
-upload_forecast(model, timezero_date, forecast_csv_file, ...)
+upload_forecast(zoltar_connection, model_id, timezero_date,
+  forecast_csv_file)
 }
 \arguments{
-\item{model}{a Model object}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+
+\item{model_id}{id of a model in zoltar_connection's projects}
 
 \item{timezero_date}{the date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
 \item{forecast_csv_file}{a CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}}
-
-\item{...}{ignored}
 }
 \value{
-the UploadFileJob object for the upload process
+UploadFileJob id for the upload
 }
 \description{
 Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can

@@ -4,15 +4,15 @@
 \alias{scores}
 \title{get a project's scores}
 \usage{
-scores(project, ...)
+scores(zoltar_connection, project_id)
 }
 \arguments{
-\item{project}{the Project to get the id of}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
-\item{...}{ignored}
+\item{project_id}{id of a project in zoltar_connection's projects}
 }
 \value{
-score data associated for all models in the passed Project object in CSV format
+a data.frame of score data for all models in the passed Project object
 }
 \description{
 get a project's scores

@@ -4,17 +4,17 @@
 \alias{forecast_data}
 \title{get a forecast's data}
 \usage{
-forecast_data(forecast, is_json = TRUE, ...)
+forecast_data(zoltar_connection, forecast_id, is_json)
 }
 \arguments{
-\item{forecast}{a Forecast object}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
-\item{is_json}{a boolean specifying whether the forecast is in JSON (the default) or CSV format}
+\item{forecast_id}{id of a forecast in zoltar_connection's forecasts}
 
-\item{...}{ignored}
+\item{is_json}{a boolean specifying whether the forecast is in JSON or CSV format}
 }
 \value{
-forecast data associated with the passed Forecast object based on the requested format
+forecast data in the requested format
 }
 \description{
 get a forecast's data

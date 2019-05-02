@@ -4,15 +4,15 @@
 \alias{forecasts}
 \title{get a model's forecasts}
 \usage{
-forecasts(model, ...)
+forecasts(zoltar_connection, model_id)
 }
 \arguments{
-\item{model}{a Model object}
+\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
 
-\item{...}{ignored}
+\item{model_id}{id of a model in zoltar_connection's models}
 }
 \value{
-a list of Forecast objects in the passed model.
+a data.frame of forecast information for the passed model
 }
 \description{
 get a model's forecasts
