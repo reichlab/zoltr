@@ -163,13 +163,25 @@ projects.default <- function(zoltar_connection) {
   projects_json <- json_for_url(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
   id_column <- c()
   url_column <- c()
+  owner_id_column <- c()
+  is_public_column <- c()
   name_column <- c()
+  description_column <- c()
+  home_url_column <- c()
+  core_data_column <- c()
   for (project_json in projects_json) {
     id_column <- append(id_column, project_json$id)
     url_column <- append(url_column, project_json$url)
+    owner_id_column <- append(owner_id_column, id_for_url(project_json$owner))
+    is_public_column <- append(is_public_column, project_json$is_public)
     name_column <- append(name_column, project_json$name)
+    description_column <- append(description_column, project_json$description)
+    home_url_column <- append(home_url_column, project_json$home_url)
+    core_data_column <- append(core_data_column, project_json$core_data)
   }
-  data.frame(id=id_column, url=url_column, name=name_column, stringsAsFactors=FALSE)
+  data.frame(id=id_column, url=url_column, owner_id=owner_id_column, public=is_public_column, name=name_column,
+    description=description_column, home_url=home_url_column, core_data=core_data_column,
+    stringsAsFactors=FALSE)
 }
 
 

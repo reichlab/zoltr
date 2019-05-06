@@ -140,9 +140,9 @@ test_that("projects(zoltar_connection) returns a data.frame", {
     the_projects <- projects(zoltar_connection)
     expect_is(the_projects, "data.frame")
     expect_equal(nrow(the_projects), 2)  # 2 projects
-    expect_equal(ncol(the_projects), 3)  # id, url, name
-    expect_equal(names(the_projects), c("id", "url", "name"))
-
+    expect_equal(ncol(the_projects), 8)
+    expect_equal(names(the_projects),
+                 c("id", "url", "owner_id", "public", "name", "description", "home_url", "core_data"))
     expect_equal(length(mock_args(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/projects/")
 
