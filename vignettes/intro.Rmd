@@ -78,25 +78,31 @@ str(the_projects)
 ```
 
 
-## Get the sandbox project to work with, and list its models
+## Get the sandbox project to work with, and list its info and models
 
-Get the project by named by PROJECT_NAME and then pass its ID to the `models()` function to get a data.frame of its
-models.
+Get the project by named by PROJECT_NAME and then pass its ID to the `project_info()` function to get details, and pass
+it to the `models()` function to get a data.frame of its models.
 
 ```{r}
 project_id <- the_projects[the_projects$name == Sys.getenv("PROJECT_NAME"), 'id']  # integer(0) if not found, which is an invalid project ID
+the_project_info <- project_info(conn, project_id)
+str(the_project_info)
+
 the_models <- models(conn, project_id)
 str(the_models)
 ```
 
 
-## Get a sandbox model to work with, and list its forecasts, if any
+## Get a sandbox model to work with, and list its info and forecasts (if any)
 
-Get the model ID specified by MODEL_NAME and then pass it to the `forecasts()` function to get a data.frame of it
-forecasts.
+Get the model ID specified by MODEL_NAME and then pass it to the `model_info()` function to get details, and to the
+`forecasts()` function to get a data.frame of its forecasts.
 
 ```{r}
 model_id <- the_models[the_models$name == Sys.getenv("MODEL_NAME"), 'id']  # integer(0) if not found, which is an invalid model ID
+the_model_info <- model_info(conn, project_id)
+str(the_model_info)
+
 the_forecasts <- forecasts(conn, model_id)
 str(the_forecasts)
 ```
@@ -125,7 +131,7 @@ Keep in mind that Zoltar queues long operations like forecast uploading, which m
 complicated. Rather than having the `upload_forecast()` function _block_ until the upload is done, you instead get a
 quick response in the form of an `UploadFileJob` ID that you can pass to the `upload_info()` function to check its 
 status to find out when the upload is done (or failed). (This is called _polling_ the host to ask the status.) Here we 
-poll every second using a helper function.s
+poll every second using a helper function.
 
 ```{r}
 busy_poll_upload_file_job <- function(upload_file_job_id) {
@@ -150,6 +156,14 @@ busy_poll_upload_file_job <- function(upload_file_job_id) {
 forecast_csv_file <- Sys.getenv("FORECAST_CSV_FILE")
 upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_csv_file)
 busy_poll_upload_file_job(upload_file_job_id)
+```
+
+
+And here's the upload's final information:
+
+```{r}
+the_upload_info <- upload_info(conn, upload_file_job_id)
+str(the_upload_info)
 ```
 
 
