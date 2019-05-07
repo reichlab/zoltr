@@ -4,10 +4,6 @@ This package provides an R interface for working with the (https://www.zoltardat
 API.
 
 
-## todo xx a nice readme like other R packages: Installation, Examples (in addition to vignettes), etc.
-REF: See more examples and details on the website or via vignette("translate", package = "googleLanguageR") - https://github.com/ropensci/googleLanguageR
-
-
 ## User notes
 To use the package, create a new connection to Zoltar using `new_connection()` and then pass that connection to the
 package's generic functions to access resources like _Projects_, _Models_, and _Forecasts_. See the example app for

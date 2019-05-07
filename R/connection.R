@@ -63,7 +63,7 @@ url_for_token_auth <- function(zoltar_connection) {
 
 add_auth_headers <- function(zoltar_connection) {
   stopifnot_authenticated(zoltar_connection)
-    httr::add_headers("Authorization"=paste0("JWT ", zoltar_connection$session$token))
+  httr::add_headers("Authorization"=paste0("JWT ", zoltar_connection$session$token))
 }
 
 
@@ -89,7 +89,7 @@ delete_resource <- function(zoltar_connection, url) {
 #' @param host The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}
 #' @export
 new_connection <- function(host="zoltardata.com") {
-  self <- structure(environment(), class="ZoltarConnection")  # todo xx change to a list?
+  self <- structure(environment(), class="ZoltarConnection")
   host <- host
   username <- NULL
   password <- NULL
@@ -373,7 +373,6 @@ forecast_data <- function(zoltar_connection, forecast_id, is_json) {
   if (is_json) {
     json_for_url(zoltar_connection, forecast_data_url)
   } else {  # CSV
-    # todo fix api_views.forecast_data() to use proper accept type rather than 'format' query parameter
     response <- httr::GET(url=forecast_data_url, add_auth_headers(zoltar_connection), query=list(format="csv"))
     httr::stop_for_status(response)
     httr::content(response, encoding="UTF-8")
@@ -424,7 +423,7 @@ upload_info <- function(zoltar_connection, upload_file_job_id) {
 #
 
 new_session <- function(zoltar_connection) {
-  self <- structure(environment(), class="ZoltarSession")  # todo xx change to a list?
+  self <- structure(environment(), class="ZoltarSession")
   zoltar_connection <- zoltar_connection
   token <- get_token(self)  # expects zoltar_connection
   self
