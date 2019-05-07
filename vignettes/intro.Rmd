@@ -53,14 +53,14 @@ library(httr)  # o/w devtools::check() gets `could not find function "POST"` err
 ```
 
 <!-- run but don't show -->
-```{r, include=FALSE}
+```{r, eval=TRUE, include=FALSE}
 conn <- new_connection(host = Sys.getenv("HOST"))
 z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
 conn
 ```
 
 <!-- show but don't run-->
-```{r, eval=FALSE}
+```{r, eval=FALSE, include=TRUE}
 conn <- new_connection()
 z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
 conn
