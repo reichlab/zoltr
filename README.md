@@ -1,30 +1,48 @@
-# zoltr
 
-This package provides an R interface for working with the (https://www.zoltardata.com/)[Zoltar] forecast repository's
-API.
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+zoltr - An R client for the Zoltar data repository API
+======================================================
 
+<!-- badges: start -->
+<!-- badges: end -->
+This package contains functions for working with the (<https://www.zoltardata.com/>)\[Zoltar\] forecast repository's API, including projects, models, forecasts, and scores. Read more at the [zoltr pkgdown site](todo).
 
-## User notes
-To use the package, create a new connection to Zoltar using `new_connection()` and then pass that connection to the
-package's generic functions to access resources like _Projects_, _Models_, and _Forecasts_. See the example app for
-more.
+Installation
+------------
 
-- Most functions return objects corresponding to Zoltar resources, which make it easier for you to work with. The entry
-  point for getting objects is the `projects()` generic function, which is passed the _ZoltarConnection_ that
-  `new_connection()` returns.
-- Access to protected resources and actions (like uploading a file or getting a private project's models) requires
-  authenticating using the `z_authenticate()` function. Pass it the username and password for your account. Note that
-  currently Zoltar uses a five minute timeout on the underlying JWT tokens used under the hood, which means you'll have
-  to re-authenticate after that time. Later some kind of auto-re-authenticate might be written.
-- Keep in mind that Zoltar uses an asychronous messaging queue for long operations like `upload_forecast()`, which makes
-  the Zoltar API a little more complicated. Rather than a function blocking, you get a response that's a _UploadFileJob_
-  which you can poll to get its current status.
+You can install the released version of zoltr from [CRAN](https://CRAN.R-project.org) with:
 
+``` r
+install.packages("zoltr")
+```
 
-## implementation notes
-This file combines two approaches to writing a library:
+And the development version from [GitHub](https://github.com/) with:
 
-- using environments (not the more traditional lists) for class instances
-  = https://rstudio-pubs-static.s3.amazonaws.com/150296_904158e070594471864e89c10c0d14f9.html
-- using generic functions vs. OO-style functions definined within objects
+``` r
+# install.packages("devtools")
+devtools::install_github("reichlab/zoltr")
+```
 
+Usage
+-----
+
+Read more at the [zoltr pkgdown site](todo), but briefly you use the `new_connection()` function to create a connection to (<https://www.zoltardata.com/>)\[Zoltar\] and then pass that connection along with the *ID* of the resource of interest (e.g., a project, model, or forecast) to this package's various functions like `projects()`, `project_info()`, or `scores()`.
+
+``` r
+library(zoltr)
+conn <- new_connection()
+conn
+#> ZoltarConnection 'http://zoltardata.com' (no session)
+
+the_projects <- projects(conn)
+project_id <- the_projects[1,]$id
+the_project_info <- project_info(conn, project_id)
+names(the_project_info)
+#>  [1] "id"           "url"          "owner"        "is_public"   
+#>  [5] "name"         "description"  "home_url"     "core_data"   
+#>  [9] "config_dict"  "template"     "truth"        "model_owners"
+#> [13] "score_data"   "models"       "locations"    "targets"     
+#> [17] "timezeros"
+the_project_info$name
+#> [1] "CDC Flu challenge"
+```
