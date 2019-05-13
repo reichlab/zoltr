@@ -25,3 +25,5 @@ Imports:
     readr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
+URL: https://github.com/reichlab/zoltr
+BugReports: https://github.com/reichlab/zoltr/issues

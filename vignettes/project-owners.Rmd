@@ -1,10 +1,10 @@
 ---
-title: "zoltr for Forecasters"
+title: "Project Owners"
 author: "Matthew Cornell"
 date: "2019-05-13"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{zoltr for Forecasters}
+  %\VignetteIndexEntry{Project Owners}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,11 +17,11 @@ knitr::opts_chunk$set(
 ```
 
 
-# Welcome to _zoltr for Forecasters_
-Welcome to the zoltr vignette for forecasters. You should read this if you are interested in creating and managing your
-own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the Zoltar API.
-Building on the _Getting Started_ vignette, this one covers deleting and uploading forecasts. Note that before starting
-you should:
+# Zoltr for Project Owners
+Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating
+and managing your own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the 
+Zoltar API. Building on the _Getting Started_ vignette, this one covers deleting and uploading forecasts. Note that
+before starting you should:
 
 - Create an account on [zoltardata.com](https://www.zoltardata.com/).
 - Create a 'sandbox' project with one timezero for testing.

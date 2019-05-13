@@ -1,10 +1,10 @@
 ---
-title: "Getting Started with zoltr"
+title: "Getting Started"
 author: "Matthew Cornell"
 date: "2019-05-13"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started with zoltr}
+  %\VignetteIndexEntry{Getting Started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -17,12 +17,11 @@ knitr::opts_chunk$set(
 ```
 
 
-# Welcome to _Getting Started with zoltr_
+# Getting Started with zoltr
 
-Welcome to the zoltr _Getting Started_ vignette. zoltr is an R package that simplifies access to the 
-[zoltardata.com](https://www.zoltardata.com/) API. This vignette takes you through the package's main features. So that
-you can experiment without needing a Zoltar account, we use our "flagship" project for the CDC Flu challenge, which 
-should always be available for public read-only access.
+zoltr is an R package that simplifies access to the [zoltardata.com](https://www.zoltardata.com/) API. This vignette 
+takes you through the package's main features. So that you can experiment without needing a Zoltar account, we use our 
+"flagship" project for the CDC Flu challenge, which should always be available for public read-only access.
 
 
 ## Connect to the host
