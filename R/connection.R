@@ -106,33 +106,17 @@ print.ZoltarConnection <-
 #' @param username username for the account to use on the connection's host
 #' @param password password ""
 #' @export
-z_authenticate <-
-  function(zoltar_connection,
-           username,
-           password) {
-    UseMethod("z_authenticate")
-  }
-
-#' @export
-z_authenticate.default <-
-  function(zoltar_connection,
-           username,
-           password) {
+z_authenticate <- function(zoltar_connection, username, password) {
     zoltar_connection$username <- username
     zoltar_connection$password <- password
     zoltar_connection$session <- new_session(zoltar_connection)
   }
 
 
-json_for_url <- function(zoltar_connection, url, ...) {  # private
-  UseMethod("json_for_url")
-}
-
-json_for_url.default <- function(zoltar_connection, url, ...) {
-  response <- httr::GET(url=url, add_auth_headers(zoltar_connection))
+json_for_url <- function(zoltar_connection, url, is_json=TRUE, query=list()) {
+  response <- httr::GET(url=url, add_auth_headers(zoltar_connection), query=query)
   httr::stop_for_status(response)
-  json_content <- httr::content(response, "parsed")
-  json_content
+  httr::content(response, as=if(is_json) "parsed" else NULL, encoding="UTF-8")
 }
 
 
@@ -197,9 +181,7 @@ project_info <- function(zoltar_connection, project_id) {
 #' @export
 scores <- function(zoltar_connection, project_id) {
   scores_url <- paste0(url_for_project_id(zoltar_connection, project_id), '/score_data/')
-  response <- httr::GET(url=scores_url, add_auth_headers(zoltar_connection))
-  httr::stop_for_status(response)
-  httr::content(response, encoding="UTF-8")
+  json_for_url(zoltar_connection, scores_url)
 }
 
 
@@ -354,11 +336,9 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 forecast_data <- function(zoltar_connection, forecast_id, is_json) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
   if (is_json) {
-    json_for_url(zoltar_connection, forecast_data_url)
+    json_for_url(zoltar_connection, forecast_data_url, is_json=is_json, query=list())
   } else {  # CSV
-    response <- httr::GET(url=forecast_data_url, add_auth_headers(zoltar_connection), query=list(format="csv"))
-    httr::stop_for_status(response)
-    httr::content(response, encoding="UTF-8")
+    json_for_url(zoltar_connection, forecast_data_url, is_json=is_json, query=list(format="csv"))
   }
 }
 

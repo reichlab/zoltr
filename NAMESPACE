@@ -2,7 +2,6 @@
 
 S3method(print,ZoltarConnection)
 S3method(projects,default)
-S3method(z_authenticate,default)
 export(delete_forecast)
 export(forecast_data)
 export(forecast_info)

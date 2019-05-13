@@ -42,48 +42,36 @@ test_that("id_for_url(url) returns an integer", {
 
 test_that("url_for_project_id(zoltar_connection, project_id) returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   expect_equal(url_for_project_id(zoltar_connection, 1L), "http://example.com/api/project/1")
 })
 
 
 test_that("url_for_model_id(zoltar_connection, project_id) returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   expect_equal(url_for_model_id(zoltar_connection, 1L), "http://example.com/api/model/1")
 })
 
 
 test_that("url_for_model_forecasts_id(zoltar_connection, project_id) returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   expect_equal(url_for_model_forecasts_id(zoltar_connection, 1L), "http://example.com/api/model/1/forecasts/")
 })
 
 
 test_that("url_for_upload_file_job_id(zoltar_connection, upload_file_job_id) returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   expect_equal(url_for_upload_file_job_id(zoltar_connection, 1L), "http://example.com/api/uploadfilejob/1")
 })
 
 
 test_that("url_for_forecast_id(zoltar_connection, forecast_id) returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   expect_equal(url_for_forecast_id(zoltar_connection, 1L), "http://example.com/api/forecast/1")
 })
 
 
 test_that("url_for_forecast_data_id(zoltar_connection, forecast_id) returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   expect_equal(url_for_forecast_data_id(zoltar_connection, 1L), "http://example.com/api/forecast/1/data/")
 })
 
@@ -112,6 +100,38 @@ test_that("z_authenticate() saves username, password, and session", {
   expect_equal(zoltar_connection$password, "password")
   expect_is(zoltar_connection$session, "ZoltarSession")
   expect_equal(zoltar_connection$session$token, mock_token)
+})
+
+
+test_that("z_authenticate() required to access protected resources", {
+  zoltar_connection <- new_connection("http://example.com")
+
+  # NB: while different zoltr functions call different httr functions, we currently only test project_info(), which
+  # calls json_for_url(), which calls httr::GET(). for completeness, we should test all other functions that call httr
+  # ones, e.g., delete_resource() (httr::DELETE()), get_token() (httr::POST()), and upload_forecast() (httr::POST())
+
+  # test that accessing a protected resource fails w/o z_authenticate() first called
+  stub <- webmockr::stub_request('get', uri = 'http://example.com/api/project/0') %>%
+    to_return(status = 403)  # Forbidden
+
+  expect_error(
+    project_info(zoltar_connection, 0L),  # todo xx see above note re: helper functions
+    "Forbidden (HTTP 403).",
+    fixed=TRUE
+  )
+
+  # test that it succeeds w/authentication
+  project1_json <- two_projects_json[[1]]
+  webmockr::remove_request_stub(stub)
+  webmockr::stub_request('get', uri = 'http://example.com/api/project/0') %>%
+    to_return(
+      body=project1_json,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+
+  mock_authenticate(zoltar_connection)
+  the_project_info <- project_info(zoltar_connection, 0L)  # todo xx see above note re: helper functions
+  expect_is(the_project_info, "list")  # arbitrary test to ensure project_info() didn't fail and did the right thing
 })
 
 
@@ -174,8 +194,6 @@ test_that("forecast_data() does not call add_headers() for unauthenticated conne
 
 test_that("projects(zoltar_connection) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   m <- mock(two_projects_json)
   testthat::with_mock("zoltr::json_for_url" = m, {
     the_projects <- projects(zoltar_connection)
@@ -208,8 +226,6 @@ test_that("projects(zoltar_connection) returns a data.frame", {
 
 test_that("project_info(zoltar_connection, project_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
-
   project1_json <- two_projects_json[[1]]
   m <- mock(project1_json)
   testthat::with_mock("zoltr::json_for_url" = m, {
@@ -225,12 +241,11 @@ test_that("project_info(zoltar_connection, project_id) returns a list", {
 
 test_that("scores(zoltar_connection, project_id) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   load("scores_response.rda")  # 'scores_response' contains partial response from Impetus_Province_Forecasts-scores.csv
   m <- mock(scores_response)
   testthat::with_mock("httr::GET" = m, {
-    the_scores <- scores(zoltar_connection, 1L)
+    the_scores <- scores(zoltar_connection, project_id=1L)
     expect_equal(dim(the_scores), c(380, 10))
     expect_equal(names(the_scores),
       c("model", "timezero", "season", "location", "target", "error", "abs_error", "log_single_bin", "log_multi_bin", "pit"))
@@ -243,7 +258,6 @@ test_that("scores(zoltar_connection, project_id) returns a data.frame", {
 
 test_that("models(zoltar_connection, project_id) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   project1_json <- two_projects_json[[1]]
   model1_json <- jsonlite::read_json("model-1.json")
@@ -270,7 +284,6 @@ test_that("models(zoltar_connection, project_id) returns a data.frame", {
 
 test_that("model_info(zoltar_connection, model_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   model1_json <- jsonlite::read_json("model-1.json")
   m <- mock(model1_json)
@@ -288,7 +301,6 @@ test_that("model_info(zoltar_connection, model_id) returns a list", {
 
 test_that("forecasts(model_id) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   # note that model-1.json has three 'forecasts' entries, but only one of those has a non-null "forecast" (a url)
   model1_json <- jsonlite::read_json("model-1.json")
@@ -329,7 +341,6 @@ test_that("forecasts(model_id) returns a data.frame", {
 
 test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_info() is OK", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   # test upload_forecast()
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
@@ -365,7 +376,6 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
 
 test_that("delete_forecast(zoltar_connection, forecast_id) passes correct URL", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   load("delete_response.rda")  # 'delete_response' contains 204 response from sample 'DELETE' call
   m <- mock(delete_response)
@@ -384,7 +394,6 @@ test_that("delete_forecast(zoltar_connection, forecast_id) passes correct URL", 
 
 test_that("forecast_info(zoltar_connection, forecast_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   forecast1_json <- jsonlite::read_json("forecast-71.json")
   m <- mock(forecast1_json)
@@ -401,12 +410,11 @@ test_that("forecast_info(zoltar_connection, forecast_id) returns a list", {
 
 test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a list", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   forecast1_json <- jsonlite::read_json("forecast-71.json")
   m <- mock(forecast1_json)
   testthat::with_mock("zoltr::json_for_url" = m, {
-    the_forecast_data <- forecast_data(zoltar_connection, 71L, is_json=TRUE)
+    the_forecast_data <- forecast_data(zoltar_connection, forecast_id=71L, is_json=TRUE)
     expect_is(the_forecast_data, "list")
     expect_equal(the_forecast_data, forecast1_json)
 
@@ -418,12 +426,11 @@ test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a 
 
 test_that("forecast_data(zoltar_connection, forecast_id) returns CSV data as a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   load("data_response.rda")  # 'data_response' contains response from EW1-KoTsarima-2017-01-17-small.csv
   m <- mock(data_response)
   testthat::with_mock("httr::GET" = m, {
-    the_data <- forecast_data(zoltar_connection, 71L, is_json=FALSE)
+    the_data <- forecast_data(zoltar_connection, forecast_id=71L, is_json=FALSE)
     expect_equal(dim(the_data), c(154, 7))
     expect_equal(names(the_data), c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))
 
@@ -439,7 +446,6 @@ test_that("forecast_data(zoltar_connection, forecast_id) returns CSV data as a d
 
 test_that("new_session() calls get_token() correctly", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   called_args <- NULL
   testthat::with_mock("httr::POST" = function(...) {
@@ -457,7 +463,6 @@ test_that("new_session() calls get_token() correctly", {
 
 test_that("upload_forecast() passes correct url to POST()", {
   zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)
 
   called_args <- NULL
   testthat::with_mock("zoltr::upload_file" = function(...) {
