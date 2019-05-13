@@ -60,6 +60,7 @@ add_auth_headers <- function(zoltar_connection) {
 
 # deletes the resource at the passed URL
 delete_resource <- function(zoltar_connection, url) {
+  message(paste0("delete_resource(): DELETE: ", url))
   response <- httr::DELETE(url=url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
 }
@@ -78,7 +79,7 @@ delete_resource <- function(zoltar_connection, url) {
 #' @return a ZoltarConnection object
 #' @param host The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}
 #' @export
-new_connection <- function(host="zoltardata.com") {
+new_connection <- function(host="http://zoltardata.com") {
   self <- structure(environment(), class="ZoltarConnection")
   host <- host
   username <- NULL
@@ -113,7 +114,8 @@ z_authenticate <- function(zoltar_connection, username, password) {
   }
 
 
-json_for_url <- function(zoltar_connection, url, is_json=TRUE, query=list()) {
+get_resource <- function(zoltar_connection, url, is_json=TRUE, query=list()) {
+  message(paste0("get_resource(): GET: ", url))
   response <- httr::GET(url=url, add_auth_headers(zoltar_connection), query=query)
   httr::stop_for_status(response)
   httr::content(response, as=if(is_json) "parsed" else NULL, encoding="UTF-8")
@@ -133,7 +135,7 @@ projects <- function(zoltar_connection) {
 
 #' @export
 projects.default <- function(zoltar_connection) {
-  projects_json <- json_for_url(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
+  projects_json <- get_resource(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
   id_column <- c()
   url_column <- c()
   owner_id_column <- c()
@@ -169,7 +171,7 @@ projects.default <- function(zoltar_connection) {
 #' @param project_id id of a project in zoltar_connection's projects
 #' @export
 project_info <- function(zoltar_connection, project_id) {
-  json_for_url(zoltar_connection, url_for_project_id(zoltar_connection, project_id))
+  get_resource(zoltar_connection, url_for_project_id(zoltar_connection, project_id))
 }
 
 
@@ -181,7 +183,7 @@ project_info <- function(zoltar_connection, project_id) {
 #' @export
 scores <- function(zoltar_connection, project_id) {
   scores_url <- paste0(url_for_project_id(zoltar_connection, project_id), '/score_data/')
-  json_for_url(zoltar_connection, scores_url)
+  get_resource(zoltar_connection, scores_url)
 }
 
 
@@ -202,7 +204,7 @@ models <- function(zoltar_connection, project_id) {
   home_url_column <- c()
   aux_data_url_column <- c()  # might be NULL. substitute NA if so
   for (model_url in the_project_info$models) {
-    model_json <- json_for_url(zoltar_connection, model_url)
+    model_json <- get_resource(zoltar_connection, model_url)
     id_column <- append(id_column, model_json$id)
     url_column <- append(url_column, model_url)
     project_id_column <- append(project_id_column, id_for_url(model_json$project))
@@ -234,7 +236,7 @@ YYYYMMDD_format <- "%Y%m%d"  # for as.Date()
 #' @param model_id id of a model in zoltar_connection's models
 #' @export
 model_info <- function(zoltar_connection, model_id) {
-  json_for_url(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
+  get_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
 }
 
 
@@ -245,7 +247,7 @@ model_info <- function(zoltar_connection, model_id) {
 #' @param model_id id of a model in zoltar_connection's models
 #' @export
 forecasts <- function(zoltar_connection, model_id) {
-  model_json <- json_for_url(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
+  model_json <- get_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
   id_column <- c()
   url_column <- c()                # character
   timezero_date_column <- c()      # Date
@@ -282,8 +284,10 @@ forecasts <- function(zoltar_connection, model_id) {
 #' @param forecast_csv_file a CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
 #' @export
 upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_csv_file) {
+  forecasts_url <- url_for_model_forecasts_id(zoltar_connection, model_id)
+  message(paste0("upload_forecast(): POST: ", forecasts_url))
   response <- httr::POST(
-    url=url_for_model_forecasts_id(zoltar_connection, model_id),
+    url=forecasts_url,
     add_auth_headers(zoltar_connection),
     body=list(data_file=httr::upload_file(forecast_csv_file), timezero_date=timezero_date))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
@@ -322,7 +326,7 @@ delete_forecast <- function(zoltar_connection, forecast_id) {
 #' @param forecast_id id of a forecast in zoltar_connection's forecasts
 #' @export
 forecast_info <- function(zoltar_connection, forecast_id) {
-  json_for_url(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
+  get_resource(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
 }
 
 
@@ -336,9 +340,9 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 forecast_data <- function(zoltar_connection, forecast_id, is_json) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
   if (is_json) {
-    json_for_url(zoltar_connection, forecast_data_url, is_json=is_json, query=list())
+    get_resource(zoltar_connection, forecast_data_url, is_json=is_json, query=list())
   } else {  # CSV
-    json_for_url(zoltar_connection, forecast_data_url, is_json=is_json, query=list(format="csv"))
+    get_resource(zoltar_connection, forecast_data_url, is_json=is_json, query=list(format="csv"))
   }
 }
 
@@ -373,7 +377,7 @@ status_as_str <- function(status_int) {
 #' @param upload_file_job_id id of a job in zoltar_connection that was uploaded via \code{\link{upload_forecast}}
 #' @export
 upload_info <- function(zoltar_connection, upload_file_job_id) {
-  ufj_json <- json_for_url(zoltar_connection, url_for_upload_file_job_id(zoltar_connection, upload_file_job_id))
+  ufj_json <- get_resource(zoltar_connection, url_for_upload_file_job_id(zoltar_connection, upload_file_job_id))
   ufj_json$status <- status_as_str(ufj_json$status)
   ufj_json$created_at <- as.Date(ufj_json$created_at)
   ufj_json$updated_at <- as.Date(ufj_json$updated_at)
@@ -398,9 +402,11 @@ get_token <- function(zoltar_session, ...) {
 }
 
 get_token.default <- function(zoltar_session, ...) {
+  token_auth_url <- url_for_token_auth(zoltar_session$zoltar_connection)
+  message(paste0("get_token(): POST: ", token_auth_url))
   response <-
     httr::POST(
-      url=url_for_token_auth(zoltar_session$zoltar_connection),
+      url=token_auth_url,
       httr::accept_json(),
       body=list(
         username=zoltar_session$zoltar_connection$username,

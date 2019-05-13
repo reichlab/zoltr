@@ -1,0 +1,94 @@
+---
+title: "Getting Started with zoltr"
+author: "Matthew Cornell"
+date: "2019-05-13"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with zoltr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Welcome to _Getting Started with zoltr_
+
+Welcome to the zoltr _Getting Started_ vignette. zoltr is an R package that simplifies access to the 
+[zoltardata.com](https://www.zoltardata.com/) API. This vignette takes you through the package's main features. So that
+you can experiment without needing a Zoltar account, we use our "flagship" project for the CDC Flu challenge, which 
+should always be available for public read-only access.
+
+
+## Connect to the host
+
+The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection` 
+function. Most zoltr functions take a `ZoltarConnection` along with the _ID_ of the thing of interest, e.g., a
+project, model, or forecast ID. You can obtain the ID using one of the `*_info` functions, and you can always use the
+web interface to navigate to the resource and look at its ID in the browser address field. The ID should be self evident
+for all resources. For example, the project [CDC Flu challenge](https://www.zoltardata.com/project/4)'s URL is
+[https://www.zoltardata.com/project/4](https://www.zoltardata.com/project/4), and you can see that its ID is _4_.
+
+(Note: To access protected resources, you need to call the `z_authenticate()` function before calling any zoltr
+functions. But this is unnecessary in this vignette because we're accessing a public project, models, and forecasts.)
+
+
+<!-- run but don't show -->
+```{r setup, include=FALSE}
+library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
+```
+
+
+```{r}
+library(zoltr)
+conn <- new_connection()
+conn
+```
+
+
+## Get a list of all projects on the host
+
+Use the `projects()` function to get a connection's projects as a data.frame. Note that it will only list those that you
+are authenticated to access.
+
+```{r}
+the_projects <- projects(conn)
+str(the_projects)
+```
+
+
+## Get a project to work with and then list its info and models
+
+Let's start by getting a public project to work with. We will search the projects list for it by name. Then we will pass
+its ID to the `project_info()` function to get details, and pass it to the `models()` function to get a data.frame of
+its models.
+
+```{r}
+project_id <- the_projects[the_projects$name == "CDC Flu challenge", 'id']  # integer(0) if not found, which is an invalid project ID
+the_project_info <- project_info(conn, project_id)
+str(the_project_info)
+
+the_models <- models(conn, project_id)  # may take some time due to the number of models and a Zoltar performance issue
+str(the_models)
+```
+
+
+## Get a model to work with, and list its info and forecasts (if any)
+
+Now let's work with a particular model, getting its ID by name and then passing it to the `model_info()` function to get 
+details. Then use the `forecasts()` function to get a data.frame of that model's forecasts.
+
+```{r}
+model_id <- the_models[the_models$name == "SARIMA model with seasonal differencing", 'id']  # integer(0) if not found
+the_model_info <- model_info(conn, model_id)
+str(the_model_info)
+
+the_forecasts <- forecasts(conn, model_id)
+str(the_forecasts)
+```
+

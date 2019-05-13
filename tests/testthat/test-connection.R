@@ -107,7 +107,7 @@ test_that("z_authenticate() required to access protected resources", {
   zoltar_connection <- new_connection("http://example.com")
 
   # NB: while different zoltr functions call different httr functions, we currently only test project_info(), which
-  # calls json_for_url(), which calls httr::GET(). for completeness, we should test all other functions that call httr
+  # calls get_resource(), which calls httr::GET(). for completeness, we should test all other functions that call httr
   # ones, e.g., delete_resource() (httr::DELETE()), get_token() (httr::POST()), and upload_forecast() (httr::POST())
 
   # test that accessing a protected resource fails w/o z_authenticate() first called
@@ -159,12 +159,12 @@ test_that("delete_forecast() does not call add_headers() for unauthenticated con
 })
 
 
-test_that("json_for_url() does not call add_headers() for unauthenticated connection", {
+test_that("get_resource() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
   webmockr::stub_request('get', uri = 'http://example.com')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
-    json_for_url(zoltar_connection, "http://example.com")
+    get_resource(zoltar_connection, "http://example.com")
     expect_equal(length(mock_calls(m)), 0)
   })
 })
@@ -195,7 +195,7 @@ test_that("forecast_data() does not call add_headers() for unauthenticated conne
 test_that("projects(zoltar_connection) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock(two_projects_json)
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_projects <- projects(zoltar_connection)
     expect_is(the_projects, "data.frame")
     expect_equal(nrow(the_projects), 2)  # 2 projects
@@ -228,7 +228,7 @@ test_that("project_info(zoltar_connection, project_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
   project1_json <- two_projects_json[[1]]
   m <- mock(project1_json)
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_project_info <- project_info(zoltar_connection, project_id=1L)
     expect_is(the_project_info, "list")
     expect_equal(the_project_info, project1_json)
@@ -262,7 +262,7 @@ test_that("models(zoltar_connection, project_id) returns a data.frame", {
   project1_json <- two_projects_json[[1]]
   model1_json <- jsonlite::read_json("model-1.json")
   m <- mock(project1_json, model1_json, model1_json)  # return values in calling order
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_models <- models(zoltar_connection, project_id=1L)
 
     expect_is(the_models, "data.frame")
@@ -287,7 +287,7 @@ test_that("model_info(zoltar_connection, model_id) returns a list", {
 
   model1_json <- jsonlite::read_json("model-1.json")
   m <- mock(model1_json)
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     exp_model_info_json <- model1_json
     the_model_info <- model_info(zoltar_connection, model_id=1L)
     expect_is(the_model_info, "list")
@@ -305,7 +305,7 @@ test_that("forecasts(model_id) returns a data.frame", {
   # note that model-1.json has three 'forecasts' entries, but only one of those has a non-null "forecast" (a url)
   model1_json <- jsonlite::read_json("model-1.json")
   m <- mock(model1_json)
-  the_forecasts <- testthat::with_mock("zoltr::json_for_url" = m, {
+  the_forecasts <- testthat::with_mock("zoltr::get_resource" = m, {
     forecasts(zoltar_connection, model_id=1L)
   })
 
@@ -363,7 +363,7 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
 
   # test upload_info()
   m <- mock(upload_file_job_json)
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_upload_info <- upload_info(zoltar_connection, upload_file_job_id)
     expect_is(the_upload_info, "list")
     expect_equal(the_upload_info, exp_upload_file_job_json)
@@ -397,7 +397,7 @@ test_that("forecast_info(zoltar_connection, forecast_id) returns a list", {
 
   forecast1_json <- jsonlite::read_json("forecast-71.json")
   m <- mock(forecast1_json)
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_forecast_info <- forecast_info(zoltar_connection, forecast_id=1L)
     expect_is(the_forecast_info, "list")
     expect_equal(the_forecast_info, forecast1_json)
@@ -413,7 +413,7 @@ test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a 
 
   forecast1_json <- jsonlite::read_json("forecast-71.json")
   m <- mock(forecast1_json)
-  testthat::with_mock("zoltr::json_for_url" = m, {
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_forecast_data <- forecast_data(zoltar_connection, forecast_id=71L, is_json=TRUE)
     expect_is(the_forecast_data, "list")
     expect_equal(the_forecast_data, forecast1_json)

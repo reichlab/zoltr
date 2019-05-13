@@ -4,7 +4,7 @@
 \alias{new_connection}
 \title{create a new connection to a Zoltar host}
 \usage{
-new_connection(host = "zoltardata.com")
+new_connection(host = "http://zoltardata.com")
 }
 \arguments{
 \item{host}{The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}}
