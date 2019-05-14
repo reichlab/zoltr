@@ -1,17 +1,19 @@
 Package: zoltr
-Title: R Interface To Zoltar API
-Version: 0.2.0
+Title: R Interface to the Zoltar Forecast Repository API
+Version: 0.2.0.9000
 Authors@R: 
-    person(given = "Nicholas",
-           family = "Reich",
-           role = c("aut", "cre"),
-           email = "nick@schoolph.umass.edu")
     person(given = "Matthew",
            family = "Cornell",
            role = c("aut", "cre"),
            email = "cornell@umass.edu")
-Description: This package provides an R interface for working with the Zoltar (https://www.zoltardata.com/) forecast
-             repository API.
+    person(given = "Nicholas",
+           family = "Reich",
+           role = c("aut", "cph"),
+           email = "nick@schoolph.umass.edu")
+Description: This package provides an R interface for working with the Zoltar ( https://www.zoltardata.com/ ) forecast
+             repository's API.
+URL: https://github.com/reichlab/zoltr , http://reichlab.io/zoltr/
+BugReports: https://github.com/reichlab/zoltr/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -25,5 +27,3 @@ Imports:
     readr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
-URL: https://github.com/reichlab/zoltr
-BugReports: https://github.com/reichlab/zoltr/issues
