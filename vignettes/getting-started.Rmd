@@ -12,7 +12,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message=FALSE, 
+  warning=FALSE
 )
 ```
 
@@ -70,14 +72,15 @@ its models.
 ```{r}
 project_id <- the_projects[the_projects$name == "CDC Flu challenge", 'id']  # integer(0) if not found, which is an invalid project ID
 the_project_info <- project_info(conn, project_id)
-str(the_project_info)
+names(the_project_info)
+the_project_info$description
 
-the_models <- models(conn, project_id)  # may take some time due to the number of models and a Zoltar performance issue
+the_models <- models(conn, project_id)  # may take some time
 str(the_models)
 ```
 
 
-## Get a model to work with, and list its info and forecasts (if any)
+## Get a model to work with and then list its info and forecasts (if any)
 
 Now let's work with a particular model, getting its ID by name and then passing it to the `model_info()` function to get 
 details. Then use the `forecasts()` function to get a data.frame of that model's forecasts.
@@ -85,9 +88,34 @@ details. Then use the `forecasts()` function to get a data.frame of that model's
 ```{r}
 model_id <- the_models[the_models$name == "SARIMA model with seasonal differencing", 'id']  # integer(0) if not found
 the_model_info <- model_info(conn, model_id)
-str(the_model_info)
+names(the_model_info)
+the_model_info$description
 
 the_forecasts <- forecasts(conn, model_id)
 str(the_forecasts)
 ```
 
+
+## Finally, download the first forecast's data in two different formats
+
+You can get forecast data using the `forecast_data()` function, which supports a nested `list` or a `data.table`
+(tabular) format.
+
+First as a `list`. (Please see [here](http://127.0.0.1:8000/docs#forecast-data-format) for nested format, AKA JSON,
+details.) 
+
+```{r}
+first_forecast_id <- the_forecasts[1, 'id']  # assumes at least one exists
+
+forecast_data <- forecast_data(conn, first_forecast_id, is_json=TRUE)
+forecast_data$locations[[1]]$name
+forecast_data$locations[[1]]$targets[[1]]$name
+forecast_data$locations[[1]]$targets[[1]]$bins[[1]]
+```
+
+And as a `data.frame`:
+
+```{r}
+forecast_data <- suppressMessages(forecast_data(conn, first_forecast_id, is_json=FALSE))
+forecast_data
+```

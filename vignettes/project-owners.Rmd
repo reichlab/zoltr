@@ -12,7 +12,9 @@ vignette: >
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
-  comment = "#>"
+  comment = "#>",
+  message=FALSE, 
+  warning=FALSE
 )
 ```
 
@@ -40,6 +42,10 @@ To access your project, you'll first need to authenticate via the `z_authenticat
 password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under 
 the hood, which means you'll have to re-authenticate after that time.
 
+(Note: Below you will see the host shown as _127.0.0.1:8000_ - this is a temporary one that was used to run this 
+documentation against.)
+
+
 <!-- run but don't show -->
 ```{r setup, include=FALSE}
 library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
@@ -63,7 +69,7 @@ conn
 ```
 
 
-## Get the sandbox project and model work with, and then list its forecasts (if any)
+## Get the sandbox project and model work with and then list its forecasts (if any)
 
 Get the ID of the project named by PROJECT_NAME and then get the ID of that project's model named MODEL_NAME. From the
 model ID, call the `forecasts()` function to get a data.frame of that model's forecasts.
@@ -157,31 +163,8 @@ str(the_forecast_info)
 
 ## Look at the model's forecast list to see the new forecast
 
-Let's again examine the model's forecasts and notice the new one is there.
+Finally, let's again examine the model's forecasts and notice the new one is there.
 
 ```{r}
 the_forecasts <- forecasts(conn, model_id)
 str(the_forecasts)
-```
-
-
-## Finally, download the new forecast's data in two different formats
-
-You can get forecast data using the `forecast_data()` function, which supports `list` (nested) or `data.table` (tabular)
-formats.
-
-First as a `list`. (Please see [here](http://127.0.0.1:8000/docs#forecast-data-format) for JSON format details.) 
-
-```{r}
-forecast_data <- forecast_data(conn, new_forecast_id, is_json=TRUE)
-forecast_data$locations[[1]]$name
-forecast_data$locations[[1]]$targets[[1]]$name
-forecast_data$locations[[1]]$targets[[1]]$bins
-```
-
-And as a `data.frame`:
-
-```{r}
-forecast_data <- suppressMessages(forecast_data(conn, new_forecast_id, is_json=FALSE))
-forecast_data
-```

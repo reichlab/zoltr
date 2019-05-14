@@ -4,5 +4,6 @@
 ^\.idea$
 ^zoltr\.iml$
 ^doc$
+^docs$
 ^Meta$
 ^README\.Rmd$
