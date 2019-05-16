@@ -60,6 +60,9 @@
     </li>
   </ul>
 </li>
+<li>
+  <a href="../news/index.html">Changelog</a>
+</li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
@@ -175,7 +178,7 @@ the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../referen
 <h2 class="hasAnchor">
 <a href="#finally-download-the-first-forecasts-data-in-two-different-formats" class="anchor"></a>Finally, download the first forecast’s data in two different formats</h2>
 <p>You can get forecast data using the <code><a href="../reference/forecast_data.html">forecast_data()</a></code> function, which supports a nested <code>list</code> or a <code>data.table</code> (tabular) format.</p>
-<p>First as a <code>list</code>. (Please see <a href="http://127.0.0.1:8000/docs#forecast-data-format">here</a> for nested format, AKA JSON, details.)</p>
+<p>First as a <code>list</code>. (Please see <a href="https://www.zoltardata.com/docs#forecast-data-format">here</a> for nested format, AKA JSON, details.)</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">first_forecast_id &lt;-<span class="st"> </span>the_forecasts[<span class="dv">1</span>, <span class="st">'id'</span>]  <span class="co"># assumes at least one exists</span>
 
 forecast_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecast_data.html">forecast_data</a></span>(conn, first_forecast_id, <span class="dt">is_json=</span><span class="ot">TRUE</span>)
@@ -235,7 +238,7 @@ forecast_data
 
 
       <footer><div class="copyright">
-  <p>Developed by Matthew Cornell.</p>
+  <p>Developed by Matthew Cornell, Nicholas Reich.</p>
 </div>
 
 <div class="pkgdown">

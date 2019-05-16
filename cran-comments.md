@@ -2,10 +2,9 @@
 
 
 ## Test environments
-- local OS X install, R version 3.5.3
-  - todo xx "" R-devel?
-- devtools::build_win()
-xx
+- local OS X install, R 3.5.3
+- todo xx devtools win-builder, R 3.4.0 beta (r72499)
+- todo xx travis.ci Linux, x64, R 3.5.0 unstable (r72992)
 
 
 ## Vignette build requirements
@@ -24,5 +23,15 @@ of the package.
 
 
 ## R CMD check results
+- There were no ERRORs nor WARNINGs.
+- Local build generated no NOTEs.
+- Win-builder generated 1 NOTE:
+  - "Possibly mis-spelled words in DESCRIPTION", but the spelling of "Zoltar" is correct.
+  
+
 0 errors | 0 warnings | 0 notes
+
+
+## Downstream dependencies
+Reverse dependencies checked with devtools::revdep_check(). No issues found.
 

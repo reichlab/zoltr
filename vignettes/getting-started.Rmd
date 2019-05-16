@@ -102,7 +102,7 @@ str(the_forecasts)
 You can get forecast data using the `forecast_data()` function, which supports a nested `list` or a `data.table`
 (tabular) format.
 
-First as a `list`. (Please see [here](http://127.0.0.1:8000/docs#forecast-data-format) for nested format, AKA JSON,
+First as a `list`. (Please see [here](https://www.zoltardata.com/docs#forecast-data-format) for nested format, AKA JSON,
 details.) 
 
 ```{r}

@@ -43,7 +43,7 @@ devtools::install_github("reichlab/zoltr")
 ## Usage
 
 Read more at the [zoltr pkgdown site](http://reichlab.io/zoltr/), but briefly you use the `new_connection()` function to
-create a connection to [https://www.zoltardata.com/(Zoltar) and then pass that connection along with the _ID_ of the
+create a connection to [https://www.zoltardata.com/](Zoltar) and then pass that connection along with the _ID_ of the
 resource of interest (e.g., a project, model, or forecast) to this package's various functions like `projects()`,
 `project_info()`, or `scores()`. 
 

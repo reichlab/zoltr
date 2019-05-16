@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>upload a forecast — upload_forecast • zoltr</title>
+<title>Changelog • zoltr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,12 +30,7 @@
 
 
 
-<meta property="og:title" content="upload a forecast — upload_forecast" />
-
-<meta property="og:description" content="Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
-be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
-turn comes up, which depends on the number of current uploads in the queue.)" />
-<meta name="twitter:card" content="summary" />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -52,7 +47,7 @@ turn comes up, which depends on the number of current uploads in the queue.)" />
   </head>
 
   <body>
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -119,58 +114,28 @@ turn comes up, which depends on the number of current uploads in the queue.)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>upload a forecast</h1>
-    <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/connection.R'><code>R/connection.R</code></a></small>
-    <div class="hidden name"><code>upload_forecast.Rd</code></div>
+      <h1>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/reichlab/zoltr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    
-    <p>Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
-be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
-turn comes up, which depends on the number of current uploads in the queue.)</p>
-    
-    </div>
-
-    <pre class="usage"><span class='fu'>upload_forecast</span>(<span class='no'>zoltar_connection</span>, <span class='no'>model_id</span>, <span class='no'>timezero_date</span>,
-  <span class='no'>forecast_csv_file</span>)</pre>
-    
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>zoltar_connection</th>
-      <td><p>a ZoltarConnection object as returned by <code><a href='new_connection.html'>new_connection</a></code></p></td>
-    </tr>
-    <tr>
-      <th>model_id</th>
-      <td><p>id of a model in zoltar_connection's projects</p></td>
-    </tr>
-    <tr>
-      <th>timezero_date</th>
-      <td><p>the date of the project timezero you are uploading for. it is a string in format YYYYMMDD</p></td>
-    </tr>
-    <tr>
-      <th>forecast_csv_file</th>
-      <td><p>a CSV file in the Zoltar standard format - see <a href='https://www.zoltardata.com/docs#forecasts'>https://www.zoltardata.com/docs#forecasts</a></p></td>
-    </tr>
-    </table>
-    
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>UploadFileJob id for the upload</p>
-    
-
+    <div id="zoltr-0-2-0" class="section level1">
+<h1 class="page-header">
+<a href="#zoltr-0-2-0" class="anchor"></a>zoltr 0.2.0</h1>
+<ul>
+<li>Initial private beta release!</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
-    <h2>Contents</h2>
-    <ul class="nav nav-pills nav-stacked">
-      <li><a href="#arguments">Arguments</a></li>
-      
-      <li><a href="#value">Value</a></li>
-          </ul>
-
+    <div id="tocnav">
+      <h2>Contents</h2>
+      <ul class="nav nav-pills nav-stacked">
+        <li><a href="#zoltr-0-2-0">0.2.0</a></li>
+      </ul>
+    </div>
   </div>
+
 </div>
 
       <footer>
