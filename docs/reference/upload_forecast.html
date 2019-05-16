@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>upload a forecast — upload_forecast • zoltr</title>
+<title>Upload a forecast — upload_forecast • zoltr</title>
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
@@ -30,11 +30,12 @@
 
 
 
-<meta property="og:title" content="upload a forecast — upload_forecast" />
+<meta property="og:title" content="Upload a forecast — upload_forecast" />
 
-<meta property="og:description" content="Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
+<meta property="og:description" content="This function submits a forecast file to the server for uploading. Returns an UploadFileJob object that can
 be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
-turn comes up, which depends on the number of current uploads in the queue.)" />
+turn comes up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob`
+objects.)" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -119,16 +120,17 @@ turn comes up, which depends on the number of current uploads in the queue.)" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>upload a forecast</h1>
+    <h1>Upload a forecast</h1>
     <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/connection.R'><code>R/connection.R</code></a></small>
     <div class="hidden name"><code>upload_forecast.Rd</code></div>
     </div>
 
     <div class="ref-description">
     
-    <p>Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
+    <p>This function submits a forecast file to the server for uploading. Returns an UploadFileJob object that can
 be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
-turn comes up, which depends on the number of current uploads in the queue.)</p>
+turn comes up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob`
+objects.)</p>
     
     </div>
 
@@ -140,25 +142,25 @@ turn comes up, which depends on the number of current uploads in the queue.)</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>zoltar_connection</th>
-      <td><p>a ZoltarConnection object as returned by <code><a href='new_connection.html'>new_connection</a></code></p></td>
+      <td><p>A `ZoltarConnection` object as returned by <code><a href='new_connection.html'>new_connection</a></code></p></td>
     </tr>
     <tr>
       <th>model_id</th>
-      <td><p>id of a model in zoltar_connection's projects</p></td>
+      <td><p>ID of a model in zoltar_connection's projects</p></td>
     </tr>
     <tr>
       <th>timezero_date</th>
-      <td><p>the date of the project timezero you are uploading for. it is a string in format YYYYMMDD</p></td>
+      <td><p>The date of the project timezero you are uploading for. it is a string in format YYYYMMDD</p></td>
     </tr>
     <tr>
       <th>forecast_csv_file</th>
-      <td><p>a CSV file in the Zoltar standard format - see <a href='https://www.zoltardata.com/docs#forecasts'>https://www.zoltardata.com/docs#forecasts</a></p></td>
+      <td><p>A CSV file in the Zoltar standard format - see <a href='https://www.zoltardata.com/docs#forecasts'>https://www.zoltardata.com/docs#forecasts</a></p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>UploadFileJob id for the upload</p>
+    <p>An UploadFileJob id for the upload</p>
     
 
   </div>
