@@ -1,7 +1,7 @@
 ---
 title: "Project Owners"
 author: "Matthew Cornell"
-date: "2019-05-13"
+date: "2019-05-16"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Project Owners}
@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message=FALSE, 
-  warning=FALSE
+  warning=FALSE,
+  eval = nzchar(Sys.getenv("IS_DEVELOPMENT_MACHINE"))
 )
 ```
 
@@ -38,25 +39,25 @@ before starting you should:
 
 ## Connect to the host and authenticate
 
-To access your project, you'll first need to authenticate via the `z_authenticate()` function. Pass it the username and 
-password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under 
-the hood, which means you'll have to re-authenticate after that time.
+To access your project, you'll first need to authenticate via the `zoltar_authenticate()` function. Pass it the username
+and password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used
+under the hood, which means you'll have to re-authenticate after that time.
 
 (Note: Below you will see the host shown as _127.0.0.1:8000_ - this is a temporary one that was used to run this 
 documentation against.)
 
 
-<!-- run but don't show -->
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r setup, include=FALSE}
 library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
 ```
 
 
-<!-- run but don't show -->
-```{r, eval=TRUE, include=FALSE}
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
+```{r, include=FALSE}
 library(zoltr)
 conn <- new_connection(host = Sys.getenv("HOST"))
-z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
+zoltar_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
 conn
 ```
 
@@ -64,7 +65,7 @@ conn
 ```{r, eval=FALSE, include=TRUE}
 library(zoltr)
 conn <- new_connection()
-z_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
+zoltar_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
 conn
 ```
 

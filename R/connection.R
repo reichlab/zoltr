@@ -3,6 +3,18 @@ library(readr)  # apparently required by httr
 
 
 #
+# ---- release_questions() function ----
+#
+
+release_questions <- function() {
+  c(
+    "Did you re-knit README.Rmd?",
+    "Did you update NEWS.Rmd?"
+  )
+}
+
+
+#
 # ---- utility functions ----
 #
 
@@ -73,7 +85,7 @@ delete_resource <- function(zoltar_connection, url) {
 #' create a new connection to a Zoltar host
 #'
 #' Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-#' connection you can call \code{\link{z_authenticate}} on it, and then call \code{\link{projects}} to get a list of
+#' connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list of
 #' Project objects to start working with.
 #'
 #' @return a ZoltarConnection object
@@ -99,7 +111,7 @@ print.ZoltarConnection <-
 #' log in to a Zoltar host
 #'
 #' Returns a new ZoltarConnection object, which is the starting point for working with the Zoltar API.
-#' Once you have the connection you can call z_authenticate() on it, and call projects() to get a list of objects to
+#' Once you have the connection you can call zoltar_authenticate() on it, and call projects() to get a list of objects to
 #' start working with.
 #'
 #' @return none
@@ -107,7 +119,7 @@ print.ZoltarConnection <-
 #' @param username username for the account to use on the connection's host
 #' @param password password ""
 #' @export
-z_authenticate <- function(zoltar_connection, username, password) {
+zoltar_authenticate <- function(zoltar_connection, username, password) {
     zoltar_connection$username <- username
     zoltar_connection$password <- password
     zoltar_connection$session <- new_session(zoltar_connection)

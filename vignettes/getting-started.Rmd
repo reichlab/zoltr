@@ -1,7 +1,7 @@
 ---
 title: "Getting Started"
 author: "Matthew Cornell"
-date: "2019-05-13"
+date: "2019-05-16"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -14,7 +14,8 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   message=FALSE, 
-  warning=FALSE
+  warning=FALSE,
+  eval = nzchar(Sys.getenv("IS_DEVELOPMENT_MACHINE"))
 )
 ```
 
@@ -35,11 +36,11 @@ web interface to navigate to the resource and look at its ID in the browser addr
 for all resources. For example, the project [CDC Flu challenge](https://www.zoltardata.com/project/4)'s URL is
 [https://www.zoltardata.com/project/4](https://www.zoltardata.com/project/4), and you can see that its ID is _4_.
 
-(Note: To access protected resources, you need to call the `z_authenticate()` function before calling any zoltr
+(Note: To access protected resources, you need to call the `zoltar_authenticate()` function before calling any zoltr
 functions. But this is unnecessary in this vignette because we're accessing a public project, models, and forecasts.)
 
 
-<!-- run but don't show -->
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r setup, include=FALSE}
 library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
 ```

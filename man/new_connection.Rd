@@ -14,6 +14,6 @@ a ZoltarConnection object
 }
 \description{
 Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-connection you can call \code{\link{z_authenticate}} on it, and then call \code{\link{projects}} to get a list of
+connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list of
 Project objects to start working with.
 }

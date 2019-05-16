@@ -26,7 +26,7 @@ mock_authenticate <- function(zoltar_connection) {
     "zoltr::get_token" = function(...) {
       mock_token
     },
-    z_authenticate(zoltar_connection, "username", "password"))
+    zoltar_authenticate(zoltar_connection, "username", "password"))
 }
 
 
@@ -92,7 +92,7 @@ test_that("new_connection() returns a ZoltarConnection object", {
 })
 
 
-test_that("z_authenticate() saves username, password, and session", {
+test_that("zoltar_authenticate() saves username, password, and session", {
   zoltar_connection <- new_connection("http://example.com")
   mock_authenticate(zoltar_connection)
 
@@ -103,14 +103,14 @@ test_that("z_authenticate() saves username, password, and session", {
 })
 
 
-test_that("z_authenticate() required to access protected resources", {
+test_that("zoltar_authenticate() required to access protected resources", {
   zoltar_connection <- new_connection("http://example.com")
 
   # NB: while different zoltr functions call different httr functions, we currently only test project_info(), which
   # calls get_resource(), which calls httr::GET(). for completeness, we should test all other functions that call httr
   # ones, e.g., delete_resource() (httr::DELETE()), get_token() (httr::POST()), and upload_forecast() (httr::POST())
 
-  # test that accessing a protected resource fails w/o z_authenticate() first called
+  # test that accessing a protected resource fails w/o zoltar_authenticate() first called
   stub <- webmockr::stub_request('get', uri = 'http://example.com/api/project/0') %>%
     to_return(status = 403)  # Forbidden
 
@@ -450,10 +450,10 @@ test_that("new_session() calls get_token() correctly", {
   called_args <- NULL
   testthat::with_mock("httr::POST" = function(...) {
       called_args <<- list(...)
-      load("get_token_response.rda")  # 'get_token_response' contains a 200 response from sample z_authenticate() call
+      load("get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
       get_token_response
     },
-    z_authenticate(zoltar_connection, "username", "password"))
+    zoltar_authenticate(zoltar_connection, "username", "password"))
 
   expect_equal(called_args$url, "http://example.com/api-token-auth/")
   expect_equal(called_args$body$username, zoltar_connection$username)
