@@ -83,7 +83,7 @@
       <h1>Project Owners</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2019-05-13</h4>
+            <h4 class="date">2019-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/project-owners.Rmd"><code>vignettes/project-owners.Rmd</code></a></small>
       <div class="hidden name"><code>project-owners.Rmd</code></div>
@@ -117,14 +117,14 @@
 <div id="connect-to-the-host-and-authenticate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connect-to-the-host-and-authenticate" class="anchor"></a>Connect to the host and authenticate</h2>
-<p>To access your project, you’ll first need to authenticate via the <code><a href="../reference/z_authenticate.html">z_authenticate()</a></code> function. Pass it the username and password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under the hood, which means you’ll have to re-authenticate after that time.</p>
+<p>To access your project, you’ll first need to authenticate via the <code><a href="../reference/zoltar_authenticate.html">zoltar_authenticate()</a></code> function. Pass it the username and password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used under the hood, which means you’ll have to re-authenticate after that time.</p>
 <p>(Note: Below you will see the host shown as <em>127.0.0.1:8000</em> - this is a temporary one that was used to run this documentation against.)</p>
-<!-- run but don't show -->
-<!-- run but don't show -->
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
 <!-- show but don't run-->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(zoltr)
 conn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_connection.html">new_connection</a></span>()
-<span class="kw"><a href="../reference/z_authenticate.html">z_authenticate</a></span>(conn, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"USERNAME"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"PASSWORD"</span>))
+<span class="kw"><a href="../reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(conn, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"USERNAME"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"PASSWORD"</span>))
 conn</code></pre></div>
 </div>
 <div id="get-the-sandbox-project-and-model-work-with-and-then-list-its-forecasts-if-any" class="section level2">
@@ -138,8 +138,8 @@ model_id &lt;-<span class="st"> </span>the_models[the_models<span class="op">$</
 the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecasts.html">forecasts</a></span>(conn, model_id)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecasts)
 <span class="co">#&gt; 'data.frame':    1 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ id               : int 116</span>
-<span class="co">#&gt;  $ url              : chr "http://127.0.0.1:8000/api/forecast/116/"</span>
+<span class="co">#&gt;  $ id               : int 125</span>
+<span class="co">#&gt;  $ url              : chr "http://127.0.0.1:8000/api/forecast/125/"</span>
 <span class="co">#&gt;  $ timezero_date    : Date, format: "2017-01-17"</span>
 <span class="co">#&gt;  $ data_version_date: Date, format: NA</span></code></pre></div>
 </div>
@@ -154,14 +154,14 @@ existing_forecast_id &lt;-<span class="st"> </span>the_forecasts[the_forecasts<s
 the_forecast_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecast_info.html">forecast_info</a></span>(conn, existing_forecast_id)  <span class="co"># `Not Found (HTTP 404)` this if forecast doesn't exist </span>
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecast_info)
 <span class="co">#&gt; List of 6</span>
-<span class="co">#&gt;  $ id            : int 116</span>
-<span class="co">#&gt;  $ url           : chr "http://127.0.0.1:8000/api/forecast/116/"</span>
+<span class="co">#&gt;  $ id            : int 125</span>
+<span class="co">#&gt;  $ url           : chr "http://127.0.0.1:8000/api/forecast/125/"</span>
 <span class="co">#&gt;  $ forecast_model: chr "http://127.0.0.1:8000/api/model/1/"</span>
 <span class="co">#&gt;  $ csv_filename  : chr "EW1-KoTsarima-2017-01-17-small.csv"</span>
 <span class="co">#&gt;  $ time_zero     :List of 2</span>
 <span class="co">#&gt;   ..$ timezero_date    : chr "20170117"</span>
 <span class="co">#&gt;   ..$ data_version_date: NULL</span>
-<span class="co">#&gt;  $ forecast_data : chr "http://127.0.0.1:8000/api/forecast/116/data/"</span>
+<span class="co">#&gt;  $ forecast_data : chr "http://127.0.0.1:8000/api/forecast/125/data/"</span>
 
 <span class="kw"><a href="../reference/delete_forecast.html">delete_forecast</a></span>(conn, the_forecast_info<span class="op">$</span>id)</code></pre></div>
 </div>
@@ -188,26 +188,26 @@ the_forecast_info &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">forecast_csv_file &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"FORECAST_CSV_FILE"</span>)
 upload_file_job_id &lt;-<span class="st"> </span><span class="kw"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(conn, model_id, timezero_date_str, forecast_csv_file)
 <span class="kw">busy_poll_upload_file_job</span>(upload_file_job_id)
-<span class="co">#&gt; polling for status change. upload_file_job: 96</span>
+<span class="co">#&gt; polling for status change. upload_file_job: 105</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></code></pre></div>
 <p>And here’s the upload’s final information:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">the_upload_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/upload_info.html">upload_info</a></span>(conn, upload_file_job_id)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_upload_info)
 <span class="co">#&gt; List of 10</span>
-<span class="co">#&gt;  $ id             : int 96</span>
-<span class="co">#&gt;  $ url            : chr "http://127.0.0.1:8000/api/uploadfilejob/96/"</span>
+<span class="co">#&gt;  $ id             : int 105</span>
+<span class="co">#&gt;  $ url            : chr "http://127.0.0.1:8000/api/uploadfilejob/105/"</span>
 <span class="co">#&gt;  $ status         : chr "SUCCESS"</span>
 <span class="co">#&gt;  $ user           : chr "http://127.0.0.1:8000/api/user/3/"</span>
-<span class="co">#&gt;  $ created_at     : Date[1:1], format: "2019-05-14"</span>
-<span class="co">#&gt;  $ updated_at     : Date[1:1], format: "2019-05-14"</span>
+<span class="co">#&gt;  $ created_at     : Date[1:1], format: "2019-05-16"</span>
+<span class="co">#&gt;  $ updated_at     : Date[1:1], format: "2019-05-16"</span>
 <span class="co">#&gt;  $ failure_message: chr ""</span>
 <span class="co">#&gt;  $ filename       : chr "EW1-KoTsarima-2017-01-17-small.csv"</span>
 <span class="co">#&gt;  $ input_json     :List of 2</span>
 <span class="co">#&gt;   ..$ forecast_model_pk: int 1</span>
 <span class="co">#&gt;   ..$ timezero_pk      : int 2</span>
 <span class="co">#&gt;  $ output_json    :List of 1</span>
-<span class="co">#&gt;   ..$ forecast_pk: int 117</span></code></pre></div>
+<span class="co">#&gt;   ..$ forecast_pk: int 126</span></code></pre></div>
 </div>
 <div id="print-information-about-the-newly-uploaded-forecast" class="section level2">
 <h2 class="hasAnchor">
@@ -219,14 +219,14 @@ new_forecast_id &lt;-<span class="st"> </span><span class="kw"><a href="../refer
 the_forecast_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecast_info.html">forecast_info</a></span>(conn, new_forecast_id)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecast_info)
 <span class="co">#&gt; List of 6</span>
-<span class="co">#&gt;  $ id            : int 117</span>
-<span class="co">#&gt;  $ url           : chr "http://127.0.0.1:8000/api/forecast/117/"</span>
+<span class="co">#&gt;  $ id            : int 126</span>
+<span class="co">#&gt;  $ url           : chr "http://127.0.0.1:8000/api/forecast/126/"</span>
 <span class="co">#&gt;  $ forecast_model: chr "http://127.0.0.1:8000/api/model/1/"</span>
 <span class="co">#&gt;  $ csv_filename  : chr "EW1-KoTsarima-2017-01-17-small.csv"</span>
 <span class="co">#&gt;  $ time_zero     :List of 2</span>
 <span class="co">#&gt;   ..$ timezero_date    : chr "20170117"</span>
 <span class="co">#&gt;   ..$ data_version_date: NULL</span>
-<span class="co">#&gt;  $ forecast_data : chr "http://127.0.0.1:8000/api/forecast/117/data/"</span></code></pre></div>
+<span class="co">#&gt;  $ forecast_data : chr "http://127.0.0.1:8000/api/forecast/126/data/"</span></code></pre></div>
 </div>
 <div id="look-at-the-models-forecast-list-to-see-the-new-forecast" class="section level2">
 <h2 class="hasAnchor">
@@ -235,8 +235,8 @@ the_forecast_info &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecasts.html">forecasts</a></span>(conn, model_id)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecasts)
 <span class="co">#&gt; 'data.frame':    1 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ id               : int 117</span>
-<span class="co">#&gt;  $ url              : chr "http://127.0.0.1:8000/api/forecast/117/"</span>
+<span class="co">#&gt;  $ id               : int 126</span>
+<span class="co">#&gt;  $ url              : chr "http://127.0.0.1:8000/api/forecast/126/"</span>
 <span class="co">#&gt;  $ timezero_date    : Date, format: "2017-01-17"</span>
 <span class="co">#&gt;  $ data_version_date: Date, format: NA</span></code></pre></div>
 </div>

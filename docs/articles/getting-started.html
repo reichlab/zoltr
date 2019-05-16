@@ -83,7 +83,7 @@
       <h1>Getting Started</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2019-05-13</h4>
+            <h4 class="date">2019-05-16</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/getting-started.Rmd"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="hidden name"><code>getting-started.Rmd</code></div>
@@ -100,8 +100,8 @@
 <h2 class="hasAnchor">
 <a href="#connect-to-the-host" class="anchor"></a>Connect to the host</h2>
 <p>The starting point for working with Zoltar’s API is a <code>ZoltarConnection</code> object, obtained via the <code>new_connection</code> function. Most zoltr functions take a <code>ZoltarConnection</code> along with the <em>ID</em> of the thing of interest, e.g., a project, model, or forecast ID. You can obtain the ID using one of the <code>*_info</code> functions, and you can always use the web interface to navigate to the resource and look at its ID in the browser address field. The ID should be self evident for all resources. For example, the project <a href="https://www.zoltardata.com/project/4">CDC Flu challenge</a>’s URL is <a href="https://www.zoltardata.com/project/4" class="uri">https://www.zoltardata.com/project/4</a>, and you can see that its ID is <em>4</em>.</p>
-<p>(Note: To access protected resources, you need to call the <code><a href="../reference/z_authenticate.html">z_authenticate()</a></code> function before calling any zoltr functions. But this is unnecessary in this vignette because we’re accessing a public project, models, and forecasts.)</p>
-<!-- run but don't show -->
+<p>(Note: To access protected resources, you need to call the <code><a href="../reference/zoltar_authenticate.html">zoltar_authenticate()</a></code> function before calling any zoltr functions. But this is unnecessary in this vignette because we’re accessing a public project, models, and forecasts.)</p>
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(zoltr)
 conn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_connection.html">new_connection</a></span>()
 conn

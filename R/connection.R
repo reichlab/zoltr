@@ -9,6 +9,7 @@ library(readr)  # apparently required by httr
 release_questions <- function() {
   c(
     "Did you re-knit README.Rmd?",
+    "Did you re-run pkgdown::build_site()?",
     "Did you update NEWS.Rmd?"
   )
 }
