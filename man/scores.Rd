@@ -2,18 +2,18 @@
 % Please edit documentation in R/connection.R
 \name{scores}
 \alias{scores}
-\title{get a project's scores}
+\title{Get a project's scores}
 \usage{
 scores(zoltar_connection, project_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{project_id}{id of a project in zoltar_connection's projects}
+\item{project_id}{ID of a project in zoltar_connection's projects}
 }
 \value{
-a data.frame of score data for all models in the passed Project object
+A `data.frame` of score data for all models in the passed project ID
 }
 \description{
-get a project's scores
+Get a project's scores
 }

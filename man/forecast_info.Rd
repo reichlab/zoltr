@@ -2,18 +2,18 @@
 % Please edit documentation in R/connection.R
 \name{forecast_info}
 \alias{forecast_info}
-\title{get a forecast's information}
+\title{Gets a forecast's information}
 \usage{
 forecast_info(zoltar_connection, forecast_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{forecast_id}{id of a forecast in zoltar_connection's forecasts}
+\item{forecast_id}{ID of a forecast in zoltar_connection's forecasts}
 }
 \value{
-a list of forecast information for the passed forecast_id
+A `list` of forecast information for the passed forecast_id
 }
 \description{
-get a forecast's information
+Gets a forecast's information
 }

@@ -2,17 +2,17 @@
 % Please edit documentation in R/connection.R
 \name{delete_forecast}
 \alias{delete_forecast}
-\title{delete a forecast}
+\title{Delete a forecast}
 \usage{
 delete_forecast(zoltar_connection, forecast_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{forecast_id}{id of a forecast in zoltar_connection's forecasts}
+\item{forecast_id}{ID of a forecast in zoltar_connection's forecasts}
 }
 \value{
-none
+None
 }
 \description{
 Deletes the forecast with the passed ID. This is permanent and cannot be undone.

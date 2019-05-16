@@ -2,18 +2,18 @@
 % Please edit documentation in R/connection.R
 \name{model_info}
 \alias{model_info}
-\title{get a model's information}
+\title{Get information about a model}
 \usage{
 model_info(zoltar_connection, model_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{model_id}{id of a model in zoltar_connection's models}
+\item{model_id}{ID of a model in zoltar_connection's models}
 }
 \value{
-a list of model information for the passed model_id
+A `list` of model information for the passed model_id
 }
 \description{
-get a model's information
+Get information about a model
 }

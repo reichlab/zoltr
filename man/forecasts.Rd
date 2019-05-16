@@ -2,18 +2,18 @@
 % Please edit documentation in R/connection.R
 \name{forecasts}
 \alias{forecasts}
-\title{get a model's forecasts}
+\title{Get a model's forecasts}
 \usage{
 forecasts(zoltar_connection, model_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{model_id}{id of a model in zoltar_connection's models}
+\item{model_id}{ID of a model in zoltar_connection's models}
 }
 \value{
-a data.frame of forecast information for the passed model
+A `data.frame` of forecast information for the passed model
 }
 \description{
-get a model's forecasts
+Get a model's forecasts
 }

@@ -2,18 +2,18 @@
 % Please edit documentation in R/connection.R
 \name{project_info}
 \alias{project_info}
-\title{get a project's information}
+\title{Get information about a project}
 \usage{
 project_info(zoltar_connection, project_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{project_id}{id of a project in zoltar_connection's projects}
+\item{project_id}{ID of a project in zoltar_connection's projects}
 }
 \value{
-a list of project information for the passed project_id
+A `list` of project information for the passed project_id
 }
 \description{
-get a project's information
+Get information about a project
 }

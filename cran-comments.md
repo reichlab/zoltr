@@ -3,12 +3,22 @@
 
 ## Test environments
 - local OS X install, R 3.5.3
-- todo xx devtools win-builder, R 3.4.0 beta (r72499)
-- todo xx travis.ci Linux, x64, R 3.5.0 unstable (r72992)
+- R-hub windows-x86_64-devel (r-devel)
+- R-hub ubuntu-gcc-release (r-release)
+- R-hub fedora-clang-devel (r-devel)
+
+
+## R CMD check results
+
+    0 errors | 0 warnings | 1 note
+
+- There were no ERRORs nor WARNINGs.
+- There was 1 NOTE on windows-x86_64-devel (r-devel), ubuntu-gcc-release (r-release), fedora-clang-devel (r-devel):
+  - "Possibly mis-spelled words in DESCRIPTION", but the spelling of "Zoltar" is correct.
 
 
 ## Vignette build requirements
-Per your policies [1], this package's vignettes and README are enabled only on the maintainer’s machine because 1) they
+Per your policies [1], this package's vignettes and README are enabled only on the maintainer’s machine because: 1) they
 take a long time (more than a few seconds) to run, and 2) they execute destructive database operations and so operate on
 a development server (rather than modify our production database). However, the unit tests do exercise all the features
 of the package.
@@ -20,18 +30,4 @@ of the package.
 
     Long-running tests and vignette code can be made optional for checking, but do ensure that the checks that are left
     do exercise all the features of the package.
-
-
-## R CMD check results
-- There were no ERRORs nor WARNINGs.
-- Local build generated no NOTEs.
-- Win-builder generated 1 NOTE:
-  - "Possibly mis-spelled words in DESCRIPTION", but the spelling of "Zoltar" is correct.
-  
-
-0 errors | 0 warnings | 0 notes
-
-
-## Downstream dependencies
-Reverse dependencies checked with devtools::revdep_check(). No issues found.
 

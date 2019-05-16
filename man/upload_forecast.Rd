@@ -2,25 +2,26 @@
 % Please edit documentation in R/connection.R
 \name{upload_forecast}
 \alias{upload_forecast}
-\title{upload a forecast}
+\title{Upload a forecast}
 \usage{
 upload_forecast(zoltar_connection, model_id, timezero_date,
   forecast_csv_file)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{model_id}{id of a model in zoltar_connection's projects}
+\item{model_id}{ID of a model in zoltar_connection's projects}
 
-\item{timezero_date}{the date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
+\item{timezero_date}{The date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
-\item{forecast_csv_file}{a CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}}
+\item{forecast_csv_file}{A CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}}
 }
 \value{
-UploadFileJob id for the upload
+An UploadFileJob id for the upload
 }
 \description{
-Function submits a forecast file to the server for uploading. returns an UploadFileJob object that can
+This function submits a forecast file to the server for uploading. Returns an UploadFileJob object that can
 be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
-turn comes up, which depends on the number of current uploads in the queue.)
+turn comes up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob`
+objects.)
 }

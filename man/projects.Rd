@@ -2,16 +2,16 @@
 % Please edit documentation in R/connection.R
 \name{projects}
 \alias{projects}
-\title{get a data.frame of all projects' metadata}
+\title{Get information about all projects}
 \usage{
 projects(zoltar_connection)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 }
 \value{
-a data.frame of project contents
+A `data.frame` of all projects' contents
 }
 \description{
-Returns a data.frame of all projects' contents.
+Get information about all projects
 }

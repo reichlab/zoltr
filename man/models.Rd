@@ -2,18 +2,18 @@
 % Please edit documentation in R/connection.R
 \name{models}
 \alias{models}
-\title{get a project's models}
+\title{Get a project's models}
 \usage{
 models(zoltar_connection, project_id)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{project_id}{id of a project in zoltar_connection's projects}
+\item{project_id}{ID of a project in zoltar_connection's projects}
 }
 \value{
-a data.frame of model contents for all models in the passed project
+A `data.frame` of model contents for all models in the passed project
 }
 \description{
-get a project's models
+Get a project's models
 }

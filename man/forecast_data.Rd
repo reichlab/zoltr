@@ -2,20 +2,20 @@
 % Please edit documentation in R/connection.R
 \name{forecast_data}
 \alias{forecast_data}
-\title{get a forecast's data}
+\title{Gets a forecast's data}
 \usage{
 forecast_data(zoltar_connection, forecast_id, is_json)
 }
 \arguments{
-\item{zoltar_connection}{a ZoltarConnection object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
-\item{forecast_id}{id of a forecast in zoltar_connection's forecasts}
+\item{forecast_id}{ID of a forecast in zoltar_connection's forecasts}
 
-\item{is_json}{a boolean specifying whether the forecast is in JSON or CSV format}
+\item{is_json}{A boolean specifying whether the forecast is in `list` or `data.frame` format}
 }
 \value{
-forecast data in the requested format
+Forecast data in the requested format - either a `list` or a `data.frame`
 }
 \description{
-get a forecast's data
+Gets a forecast's data
 }

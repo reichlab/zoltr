@@ -2,7 +2,7 @@
 % Please edit documentation in R/connection.R
 \name{new_connection}
 \alias{new_connection}
-\title{create a new connection to a Zoltar host}
+\title{Get a connection to a Zoltar host}
 \usage{
 new_connection(host = "http://zoltardata.com")
 }
@@ -10,7 +10,7 @@ new_connection(host = "http://zoltardata.com")
 \item{host}{The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}}
 }
 \value{
-a ZoltarConnection object
+A `ZoltarConnection` object
 }
 \description{
 Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
