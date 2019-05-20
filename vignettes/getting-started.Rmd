@@ -64,7 +64,7 @@ str(the_projects)
 ```
 
 
-## Get a project to work with and then list its info and models
+## Get a project to work with, list its info and models, and download its scores
 
 Let's start by getting a public project to work with. We will search the projects list for it by name. Then we will pass
 its ID to the `project_info()` function to get details, and pass it to the `models()` function to get a data.frame of
@@ -78,6 +78,9 @@ the_project_info$description
 
 the_models <- models(conn, project_id)  # may take some time
 str(the_models)
+
+score_data <- scores(conn, project_id)
+score_data
 ```
 
 

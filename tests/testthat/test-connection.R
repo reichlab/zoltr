@@ -103,38 +103,6 @@ test_that("zoltar_authenticate() saves username, password, and session", {
 })
 
 
-test_that("zoltar_authenticate() required to access protected resources", {
-  zoltar_connection <- new_connection("http://example.com")
-
-  # NB: while different zoltr functions call different httr functions, we currently only test project_info(), which
-  # calls get_resource(), which calls httr::GET(). for completeness, we should test all other functions that call httr
-  # ones, e.g., delete_resource() (httr::DELETE()), get_token() (httr::POST()), and upload_forecast() (httr::POST())
-
-  # test that accessing a protected resource fails w/o zoltar_authenticate() first called
-  stub <- webmockr::stub_request('get', uri = 'http://example.com/api/project/0') %>%
-    to_return(status = 403)  # Forbidden
-
-  expect_error(
-    project_info(zoltar_connection, 0L),  # todo xx see above note re: helper functions
-    "Forbidden (HTTP 403).",
-    fixed=TRUE
-  )
-
-  # test that it succeeds w/authentication
-  project1_json <- two_projects_json[[1]]
-  webmockr::remove_request_stub(stub)
-  webmockr::stub_request('get', uri = 'http://example.com/api/project/0') %>%
-    to_return(
-      body=project1_json,
-      status = 200,
-      headers = list('Content-Type' = 'application/json; charset=utf-8'))
-
-  mock_authenticate(zoltar_connection)
-  the_project_info <- project_info(zoltar_connection, 0L)  # todo xx see above note re: helper functions
-  expect_is(the_project_info, "list")  # arbitrary test to ensure project_info() didn't fail and did the right thing
-})
-
-
 test_that("upload_forecast() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
