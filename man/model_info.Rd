@@ -17,3 +17,8 @@ A `list` of model information for the passed model_id
 \description{
 Get information about a model
 }
+\examples{
+\dontrun{
+  the_model_info <- model_info(conn, 26L)
+}
+}

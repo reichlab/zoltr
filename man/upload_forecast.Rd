@@ -25,3 +25,8 @@ be used to track the upload's progress. (Uploads are processed in a queue, which
 turn comes up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob`
 objects.)
 }
+\examples{
+\dontrun{
+  upload_file_job_id <- upload_forecast(conn, 26L, "20170117", "/tmp/EW1-KoTsarima-2017-01-17.csv")
+}
+}

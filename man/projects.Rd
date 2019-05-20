@@ -15,3 +15,8 @@ A `data.frame` of all projects' contents
 \description{
 Get information about all projects
 }
+\examples{
+\dontrun{
+  the_projects <- projects(conn)
+}
+}

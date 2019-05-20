@@ -17,3 +17,8 @@ A `list` of forecast information for the passed forecast_id
 \description{
 Gets a forecast's information
 }
+\examples{
+\dontrun{
+  the_forecast_info <- forecast_info(conn, 46L)
+}
+}

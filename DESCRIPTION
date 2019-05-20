@@ -1,10 +1,14 @@
 Package: zoltr
-Title: R Interface to the Zoltar Forecast Repository API
+Title: Interface to the 'Zoltar' Forecast Repository API
 Version: 0.2.0
 Authors@R: c(
     person("Matthew", "Cornell", role = c("aut", "cre"), email = "cornell@umass.edu"),
     person("Nicholas", "Reich", role = c("aut", "cph"), email = "nick@schoolph.umass.edu"))
-Description: Provides an R interface for working with the Zoltar <https://www.zoltardata.com/> forecast repository's API.
+Description: 'Zoltar' <https://www.zoltardata.com/> is a website that provides a repository of model forecast results
+    in a standardized format and a central location. It supports storing, retrieving, comparing, and analyzing time
+    series forecasts for prediction challenges of interest to the modeling community. This package provides functions
+    for working with the 'Zoltar' API, including connecting and authenticating, getting information about projects,
+    models, and forecasts, deleting and uploading forecast data, and downloading scores.
 URL: https://github.com/reichlab/zoltr , http://reichlab.io/zoltr/
 BugReports: https://github.com/reichlab/zoltr/issues
 License: GPL-3

@@ -18,3 +18,8 @@ A `list` of upload information for the passed upload_file_job_id. it has these n
 \description{
 Gets an upload's information that can be used to track the upload's progress. (Uploads are processed in a queue,
 }
+\examples{
+\dontrun{
+  the_upload_info <- upload_info(conn, 287L)
+}
+}

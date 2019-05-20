@@ -9,8 +9,9 @@ library(readr)  # apparently required by httr
 release_questions <- function() {
   c(
     "Did you re-knit README.Rmd?",
-    "Did you re-run pkgdown::build_site()?",
+    "Did you run devtools::document()?",
     "Did you run devtools::build_vignettes()?",
+    "Did you re-run pkgdown::build_site()?",
     "Did you update NEWS.Rmd?"
   )
 }
@@ -87,12 +88,16 @@ delete_resource <- function(zoltar_connection, url) {
 #' Get a connection to a Zoltar host
 #'
 #' Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-#' connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list of
-#' Project objects to start working with.
+#' connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list
+#' of Project objects to start working with.
 #'
 #' @return A `ZoltarConnection` object
 #' @param host The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}
 #' @export
+#' @examples \dontrun{
+#'   conn <- new_connection()
+#' }
+
 new_connection <- function(host="http://zoltardata.com") {
   self <- structure(environment(), class="ZoltarConnection")
   host <- host
@@ -113,14 +118,17 @@ print.ZoltarConnection <-
 #' Log in to a Zoltar host
 #'
 #' Returns a new `ZoltarConnection` object, which is the starting point for working with the Zoltar API.
-#' Once you have the connection you can call zoltar_authenticate() on it, and call projects() to get a list of objects to
-#' start working with.
+#' Once you have the connection you can call zoltar_authenticate() on it, and call projects() to get a list of objects
+#' to start working with.
 #'
 #' @return None
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}.
 #' @param username Username for the account to use on the connection's host
 #' @param password Password ""
 #' @export
+#' @examples \dontrun{
+#'   zoltar_authenticate(conn, "USERNAME", "PASSWORD")
+#' }
 zoltar_authenticate <- function(zoltar_connection, username, password) {
     zoltar_connection$username <- username
     zoltar_connection$password <- password
@@ -141,12 +149,10 @@ get_resource <- function(zoltar_connection, url, is_json=TRUE, query=list()) {
 #' @return A `data.frame` of all projects' contents
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @export
+#' @examples \dontrun{
+#'   the_projects <- projects(conn)
+#' }
 projects <- function(zoltar_connection) {
-  UseMethod("projects")
-}
-
-#' @export
-projects.default <- function(zoltar_connection) {
   projects_json <- get_resource(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
   id_column <- c()
   url_column <- c()
@@ -182,6 +188,9 @@ projects.default <- function(zoltar_connection) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_id ID of a project in zoltar_connection's projects
 #' @export
+#' @examples \dontrun{
+#'   the_project_info <- project_info(conn, 4L)
+#' }
 project_info <- function(zoltar_connection, project_id) {
   get_resource(zoltar_connection, url_for_project_id(zoltar_connection, project_id))
 }
@@ -193,6 +202,9 @@ project_info <- function(zoltar_connection, project_id) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_id ID of a project in zoltar_connection's projects
 #' @export
+#' @examples \dontrun{
+#'   the_scores <- scores(conn, 4L)
+#' }
 scores <- function(zoltar_connection, project_id) {
   scores_url <- paste0(url_for_project_id(zoltar_connection, project_id), '/score_data/')
   get_resource(zoltar_connection, scores_url)
@@ -205,6 +217,9 @@ scores <- function(zoltar_connection, project_id) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_id ID of a project in zoltar_connection's projects
 #' @export
+#' @examples \dontrun{
+#'   the_models <- models(conn, 4L)
+#' }
 models <- function(zoltar_connection, project_id) {
   the_project_info <- project_info(zoltar_connection, project_id)
   id_column <- c()
@@ -247,6 +262,9 @@ YYYYMMDD_format <- "%Y%m%d"  # for as.Date()
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param model_id ID of a model in zoltar_connection's models
 #' @export
+#' @examples \dontrun{
+#'   the_model_info <- model_info(conn, 26L)
+#' }
 model_info <- function(zoltar_connection, model_id) {
   get_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
 }
@@ -258,6 +276,9 @@ model_info <- function(zoltar_connection, model_id) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param model_id ID of a model in zoltar_connection's models
 #' @export
+#' @examples \dontrun{
+#'   the_forecasts <- forecasts(conn, 26L)
+#' }
 forecasts <- function(zoltar_connection, model_id) {
   model_json <- get_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
   id_column <- c()
@@ -296,6 +317,9 @@ forecasts <- function(zoltar_connection, model_id) {
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
 #' @param forecast_csv_file A CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
 #' @export
+#' @examples \dontrun{
+#'   upload_file_job_id <- upload_forecast(conn, 26L, "20170117", "/tmp/EW1-KoTsarima-2017-01-17.csv")
+#' }
 upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_csv_file) {
   forecasts_url <- url_for_model_forecasts_id(zoltar_connection, model_id)
   message(paste0("upload_forecast(): POST: ", forecasts_url))
@@ -323,6 +347,9 @@ upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
 #' @export
+#' @examples \dontrun{
+#'   delete_forecast(conn, 46L)
+#' }
 delete_forecast <- function(zoltar_connection, forecast_id) {
   delete_resource(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
 }
@@ -338,6 +365,9 @@ delete_forecast <- function(zoltar_connection, forecast_id) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
 #' @export
+#' @examples \dontrun{
+#'   the_forecast_info <- forecast_info(conn, 46L)
+#' }
 forecast_info <- function(zoltar_connection, forecast_id) {
   get_resource(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
 }
@@ -350,6 +380,10 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
 #' @param is_json A boolean specifying whether the forecast is in `list` or `data.frame` format
 #' @export
+#' @examples \dontrun{
+#'   forecast_data_json <- forecast_data(conn, 46L, is_json=TRUE)
+#'   forecast_data_csv <- forecast_data(conn, 46L, is_json=FALSE)
+#' }
 forecast_data <- function(zoltar_connection, forecast_id, is_json) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
   if (is_json) {
@@ -389,6 +423,9 @@ status_as_str <- function(status_int) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param upload_file_job_id ID of a job in zoltar_connection that was uploaded via \code{\link{upload_forecast}}
 #' @export
+#' @examples \dontrun{
+#'   the_upload_info <- upload_info(conn, 287L)
+#' }
 upload_info <- function(zoltar_connection, upload_file_job_id) {
   ufj_json <- get_resource(zoltar_connection, url_for_upload_file_job_id(zoltar_connection, upload_file_job_id))
   ufj_json$status <- status_as_str(ufj_json$status)

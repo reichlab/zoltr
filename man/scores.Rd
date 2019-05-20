@@ -17,3 +17,8 @@ A `data.frame` of score data for all models in the passed project ID
 \description{
 Get a project's scores
 }
+\examples{
+\dontrun{
+  the_scores <- scores(conn, 4L)
+}
+}

@@ -17,3 +17,8 @@ None
 \description{
 Deletes the forecast with the passed ID. This is permanent and cannot be undone.
 }
+\examples{
+\dontrun{
+  delete_forecast(conn, 46L)
+}
+}

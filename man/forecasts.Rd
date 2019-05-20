@@ -17,3 +17,8 @@ A `data.frame` of forecast information for the passed model
 \description{
 Get a model's forecasts
 }
+\examples{
+\dontrun{
+  the_forecasts <- forecasts(conn, 26L)
+}
+}

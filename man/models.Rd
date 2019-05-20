@@ -17,3 +17,8 @@ A `data.frame` of model contents for all models in the passed project
 \description{
 Get a project's models
 }
+\examples{
+\dontrun{
+  the_models <- models(conn, 4L)
+}
+}

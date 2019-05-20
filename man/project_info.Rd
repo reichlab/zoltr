@@ -17,3 +17,8 @@ A `list` of project information for the passed project_id
 \description{
 Get information about a project
 }
+\examples{
+\dontrun{
+  the_project_info <- project_info(conn, 4L)
+}
+}

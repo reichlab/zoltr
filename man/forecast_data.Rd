@@ -19,3 +19,9 @@ Forecast data in the requested format - either a `list` or a `data.frame`
 \description{
 Gets a forecast's data
 }
+\examples{
+\dontrun{
+  forecast_data_json <- forecast_data(conn, 46L, is_json=TRUE)
+  forecast_data_csv <- forecast_data(conn, 46L, is_json=FALSE)
+}
+}

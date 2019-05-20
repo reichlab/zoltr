@@ -1,6 +1,16 @@
 ## Note: Initial CRAN release :-)
 
 
+## Resubmission
+This is a resubmission. In this version we have:
+- Omitted the redundant "R" in title and description.
+- Changed package names, software names and API names to be in single quotes in the title and description fields.
+- Lengthened and elaborated the description field to be a (one paragraph) summary of what the package does and why
+  it may be useful.
+- Provided small executable examples in all exported functions' Rd files. Examples have been wrapped in \dontrun{} for
+  the reasons explained in "Vignette build requirements" below.
+
+
 ## Test environments
 - local OS X install, R 3.5.3
 - R-hub windows-x86_64-devel (r-devel)
@@ -9,12 +19,11 @@
 
 
 ## R CMD check results
-
-    0 errors | 0 warnings | 1 note
-
 - There were no ERRORs nor WARNINGs.
 - There was 1 NOTE on windows-x86_64-devel (r-devel), ubuntu-gcc-release (r-release), fedora-clang-devel (r-devel):
-  - "Possibly mis-spelled words in DESCRIPTION", but the spelling of "Zoltar" is correct.
+    checking CRAN incoming feasibility ... NOTE
+    Maintainer: 'Matthew Cornell <cornell@umass.edu>'
+    New submission
 
 
 ## Vignette build requirements
