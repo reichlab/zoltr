@@ -32,7 +32,7 @@ Read more at the [zoltr pkgdown site](http://reichlab.io/zoltr/), but briefly yo
 library(zoltr)
 conn <- new_connection()
 conn
-#> ZoltarConnection 'http://zoltardata.com' (no session)
+#> ZoltarConnection 'https://zoltardata.com' (no session)
 
 the_projects <- projects(conn)
 project_id <- the_projects[1,]$id

@@ -108,7 +108,7 @@
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(zoltr)
 conn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_connection.html">new_connection</a></span>()
 conn
-<span class="co">#&gt; ZoltarConnection 'http://zoltardata.com' (no session)</span></code></pre></div>
+<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' (no session)</span></code></pre></div>
 </div>
 <div id="get-a-list-of-all-projects-on-the-host" class="section level2">
 <h2 class="hasAnchor">
@@ -118,7 +118,7 @@ conn
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_projects)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
 <span class="co">#&gt;  $ id         : int 4</span>
-<span class="co">#&gt;  $ url        : chr "http://zoltardata.com/api/project/4/"</span>
+<span class="co">#&gt;  $ url        : chr "https://zoltardata.com/api/project/4/"</span>
 <span class="co">#&gt;  $ owner_id   : int 5</span>
 <span class="co">#&gt;  $ public     : logi TRUE</span>
 <span class="co">#&gt;  $ name       : chr "CDC Flu challenge"</span>
@@ -145,7 +145,7 @@ the_models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_models)
 <span class="co">#&gt; 'data.frame':    21 obs. of  8 variables:</span>
 <span class="co">#&gt;  $ id          : int  12 26 25 24 23 11 10 18 20 21 ...</span>
-<span class="co">#&gt;  $ url         : chr  "http://zoltardata.com/api/model/12/" "http://zoltardata.com/api/model/26/" "http://zoltardata.com/api/model/25/" "http://zoltardata.com/api/model/24/" ...</span>
+<span class="co">#&gt;  $ url         : chr  "https://zoltardata.com/api/model/12/" "https://zoltardata.com/api/model/26/" "https://zoltardata.com/api/model/25/" "https://zoltardata.com/api/model/24/" ...</span>
 <span class="co">#&gt;  $ project_id  : int  4 4 4 4 4 4 4 4 4 4 ...</span>
 <span class="co">#&gt;  $ owner_id    : int  5 5 5 5 5 5 5 5 5 5 ...</span>
 <span class="co">#&gt;  $ name        : chr  "Rank Histogram Filter SIRS" "SARIMA model with seasonal differencing" "SARIMA model without seasonal differencing" "Kernel Density Estimation" ...</span>
@@ -188,7 +188,7 @@ the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../referen
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecasts)
 <span class="co">#&gt; 'data.frame':    225 obs. of  4 variables:</span>
 <span class="co">#&gt;  $ id               : int  4539 4540 4541 4542 4543 4544 4545 4546 4547 4548 ...</span>
-<span class="co">#&gt;  $ url              : chr  "http://zoltardata.com/api/forecast/4539/" "http://zoltardata.com/api/forecast/4540/" "http://zoltardata.com/api/forecast/4541/" "http://zoltardata.com/api/forecast/4542/" ...</span>
+<span class="co">#&gt;  $ url              : chr  "https://zoltardata.com/api/forecast/4539/" "https://zoltardata.com/api/forecast/4540/" "https://zoltardata.com/api/forecast/4541/" "https://zoltardata.com/api/forecast/4542/" ...</span>
 <span class="co">#&gt;  $ timezero_date    : Date, format: "2010-10-24" "2010-10-31" ...</span>
 <span class="co">#&gt;  $ data_version_date: Date, format: "2010-11-08" "2010-11-15" ...</span></code></pre></div>
 </div>
