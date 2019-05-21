@@ -40,11 +40,14 @@ before starting you should:
 ## Connect to the host and authenticate
 
 To access your project, you'll first need to authenticate via the `zoltar_authenticate()` function. Pass it the username
-and password for your account. Note that currently Zoltar uses a five minute timeout on the underlying JWT tokens used
-under the hood, which means you'll have to re-authenticate after that time.
-
-(Note: Below you will see the host shown as _127.0.0.1:8000_ - this is a temporary one that was used to run this 
-documentation against.)
+and password for your account. Notes:
+ 
+- If you specify a different host, you should _always_ use "https" for the URL (it's the "s" that's different from a
+  non-secure URL). That is why the default host is "https://zoltardata.com" and not "http://zoltardata.com".
+- Zoltar currently uses a five minute timeout on the underlying JWT tokens used under the hood, which means you'll have 
+  to re-authenticate after that time.
+- Below you will see the host shown as _127.0.0.1:8000_ - this is a temporary one that was used to generate this 
+  documentation.
 
 
 <!-- run but don't show. NB: will run only if above eval=TRUE -->

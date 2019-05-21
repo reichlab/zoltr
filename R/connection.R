@@ -98,7 +98,7 @@ delete_resource <- function(zoltar_connection, url) {
 #'   conn <- new_connection()
 #' }
 
-new_connection <- function(host="http://zoltardata.com") {
+new_connection <- function(host="https://zoltardata.com") {
   self <- structure(environment(), class="ZoltarConnection")
   host <- host
   username <- NULL
