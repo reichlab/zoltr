@@ -3,21 +3,6 @@ library(readr)  # apparently required by httr
 
 
 #
-# ---- release_questions() function ----
-#
-
-release_questions <- function() {
-  c(
-    "Did you re-knit README.Rmd?",
-    "Did you run devtools::document()?",
-    "Did you run devtools::build_vignettes()?",
-    "Did you re-run pkgdown::build_site()?",
-    "Did you update NEWS.Rmd?"
-  )
-}
-
-
-#
 # ---- utility functions ----
 #
 
