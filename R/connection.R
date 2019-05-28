@@ -1,5 +1,7 @@
 library(httr)
 library(readr)  # apparently required by httr
+library(base64url)
+library(jsonlite)
 
 
 #
@@ -60,6 +62,7 @@ add_auth_headers <- function(zoltar_connection) {
 
 # deletes the resource at the passed URL
 delete_resource <- function(zoltar_connection, url) {
+  re_authenticate_if_necessary(zoltar_connection)
   message(paste0("delete_resource(): DELETE: ", url))
   response <- httr::DELETE(url=url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
@@ -115,13 +118,20 @@ print.ZoltarConnection <-
 #'   zoltar_authenticate(conn, "USERNAME", "PASSWORD")
 #' }
 zoltar_authenticate <- function(zoltar_connection, username, password) {
-    zoltar_connection$username <- username
-    zoltar_connection$password <- password
-    zoltar_connection$session <- new_session(zoltar_connection)
+  zoltar_connection$username <- username
+  zoltar_connection$password <- password
+  zoltar_connection$session <- new_session(zoltar_connection)
   }
+
+re_authenticate_if_necessary <- function(zoltar_connection) {
+  if (inherits(zoltar_connection$session, "ZoltarSession") && is_token_expired(zoltar_connection$session)) {
+    zoltar_authenticate(zoltar_connection, zoltar_connection$username, zoltar_connection$password)
+  }
+}
 
 
 get_resource <- function(zoltar_connection, url, is_json=TRUE, query=list()) {
+  re_authenticate_if_necessary(zoltar_connection)
   message(paste0("get_resource(): GET: ", url))
   response <- httr::GET(url=url, add_auth_headers(zoltar_connection), query=query)
   httr::stop_for_status(response)
@@ -307,6 +317,7 @@ forecasts <- function(zoltar_connection, model_id) {
 #' }
 upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_csv_file) {
   forecasts_url <- url_for_model_forecasts_id(zoltar_connection, model_id)
+  re_authenticate_if_necessary(zoltar_connection)
   message(paste0("upload_forecast(): POST: ", forecasts_url))
   response <- httr::POST(
     url=forecasts_url,
@@ -432,20 +443,21 @@ new_session <- function(zoltar_connection) {
 }
 
 
-get_token <- function(zoltar_session, ...) {
-  UseMethod("get_token")
-}
-
-get_token.default <- function(zoltar_session, ...) {
-  token_auth_url <- url_for_token_auth(zoltar_session$zoltar_connection)
+# returns the JWT token string obtained from zoltar. it has decoded contents that look like this:
+# - header:  {"typ": "JWT", "alg": "HS256"}
+# - payload: {"user_id": 3, "username": "model_owner1", "exp": 1558442805, "email": ""}
+get_token <- function(zoltar_session) {
+  zoltar_connection <- zoltar_session$zoltar_connection
+  token_auth_url <- url_for_token_auth(zoltar_connection)
+  re_authenticate_if_necessary(zoltar_connection)
   message(paste0("get_token(): POST: ", token_auth_url))
   response <-
     httr::POST(
       url=token_auth_url,
       httr::accept_json(),
       body=list(
-        username=zoltar_session$zoltar_connection$username,
-        password=zoltar_session$zoltar_connection$password
+        username=zoltar_connection$username,
+        password=zoltar_connection$password
       )
     )
   httr::stop_for_status(response)
@@ -453,3 +465,15 @@ get_token.default <- function(zoltar_session, ...) {
   json_content$token
 }
 
+# returns TRUE if zoltar_session's token is expired, and FALSE if still valid. details: based on how Zoltar implements
+# JWT, we determine expiration by comparing the current datetime to the token's payload's "exp" field. its value is a
+# POSIX timestamp of a UTC date and time as returned by datetime.utcnow().timestamp() - https://docs.python.org/3.6/library/datetime.html#datetime.datetime.utcnow . xx
+is_token_expired <- function(zoltar_session) {
+  token_split <- strsplit(zoltar_session$token, ".", fixed=TRUE)  # 3 parts: header, payload, and signature
+  payload_encoded <- token_split[[1]][[2]]
+  payload_decoded <- base64url::base64_urldecode(payload_encoded)
+  payload <- jsonlite::fromJSON(payload_decoded)
+  exp_timestamp_utc <- payload$exp
+  exp_timestamp_date <- .POSIXct(exp_timestamp_utc, tz="UTC")
+  exp_timestamp_date <= Sys.time()  # now
+}

@@ -6,6 +6,7 @@ library(mockery)
 library(testthat)
 library(zoltr)
 library(webmockr)
+library(base64url)
 
 httr_mock()  # turns on for *all* tests
 
@@ -18,13 +19,20 @@ httr_mock()  # turns on for *all* tests
 
 two_projects_json <- jsonlite::read_json("projects-list.json")
 
-mock_token <- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+# mock_token is an expired token as returned by zoltar. decoded contents:
+# - header:  {"typ": "JWT", "alg": "HS256"}
+# - payload: {"user_id": 3, "username": "model_owner1", "exp": 1558442805, "email": ""}
+# - expiration:
+#   05/21/2019 @ 12:46pm               (UTC)
+#   2019-05-21T12:46:45+00:00          (ISO 8601)
+#   Tuesday, May 21, 2019 12:46:45 PM  (GMT)
+#   datetime(2019, 5, 21, 12, 46, 45)  (python): datetime.utcfromtimestamp(1558442805)
+mock_token <- "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjozLCJ1c2VybmFtZSI6Im1vZGVsX293bmVyMSIsImV4cCI6MTU1ODQ0MjgwNSwiZW1haWwiOiIifQ.o03V2RxkFpA5ThhRAidwDWCdcQNeJzr1wwFkOFKUI74"
 
-
-mock_authenticate <- function(zoltar_connection) {
+mock_authenticate <- function(zoltar_connection, token=mock_token) {
   with_mock(
     "zoltr::get_token" = function(...) {
-      mock_token
+      token
     },
     zoltar_authenticate(zoltar_connection, "username", "password"))
 }
@@ -103,10 +111,73 @@ test_that("zoltar_authenticate() saves username, password, and session", {
 })
 
 
+test_that("is_token_expired() works for an expired and unexpired tokens", {
+  # test an expired token
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)  # default token (mock_token) is expired
+  expect_true(is_token_expired(zoltar_connection$session))
+
+  # construct and test an unexpired token
+  token_split <- strsplit(mock_token, ".", fixed=TRUE)  # 3 parts: header, payload, and signature
+  old_header <- token_split[[1]][[1]]
+  old_signature <- token_split[[1]][[3]]
+
+  ten_min_from_now <- round(unclass(Sys.time() + (60 * 10)))  # exclude decimal portion - throws off some JWT tools
+  new_payload <- list(user_id=3, username="model_owner1", exp=ten_min_from_now, email="")
+  new_payload_json <- jsonlite::toJSON(new_payload, auto_unbox=TRUE)
+  unexpired_token <- paste0(old_header, '.', base64url::base64_urlencode(new_payload_json), '.', old_signature)
+
+  mock_authenticate(zoltar_connection, token=unexpired_token)
+  expect_false(is_token_expired(zoltar_connection$session))
+})
+
+
+test_that("httr functions re-authenticate expired tokens", {
+  # test that all httr methods re-authenticate. the current functions that call httr methods follow.
+  # todo update this when adding new functionality
+  # - GET     <- get_resource()
+  # - DELETE  <- delete_resource()
+  # - POST    <- upload_forecast() , get_token()
+
+  zoltar_connection <- new_connection("http://example.com")
+  mock_authenticate(zoltar_connection)  # default token (mock_token) is expired
+
+  webmockr::stub_request('get', uri='http://example.com')
+  webmockr::stub_request('delete', uri='http://example.com/api/forecast/0')
+  webmockr::stub_request('post', uri='http://example.com/api/model/0/forecasts/')
+  webmockr::stub_request('post', uri = 'http://example.com/api-token-auth/')
+  mockery::stub(upload_forecast, 'httr::upload_file', NULL)
+
+  m <- mock()
+  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
+    get_resource(zoltar_connection, "http://example.com")  # httr::GET
+    expect_equal(length(mock_calls(m)), 1)
+  })
+
+  m <- mock()
+  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
+    delete_forecast(zoltar_connection, forecast_id=0L)  # httr::DELETE
+    expect_equal(length(mock_calls(m)), 1)
+  })
+
+  m <- mock()
+  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
+    upload_forecast(zoltar_connection, 0L, NULL, "")  # httr::POST. model_id, timezero_date, forecast_csv_file
+    expect_equal(length(mock_calls(m)), 1)
+  })
+
+  m <- mock()
+  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
+    get_token(zoltar_connection$session)  # httr::POST
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
 test_that("upload_forecast() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
-  webmockr::stub_request('post', uri = 'http://example.com/api/model/0/forecasts/')
+  webmockr::stub_request('post', uri='http://example.com/api/model/0/forecasts/')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
     upload_forecast(zoltar_connection, 0L, NULL, "")  # model_id, timezero_date, forecast_csv_file
@@ -117,7 +188,7 @@ test_that("upload_forecast() does not call add_headers() for unauthenticated con
 
 test_that("delete_forecast() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request('delete', uri = 'http://example.com/api/forecast/0')
+  webmockr::stub_request('delete', uri='http://example.com/api/forecast/0')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
     delete_forecast(zoltar_connection, forecast_id=0L)
@@ -129,7 +200,7 @@ test_that("delete_forecast() does not call add_headers() for unauthenticated con
 
 test_that("get_resource() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request('get', uri = 'http://example.com')
+  webmockr::stub_request('get', uri='http://example.com')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
     get_resource(zoltar_connection, "http://example.com")
@@ -140,7 +211,7 @@ test_that("get_resource() does not call add_headers() for unauthenticated connec
 
 test_that("scores() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request('get', uri = 'http://example.com/api/project/0/score_data/')
+  webmockr::stub_request('get', uri='http://example.com/api/project/0/score_data/')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
     scores(zoltar_connection, 0L)
@@ -151,7 +222,7 @@ test_that("scores() does not call add_headers() for unauthenticated connection",
 
 test_that("forecast_data() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request('get', uri = 'http://example.com/api/forecast/0/data/?format=csv')
+  webmockr::stub_request('get', uri='http://example.com/api/forecast/0/data/?format=csv')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
     forecast_data(zoltar_connection, 0L, is_json=FALSE)  # CSV
@@ -159,6 +230,10 @@ test_that("forecast_data() does not call add_headers() for unauthenticated conne
   })
 })
 
+
+#
+# ---- project tests ----
+#
 
 test_that("projects(zoltar_connection) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
@@ -169,28 +244,24 @@ test_that("projects(zoltar_connection) returns a data.frame", {
     expect_equal(nrow(the_projects), 2)  # 2 projects
     expect_equal(ncol(the_projects), 8)
     expect_equal(names(the_projects),
-                 c("id", "url", "owner_id", "public", "name", "description", "home_url", "core_data"))
+    c("id", "url", "owner_id", "public", "name", "description", "home_url", "core_data"))
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/projects/")
 
     project_row <- the_projects[1, ]
-    exp_row <- data.frame(id=1L, url="http://example.com/api/project/1/", name="public project", stringsAsFactors = FALSE)
+    exp_row <- data.frame(id=1L, url="http://example.com/api/project/1/", name="public project", stringsAsFactors=FALSE)
     expect_equal(project_row$id, exp_row$id)
     expect_equal(project_row$url, exp_row$url)
     expect_equal(project_row$name, exp_row$name)
 
     project_row <- the_projects[2, ]
-    exp_row <- data.frame(id=2L, url="http://example.com/api/project/2/", name="private project", stringsAsFactors = FALSE)
+    exp_row <- data.frame(id=2L, url="http://example.com/api/project/2/", name="private project", stringsAsFactors=FALSE)
     expect_equal(project_row$id, exp_row$id)
     expect_equal(project_row$url, exp_row$url)
     expect_equal(project_row$name, exp_row$name)
   })
 })
 
-
-#
-# ---- project tests ----
-#
 
 test_that("project_info(zoltar_connection, project_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
@@ -288,9 +359,9 @@ test_that("forecasts(model_id) returns a data.frame", {
   forecast_row <- the_forecasts[1, ]
   exp_row <- data.frame(
     url="http://example.com/api/forecast/71/",
-    timezero_date=as.Date("20170117", format = "%Y%m%d"),
+    timezero_date=as.Date("20170117", format="%Y%m%d"),
     data_version_date=as.Date(NA),
-    stringsAsFactors = FALSE)
+    stringsAsFactors=FALSE)
   expect_equal(forecast_row$url, exp_row$url)
   expect_equal(forecast_row$timezero_date, exp_row$timezero_date)
   expect_equal(forecast_row$data_version_date, exp_row$data_version_date)
@@ -298,9 +369,9 @@ test_that("forecasts(model_id) returns a data.frame", {
   forecast_row <- the_forecasts[2, ]
   exp_row <- data.frame(
     url="http://example.com/api/forecast/72/",
-    timezero_date=as.Date("20170130", format = "%Y%m%d"),
-    data_version_date=as.Date("20170131", format = "%Y%m%d"),
-    stringsAsFactors = FALSE)
+    timezero_date=as.Date("20170130", format="%Y%m%d"),
+    data_version_date=as.Date("20170131", format="%Y%m%d"),
+    stringsAsFactors=FALSE)
   expect_equal(forecast_row$url, exp_row$url)
   expect_equal(forecast_row$timezero_date, exp_row$timezero_date)
   expect_equal(forecast_row$data_version_date, exp_row$data_version_date)
@@ -313,11 +384,11 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
   # test upload_forecast()
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
-  webmockr::stub_request('post', uri = 'http://example.com/api/model/1/forecasts/') %>%
+  webmockr::stub_request('post', uri='http://example.com/api/model/1/forecasts/') %>%
     to_return(
       body=upload_file_job_json,
-      status = 200,
-      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+      status=200,
+      headers=list('Content-Type'='application/json; charset=utf-8'))
 
   upload_file_job_id <- upload_forecast(zoltar_connection, 1L, NULL, NULL)  # model_id, timezero_date, forecast_csv_file
   expect_equal(upload_file_job_id, 2L)

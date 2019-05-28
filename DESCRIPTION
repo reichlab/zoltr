@@ -1,6 +1,6 @@
 Package: zoltr
 Title: Interface to the 'Zoltar' Forecast Repository API
-Version: 0.2.1
+Version: 0.2.2
 Authors@R: c(
     person("Matthew", "Cornell", role = c("aut", "cre"), email = "cornell@umass.edu"),
     person("Nicholas", "Reich", role = c("aut", "cph"), email = "nick@schoolph.umass.edu"))
@@ -23,6 +23,7 @@ Imports:
     jsonlite,
     readr,
     mockery,
-    webmockr
+    webmockr,
+    base64url
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

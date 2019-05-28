@@ -3,8 +3,9 @@
 zoltr - An R client for the Zoltar data repository API
 ======================================================
 
-<!-- badges: start -->
-<!-- badges: end -->
+Overview
+--------
+
 This package contains functions for working with the [https://www.zoltardata.com/](Zoltar) forecast repository's API, including projects, models, forecasts, and scores. Read more at the [zoltr pkgdown site](http://reichlab.io/zoltr/).
 
 Installation
