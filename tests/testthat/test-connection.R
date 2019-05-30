@@ -169,7 +169,7 @@ test_that("httr functions re-authenticate expired tokens", {
   m <- mock()
   testthat::with_mock("zoltr::zoltar_authenticate" = m, {
     get_token(zoltar_connection$session)  # httr::POST
-    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(length(mock_calls(m)), 0)  # ensure get_token() does *not* call zoltar_authenticate() - o/w inf loop!
   })
 })
 

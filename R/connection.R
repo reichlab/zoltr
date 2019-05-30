@@ -99,7 +99,10 @@ new_connection <- function(host="https://zoltardata.com") {
 #' @export
 print.ZoltarConnection <-
   function(x, ...) {
-    cat(class(x), " '", x$host, "' ", if (is.null(x$session)) "(no session)" else "(authenticated)", "\n", sep='')
+    cat(class(x), " '", x$host, "' ",
+      if (is.null(x$session)) "not authenticated"
+      else paste0("authenticated (exp=", token_expiration_date(x$session), " UTC)"),
+      "\n", sep='')
   }
 
 
@@ -123,8 +126,10 @@ zoltar_authenticate <- function(zoltar_connection, username, password) {
   zoltar_connection$session <- new_session(zoltar_connection)
   }
 
+
 re_authenticate_if_necessary <- function(zoltar_connection) {
   if (inherits(zoltar_connection$session, "ZoltarSession") && is_token_expired(zoltar_connection$session)) {
+    message(paste0("re-authenticating expired token '", zoltar_connection$host, "'"))
     zoltar_authenticate(zoltar_connection, zoltar_connection$username, zoltar_connection$password)
   }
 }
@@ -449,7 +454,6 @@ new_session <- function(zoltar_connection) {
 get_token <- function(zoltar_session) {
   zoltar_connection <- zoltar_session$zoltar_connection
   token_auth_url <- url_for_token_auth(zoltar_connection)
-  re_authenticate_if_necessary(zoltar_connection)
   message(paste0("get_token(): POST: ", token_auth_url))
   response <-
     httr::POST(
@@ -465,15 +469,22 @@ get_token <- function(zoltar_session) {
   json_content$token
 }
 
-# returns TRUE if zoltar_session's token is expired, and FALSE if still valid. details: based on how Zoltar implements
-# JWT, we determine expiration by comparing the current datetime to the token's payload's "exp" field. its value is a
-# POSIX timestamp of a UTC date and time as returned by datetime.utcnow().timestamp() - https://docs.python.org/3.6/library/datetime.html#datetime.datetime.utcnow . xx
-is_token_expired <- function(zoltar_session) {
+
+# returns a POSIXct for the zoltar_session's token. see notes in is_token_expired() for details on extracting the date
+token_expiration_date <- function(zoltar_session) {
   token_split <- strsplit(zoltar_session$token, ".", fixed=TRUE)  # 3 parts: header, payload, and signature
   payload_encoded <- token_split[[1]][[2]]
   payload_decoded <- base64url::base64_urldecode(payload_encoded)
   payload <- jsonlite::fromJSON(payload_decoded)
   exp_timestamp_utc <- payload$exp
   exp_timestamp_date <- .POSIXct(exp_timestamp_utc, tz="UTC")
-  exp_timestamp_date <= Sys.time()  # now
+  exp_timestamp_date
+}
+
+
+# returns TRUE if zoltar_session's token is expired, and FALSE if still valid. details: based on how Zoltar implements
+# JWT, we determine expiration by comparing the current datetime to the token's payload's "exp" field. its value is a
+# POSIX timestamp of a UTC date and time as returned by datetime.utcnow().timestamp() - https://docs.python.org/3.6/library/datetime.html#datetime.datetime.utcnow . xx
+is_token_expired <- function(zoltar_session) {
+  token_expiration_date(zoltar_session) <= Sys.time()  # now
 }

@@ -29,7 +29,7 @@ takes you through the package's main features. So that you can experiment withou
 
 ## Connect to the host
 
-The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection` 
+The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection`
 function. Most zoltr functions take a `ZoltarConnection` along with the _ID_ of the thing of interest, e.g., a
 project, model, or forecast ID. You can obtain the ID using one of the `*_info` functions, and you can always use the
 web interface to navigate to the resource and look at its ID in the browser address field. The ID should be self evident
