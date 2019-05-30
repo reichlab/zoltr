@@ -1,23 +1,16 @@
-## Note: Initial CRAN release :-)
-
-
 ## Test environments
-- local OS X install, R 3.5.3
+- local OS X install, R 3.6.0
 - rhub::check_for_cran()
   - _windows-x86_64-devel_ (r-devel)
   - _ubuntu-gcc-release_ (r-release)
   - _fedora-clang-devel_ (r-devel)
 - rhub::check_on_fedora()
-  - _fedora-gcc-devel_ (r-devel)
+  - _fedora-gcc-devel_ (r-devel)  
+- devtools::build_win()
 
 
 ## R CMD check results
-- There were no ERRORs nor WARNINGs.
-- There was 1 NOTE on windows-x86_64-devel, ubuntu-gcc-release, fedora-clang-devel:
-
-    checking CRAN incoming feasibility ... NOTE
-    Maintainer: 'Matthew Cornell <cornell@umass.edu>'
-    Days since last update: 1
+0 ERRORs | 0 WARNINGs | 0 NOTES
 
 
 ## Vignette build requirements
