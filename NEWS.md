@@ -2,8 +2,8 @@
 - Added automatic re-authentication of expired tokens
 
 
-- Made changes to avoid CRAN NOTE:
 # zoltr 0.2.1
+- Made changes to avoid CRAN NOTE:
 - Made changes to avoid CRAN NOTE:
 
     checking dependencies in R code ... NOTE
