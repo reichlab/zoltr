@@ -220,10 +220,10 @@ test_that("scores() does not call add_headers() for unauthenticated connection",
 
 test_that("forecast_data() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request('get', uri='http://example.com/api/forecast/0/data/?format=csv')
+  webmockr::stub_request('get', uri='http://example.com/api/forecast/0/data/')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
-    forecast_data(zoltar_connection, 0L, is_json=FALSE)  # CSV
+    forecast_data(zoltar_connection, 0L)
     expect_equal(length(mock_calls(m)), 0)
   })
 })
@@ -288,11 +288,10 @@ test_that("project_info(zoltar_connection, project_id) returns a list", {
   m <- mock(project1_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     the_project_info <- project_info(zoltar_connection, project_id=1L)
-    expect_is(the_project_info, "list")
-    expect_equal(the_project_info, project1_json)
-
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1")
+    expect_is(the_project_info, "list")
+    expect_equal(the_project_info, project1_json)
   })
 })
 
@@ -304,12 +303,11 @@ test_that("scores(zoltar_connection, project_id) returns a data.frame", {
   m <- mock(scores_response)
   testthat::with_mock("httr::GET" = m, {
     the_scores <- scores(zoltar_connection, project_id=1L)
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/project/1/score_data/")
     expect_equal(dim(the_scores), c(380, 10))
     expect_equal(names(the_scores),
       c("model", "timezero", "season", "location", "target", "error", "abs_error", "log_single_bin", "log_multi_bin", "pit"))
-
-    expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/project/1/score_data/")
   })
 })
 
@@ -321,35 +319,45 @@ test_that("models(zoltar_connection, project_id) returns a data.frame", {
   m <- mock(project1_json, model1_json, model1_json)  # return values in calling order
   testthat::with_mock("zoltr::get_resource" = m, {
     the_models <- models(zoltar_connection, project_id=1L)
-    expect_is(the_models, "data.frame")
-    expect_equal(names(the_models), c("id", "url", "project_id", "owner_id", "name", "description", "home_url", "aux_data_url"))
-    expect_equal(nrow(the_models), 2)  # 2 projects
-    expect_equal(ncol(the_models), 8)
     expect_equal(length(mock_calls(m)), 3)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1")
     expect_equal(mock_args(m)[[2]][[2]], "http://example.com/api/model/1/")
     expect_equal(mock_args(m)[[3]][[2]], "http://example.com/api/model/2/")
+    expect_is(the_models, "data.frame")
+    expect_equal(names(the_models), c("id", "url", "project_id", "owner_id", "name", "description", "home_url", "aux_data_url"))
+    expect_equal(nrow(the_models), 2)  # 2 projects
+    expect_equal(ncol(the_models), 8)
   })
 })
 
 
 test_that("models(zoltar_connection, project_id) can handle NULL owner in project JSON", {
-  zoltar_connection <- new_connection("http://example.com")
-  project1_json <- two_projects_json[[1]]
-  model1_json <- jsonlite::read_json("model-1.json")
-  model1_json$owner <- NULL
-  m <- mock(project1_json, model1_json, model1_json)  # return values in calling order
-  testthat::with_mock("zoltr::get_resource" = m, {
-    the_models <- models(zoltar_connection, project_id=1L)
-    expect_is(the_models, "data.frame")
-    expect_equal(names(the_models), c("id", "url", "project_id", "owner_id", "name", "description", "home_url", "aux_data_url"))
-    expect_equal(nrow(the_models), 2)  # 2 projects
-    expect_equal(ncol(the_models), 8)
-    expect_equal(length(mock_calls(m)), 3)
-    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1")
-    expect_equal(mock_args(m)[[2]][[2]], "http://example.com/api/model/1/")
-    expect_equal(mock_args(m)[[3]][[2]], "http://example.com/api/model/2/")
-  })
+    zoltar_connection <- new_connection("http://example.com")
+    project1_json <- two_projects_json[[1]]
+    model1_json <- jsonlite::read_json("model-1.json")
+    model1_json$owner <- NULL
+    m <- mock(project1_json, model1_json, model1_json)  # return values in calling order
+    testthat::with_mock("zoltr::get_resource" = m, {
+        the_models <- models(zoltar_connection, project_id=1L)
+        expect_equal(length(mock_calls(m)), 3)
+        expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1")
+        expect_equal(mock_args(m)[[2]][[2]], "http://example.com/api/model/1/")
+        expect_equal(mock_args(m)[[3]][[2]], "http://example.com/api/model/2/")
+        expect_is(the_models, "data.frame")
+        expect_equal(names(the_models), c("id", "url", "project_id", "owner_id", "name", "description", "home_url", "aux_data_url"))
+        expect_equal(nrow(the_models), 2)  # 2 projects
+        expect_equal(ncol(the_models), 8)
+    })
+})
+
+
+test_that("create_project() creates a Project", {
+    fail("todo xx")
+})
+
+
+test_that("delete_project() deletes a Project", {
+    fail("todo xx")
 })
 
 
@@ -364,11 +372,10 @@ test_that("model_info(zoltar_connection, model_id) returns a list", {
   testthat::with_mock("zoltr::get_resource" = m, {
     exp_model_info_json <- model1_json
     the_model_info <- model_info(zoltar_connection, model_id=1L)
-    expect_is(the_model_info, "list")
-    expect_equal(the_model_info, exp_model_info_json)
-
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/1")
+    expect_is(the_model_info, "list")
+    expect_equal(the_model_info, exp_model_info_json)
   })
 })
 
@@ -381,14 +388,12 @@ test_that("forecasts(model_id) returns a data.frame", {
   the_forecasts <- testthat::with_mock("zoltr::get_resource" = m, {
     forecasts(zoltar_connection, model_id=1L)
   })
-
+  expect_equal(length(mock_calls(m)), 1)
+  expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/1")
   expect_is(the_forecasts, "data.frame")
   expect_equal(names(the_forecasts), c("id", "url", "timezero_date", "data_version_date"))
   expect_equal(nrow(the_forecasts), 2)  # 2 forecasts
   expect_equal(ncol(the_forecasts), 4)  # id, url, timezero_date, data_version_date
-
-  expect_equal(length(mock_calls(m)), 1)
-  expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/1")
 
   forecast_row <- the_forecasts[1, ]
   exp_row <- data.frame(
@@ -437,12 +442,16 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
   m <- mock(upload_file_job_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     the_upload_info <- upload_info(zoltar_connection, upload_file_job_id)
-    expect_is(the_upload_info, "list")
-    expect_equal(the_upload_info, exp_upload_file_job_json)
-
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/uploadfilejob/2")
+    expect_is(the_upload_info, "list")
+    expect_equal(the_upload_info, exp_upload_file_job_json)
   })
+})
+
+
+test_that("upload_forecast() takes forecast_json_file, not forecast_csv_file", {
+  fail("todo xx")
 })
 
 
@@ -452,10 +461,19 @@ test_that("delete_forecast(zoltar_connection, forecast_id) passes correct URL", 
   m <- mock(delete_response)
   testthat::with_mock("httr::DELETE" = m, {
     delete_forecast(zoltar_connection, forecast_id=1L)
-
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/forecast/1")
   })
+})
+
+
+test_that("create_model() creates a Model", {
+    fail("todo xx")
+})
+
+
+test_that("delete_model() deletes a Model", {
+    fail("todo xx")
 })
 
 
@@ -469,42 +487,37 @@ test_that("forecast_info(zoltar_connection, forecast_id) returns a list", {
   m <- mock(forecast1_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     the_forecast_info <- forecast_info(zoltar_connection, forecast_id=1L)
-    expect_is(the_forecast_info, "list")
-    expect_equal(the_forecast_info, forecast1_json)
-
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/forecast/1")
+    expect_is(the_forecast_info, "list")
+    expect_equal(the_forecast_info, forecast1_json)
   })
 })
 
 
 test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a list", {
   zoltar_connection <- new_connection("http://example.com")
-  forecast1_json <- jsonlite::read_json("forecast-71.json")
-  m <- mock(forecast1_json)
-  testthat::with_mock("zoltr::get_resource" = m, {
-    the_forecast_data <- forecast_data(zoltar_connection, forecast_id=71L, is_json=TRUE)
-    expect_is(the_forecast_data, "list")
-    expect_equal(the_forecast_data, forecast1_json)
-
+  load("data_response.rda")  # 'data_response' contains JSON response from EW1-KoTsarima-2017-01-17-small.json
+  m <- mock(data_response)
+  testthat::with_mock("httr::GET" = m, {
+    act_data <- forecast_data(zoltar_connection, forecast_id=71L)
+    expect_is(act_data, "list")
     expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/forecast/71/data/")
+    expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/forecast/71/data/")
+
+    # spot-check a few items
+    exp_data <- jsonlite::read_json("EW1-KoTsarima-2017-01-17-small.json")
+    expect_equal(names(act_data), names(exp_data))
+    expect_equal(names(act_data$meta), names(exp_data$meta))
+    expect_equal(length(act_data$predictions), length(exp_data$predictions))
   })
 })
 
 
-test_that("forecast_data(zoltar_connection, forecast_id) returns CSV data as a data.frame", {
-  zoltar_connection <- new_connection("http://example.com")
-  load("data_response.rda")  # 'data_response' contains response from EW1-KoTsarima-2017-01-17-small.csv
-  m <- mock(data_response)
-  testthat::with_mock("httr::GET" = m, {
-    the_data <- forecast_data(zoltar_connection, forecast_id=71L, is_json=FALSE)
-    expect_equal(dim(the_data), c(154, 7))
-    expect_equal(names(the_data), c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))
-
-    expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/forecast/71/data/")
-  })
+test_that("forecast_data_as_frame(forecast_data) returns a data.frame", {
+  # forecast_data as returned by forecast_data(zoltar_connection, forecast_id)
+  # - see zoltpy.csv_util.csv_rows_from_json_io_dict()
+  fail("todo xx")
 })
 
 

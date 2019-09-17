@@ -135,12 +135,12 @@ re_authenticate_if_necessary <- function(zoltar_connection) {
 }
 
 
-get_resource <- function(zoltar_connection, url, is_json=TRUE, query=list()) {
+get_resource <- function(zoltar_connection, url) {
   re_authenticate_if_necessary(zoltar_connection)
   message(paste0("get_resource(): GET: ", url))
-  response <- httr::GET(url=url, add_auth_headers(zoltar_connection), query=query)
+  response <- httr::GET(url=url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
-  httr::content(response, as=if(is_json) "parsed" else NULL, encoding="UTF-8")
+  httr::content(response, as="parsed", encoding="UTF-8")
 }
 
 
@@ -384,22 +384,17 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 
 #' Gets a forecast's data
 #'
-#' @return Forecast data in the requested format - either a `list` or a `data.frame`
+#' @return Forecast data as a `list` in the "JSON IO dict" format accepted by Zoltar's
+#    utils.forecast.load_predictions_from_json_io_dict().
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
-#' @param is_json A boolean specifying whether the forecast is in `list` or `data.frame` format
 #' @export
 #' @examples \dontrun{
-#'   forecast_data_json <- forecast_data(conn, 46L, is_json=TRUE)
-#'   forecast_data_csv <- forecast_data(conn, 46L, is_json=FALSE)
+#'   forecast_data_json <- forecast_data(conn, 46L)
 #' }
-forecast_data <- function(zoltar_connection, forecast_id, is_json) {
+forecast_data <- function(zoltar_connection, forecast_id) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
-  if (is_json) {
-    get_resource(zoltar_connection, forecast_data_url, is_json=is_json, query=list())
-  } else {  # CSV
-    get_resource(zoltar_connection, forecast_data_url, is_json=is_json, query=list(format="csv"))
-  }
+  get_resource(zoltar_connection, forecast_data_url)
 }
 
 
