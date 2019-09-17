@@ -8,10 +8,6 @@
     "description": "d",
     "home_url": "http://example.com",
     "core_data": "http://example.com",
-    "config_dict": {
-      "visualization-y-label": "Weighted ILI (%)"
-    },
-    "template": "http://example.com/api/project/1/template/",
     "truth": "http://example.com/api/project/1/truth/",
     "model_owners": [
       "http://example.com/api/user/3/"
@@ -110,10 +106,6 @@
     "description": "",
     "home_url": "",
     "core_data": "",
-    "config_dict": {
-      "visualization-y-label": "Weighted ILI (%)"
-    },
-    "template": "http://example.com/api/project/2/template/",
     "truth": "http://example.com/api/project/2/truth/",
     "model_owners": [
       "http://example.com/api/user/3/"

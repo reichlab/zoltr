@@ -165,7 +165,10 @@ projects <- function(zoltar_connection) {
   for (project_json in projects_json) {
     id_column <- append(id_column, project_json$id)
     url_column <- append(url_column, project_json$url)
-    owner_id_column <- append(owner_id_column, id_for_url(project_json$owner))
+
+    owner_id_value <- if (is.null(project_json$owner)) NA else id_for_url(project_json$owner)
+    owner_id_column <- append(owner_id_column, owner_id_value)
+
     is_public_column <- append(is_public_column, project_json$is_public)
     name_column <- append(name_column, project_json$name)
     description_column <- append(description_column, project_json$description)
@@ -235,7 +238,11 @@ models <- function(zoltar_connection, project_id) {
     id_column <- append(id_column, model_json$id)
     url_column <- append(url_column, model_url)
     project_id_column <- append(project_id_column, id_for_url(model_json$project))
-    owner_id_column <- append(owner_id_column, id_for_url(model_json$owner))
+
+    # owner_id_column <- append(owner_id_column, id_for_url(model_json$owner))
+    owner_id_value <- if (is.null(model_json$owner)) NA else id_for_url(model_json$owner)
+    owner_id_column <- append(owner_id_column, owner_id_value)
+
     name_column <- append(name_column, model_json$name)
     description_column <- append(description_column, model_json$description)
     home_url_column <- append(home_url_column, model_json$home_url)
@@ -296,6 +303,7 @@ forecasts <- function(zoltar_connection, model_id) {
     id_column <- append(id_column, id_for_url(forecast_json$forecast))
     url_column <- append(url_column, forecast_json$forecast)
     timezero_date_column <- append(timezero_date_column, as.Date(forecast_json$timezero_date, format=YYYYMMDD_format))
+
     dvd_value <- if (is.null(forecast_json$data_version_date)) NA else forecast_json$data_version_date
     data_version_date_column <- append(data_version_date_column, as.Date(dvd_value, format=YYYYMMDD_format))
   }
@@ -473,7 +481,7 @@ get_token <- function(zoltar_session) {
 # returns a POSIXct for the zoltar_session's token. see notes in is_token_expired() for details on extracting the date
 token_expiration_date <- function(zoltar_session) {
   token_split <- strsplit(zoltar_session$token, ".", fixed=TRUE)  # 3 parts: header, payload, and signature
-  payload_encoded <- token_split[[1]][[2]]
+  payload_encoded <- token_split[[1]][2]
   payload_decoded <- base64url::base64_urldecode(payload_encoded)
   payload <- jsonlite::fromJSON(payload_decoded)
   exp_timestamp_utc <- payload$exp
