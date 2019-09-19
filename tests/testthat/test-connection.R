@@ -239,10 +239,10 @@ test_that("projects(zoltar_connection) returns a data.frame", {
   testthat::with_mock("zoltr::get_resource" = m, {
     the_projects <- projects(zoltar_connection)
     expect_is(the_projects, "data.frame")
-    expect_equal(nrow(the_projects), 2)  # 2 projects
-    expect_equal(ncol(the_projects), 8)
     expect_equal(names(the_projects),
       c("id", "url", "owner_id", "public", "name", "description", "home_url", "core_data"))
+    expect_equal(nrow(the_projects), 2)  # 2 projects
+    expect_equal(ncol(the_projects), 8)
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/projects/")
 
@@ -510,20 +510,33 @@ test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a 
 
 
 test_that("forecast_data_as_frame(forecast_data) returns a data.frame", {
-  # forecast_data as returned by forecast_data(zoltar_connection, forecast_id)
-  # - see zoltpy.csv_util.csv_rows_from_json_io_dict()
+  # regarding test data, the "meta" information in this file contains dates, but that information is discarded by
+  # forecast_data_as_frame(), so we can simply load directly from the .json file rather than mocking an httr response
+  the_forecast_data <- jsonlite::read_json("predictions-example.json")
+  forecast_data_frame <- forecast_data_as_frame(the_forecast_data)
+  expect_is(forecast_data_frame, "data.frame")
+  expect_equal(names(forecast_data_frame),
+               c("location", "target", "unit", "class", "cat", "family", "lwr", "param1", "param2", "param3", "prob",
+                 "sample", "value"))
+  expect_equal(nrow(forecast_data_frame), 7)
+  expect_equal(ncol(forecast_data_frame), 13)
+  exp_data_frame = read.csv("predictions-example-exp-rows.csv")
+  expect_equal(forecast_data_frame, exp_data_frame)
+
+  # now test with a forecast that does not include all columns: EW1-KoTsarima-2017-01-17-small.json
   fail("todo xx")
 })
 
 
 test_that("all forecast-related date information is converted to Date objects", {
   # see as.Date()
-  # Q: which ones? [is_coded][is_tested]
+  # need implementing [is_coded][is_tested]:
   # - [x][x] forecast_data() . EW1-KoTsarima-2017-01-17-small.json . $meta$forecast$time_zero$timezero_date , $meta$forecast$time_zero$data_version_date
   # - [x][x] forecast_info() . forecast-71.json . time_zero$timezero_date, time_zero$data_version_date
-  # - [v][v] forecasts() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
   # - [x][x] model_info() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
   # - [x][x] project_info() . projects-list.json . $timezeros[...]$timezero_date , $timezeros[...]$data_version_date
+  # done:
+  # - [v][v] forecasts() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
   # - [v][v] upload_info() . upload-file-job-2.json . $created_at, $updated_at
   fail("todo xx")
 })

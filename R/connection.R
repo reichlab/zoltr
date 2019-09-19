@@ -387,16 +387,61 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 #'
 #' @return Forecast data as a `list` in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
 #'   An example: tests/testthat/EW1-KoTsarima-2017-01-17-small.json
-#' @param forecast_json_file A JSON file in the
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
 #' @export
 #' @examples \dontrun{
-#'   forecast_data_json <- forecast_data(conn, 46L)
+#'   the_forecast_data <- forecast_data(conn, 46L)
 #' }
 forecast_data <- function(zoltar_connection, forecast_id) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
   get_resource(zoltar_connection, forecast_data_url)
+}
+
+
+#' Converts forecast data from Zoltar's native `list` format to a `data.frame`
+#'
+#' @return Forecast data as a `data.frame`. Only the "predictions" section is included (the "meta" is excluded).
+#'   The rows are an 'expanded' version of json_io_dict where bin-type classes result in multiple rows:
+#    BinCatDistribution, BinLwrDistribution, SampleDistribution, and SampleCatDistribution. The 'class' of each row
+#    is named according to forecast-repository.utils.forecast.PREDICTION_CLASS_TO_JSON_IO_DICT_CLASS. Column ordering
+#    is: ['location', 'target', 'unit', 'class', 'cat', 'family', 'lwr', 'param1', 'param2', 'param3', 'prob', 'sample',
+#    'value']. Note that the table is 'sparse': not every row uses all columns, and unused ones are empty. However, the
+#    first four columns are always non-empty, i.e., every prediction has them.
+#' @param the_forecast_data A forecast's data in Zoltar's native `list` as returned by \code{\link{forecast_data}}
+#' @export
+#' @examples \dontrun{
+#'   the_forecast_data <- forecast_data(conn, 46L)
+#'   forecast_data_frame <- forecast_data_as_frame(the_forecast_data)
+#' }
+forecast_data_as_frame <- function(the_forecast_data) {
+  location_column <- c()
+  target_column <- c()
+  unit_column <- c()
+  class_column <- c()
+  cat_column <- c()
+  family_column <- c()
+  lwr_column <- c()
+  param1_column <- c()
+  param2_column <- c()
+  param3_column <- c()
+  prob_column <- c()
+  sample_column <- c()
+  value_column <- c()
+  for (prediction_idx in seq_along(the_forecast_data$predictions)) {
+    prediction_json <- the_forecast_data$predictions[[prediction_idx]]
+    # see zoltpy/csv_util.py
+    # id_column <- append(id_column, id_for_url(prediction_json$forecast))
+    # url_column <- append(url_column, prediction_json$forecast)
+    # timezero_date_column <- append(timezero_date_column, as.Date(prediction_json$timezero_date, format=YYYYMMDD_format))
+    # dvd_value <- if (is.null(prediction_json$data_version_date)) NA else prediction_json$data_version_date
+    # data_version_date_column <- append(data_version_date_column, as.Date(dvd_value, format=YYYYMMDD_format))
+    # todo xx
+  }
+  data.frame(location=location_column, target=target_column, unit=unit_column, class=class_column, cat=cat_column,
+    family=family_column, lwr=lwr_column, param1=param1_column, param2=param2_column, param3=param3_column,
+    prob=prob_column, sample=sample_column, value=value_column,
+    stringsAsFactors=FALSE)
 }
 
 
