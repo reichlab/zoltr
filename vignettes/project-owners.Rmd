@@ -33,7 +33,7 @@ before starting you should:
     - `USERNAME` and `PASSWORD`: should match your account settings
     - `PROJECT_NAME` and `MODEL_NAME`: should match your project and model
     - `TIMEZERO_DATE`: should match your project
-    - `FORECAST_CSV_FILE`: the path of a forecast data file in the format documented in
+    - `FORECAST_JSON_FILE`: the path of a forecast data file in the format documented in
       [Zoltar documentation](https://www.zoltardata.com/docs)
 
 
@@ -111,7 +111,7 @@ delete_forecast(conn, the_forecast_info$id)
 
 ## Upload a forecast
 
-Now let's upload the forecast data file FORECAST_CSV_FILE for TIMEZERO_DATE via the `upload_forecast()` function.
+Now let's upload the forecast data file FORECAST_JSON_FILE for TIMEZERO_DATE via the `upload_forecast()` function.
 
 Keep in mind that Zoltar queues long operations like forecast uploading, which keeps the site responsive, but makes the
 Zoltar API a little more complicated. Rather than having the `upload_forecast()` function _block_ until the upload is 
@@ -139,8 +139,8 @@ busy_poll_upload_file_job <- function(upload_file_job_id) {
 
 
 ```{r}
-forecast_csv_file <- Sys.getenv("FORECAST_CSV_FILE")
-upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_csv_file)
+forecast_json_file <- Sys.getenv("FORECAST_JSON_FILE")
+upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_json_file)
 busy_poll_upload_file_job(upload_file_job_id)
 ```
 

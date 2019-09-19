@@ -323,19 +323,20 @@ forecasts <- function(zoltar_connection, model_id) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param model_id ID of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
-#' @param forecast_csv_file A CSV file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
+#' @param forecast_json_file A JSON file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
+#'   An example: tests/testthat/EW1-KoTsarima-2017-01-17-small.json
 #' @export
 #' @examples \dontrun{
 #'   upload_file_job_id <- upload_forecast(conn, 26L, "20170117", "/tmp/EW1-KoTsarima-2017-01-17.csv")
 #' }
-upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_csv_file) {
+upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_json_file) {
   forecasts_url <- url_for_model_forecasts_id(zoltar_connection, model_id)
   re_authenticate_if_necessary(zoltar_connection)
   message(paste0("upload_forecast(): POST: ", forecasts_url))
   response <- httr::POST(
     url=forecasts_url,
     add_auth_headers(zoltar_connection),
-    body=list(data_file=httr::upload_file(forecast_csv_file), timezero_date=timezero_date))
+    body=list(data_file=httr::upload_file(forecast_json_file), timezero_date=timezero_date))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   if (response$status_code == 400) {
@@ -384,8 +385,9 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 
 #' Gets a forecast's data
 #'
-#' @return Forecast data as a `list` in the "JSON IO dict" format accepted by Zoltar's
-#    utils.forecast.load_predictions_from_json_io_dict().
+#' @return Forecast data as a `list` in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
+#'   An example: tests/testthat/EW1-KoTsarima-2017-01-17-small.json
+#' @param forecast_json_file A JSON file in the
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
 #' @export

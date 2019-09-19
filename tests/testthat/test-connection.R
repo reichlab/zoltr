@@ -160,7 +160,7 @@ test_that("httr functions re-authenticate expired tokens", {
 
   m <- mock()
   testthat::with_mock("zoltr::zoltar_authenticate" = m, {
-    upload_forecast(zoltar_connection, 0L, NULL, "")  # httr::POST. model_id, timezero_date, forecast_csv_file
+    upload_forecast(zoltar_connection, 0L, NULL, "")  # httr::POST. model_id, timezero_date, forecast_json_file
     expect_equal(length(mock_calls(m)), 1)
   })
 
@@ -178,7 +178,7 @@ test_that("upload_forecast() does not call add_headers() for unauthenticated con
   webmockr::stub_request('post', uri='http://example.com/api/model/0/forecasts/')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
-    upload_forecast(zoltar_connection, 0L, NULL, "")  # model_id, timezero_date, forecast_csv_file
+    upload_forecast(zoltar_connection, 0L, NULL, "")  # model_id, timezero_date, forecast_json_file
     expect_equal(length(mock_args(m)), 0)
   })
 })
@@ -428,7 +428,7 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
       status=200,
       headers=list('Content-Type'='application/json; charset=utf-8'))
 
-  upload_file_job_id <- upload_forecast(zoltar_connection, 1L, NULL, NULL)  # model_id, timezero_date, forecast_csv_file
+  upload_file_job_id <- upload_forecast(zoltar_connection, 1L, NULL, NULL)  # model_id, timezero_date, forecast_json_file
   expect_equal(upload_file_job_id, 2L)
 
   exp_upload_file_job_json <- upload_file_job_json
@@ -447,11 +447,6 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
     expect_is(the_upload_info, "list")
     expect_equal(the_upload_info, exp_upload_file_job_json)
   })
-})
-
-
-test_that("upload_forecast() takes forecast_json_file, not forecast_csv_file", {
-  fail("todo xx")
 })
 
 
@@ -521,6 +516,19 @@ test_that("forecast_data_as_frame(forecast_data) returns a data.frame", {
 })
 
 
+test_that("all forecast-related date information is converted to Date objects", {
+  # see as.Date()
+  # Q: which ones? [is_coded][is_tested]
+  # - [x][x] forecast_data() . EW1-KoTsarima-2017-01-17-small.json . $meta$forecast$time_zero$timezero_date , $meta$forecast$time_zero$data_version_date
+  # - [x][x] forecast_info() . forecast-71.json . time_zero$timezero_date, time_zero$data_version_date
+  # - [v][v] forecasts() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
+  # - [x][x] model_info() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
+  # - [x][x] project_info() . projects-list.json . $timezeros[...]$timezero_date , $timezeros[...]$data_version_date
+  # - [v][v] upload_info() . upload-file-job-2.json . $created_at, $updated_at
+  fail("todo xx")
+})
+
+
 #
 # ---- lower-level net-oriented tests ----
 #
@@ -553,7 +561,7 @@ test_that("upload_forecast() passes correct url to POST()", {
         load("upload_response.rda")  # 'upload_response' contains 200 response from sample upload_forecast() call
         upload_response
       },
-    upload_forecast(zoltar_connection, 1L, NULL, NULL)))  # model_id, timezero_date, forecast_csv_file
+    upload_forecast(zoltar_connection, 1L, NULL, NULL)))  # model_id, timezero_date, forecast_json_file
 
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
 })
