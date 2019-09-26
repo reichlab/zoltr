@@ -327,7 +327,7 @@ forecasts <- function(zoltar_connection, model_id) {
 #'   An example: tests/testthat/EW1-KoTsarima-2017-01-17-small.json
 #' @export
 #' @examples \dontrun{
-#'   upload_file_job_id <- upload_forecast(conn, 26L, "20170117", "/tmp/EW1-KoTsarima-2017-01-17.csv")
+#'   upload_file_job_id <- upload_forecast(conn, 26L, "20170117", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
 #' }
 upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_json_file) {
   forecasts_url <- url_for_model_forecasts_id(zoltar_connection, model_id)
@@ -399,6 +399,21 @@ forecast_data <- function(zoltar_connection, forecast_id) {
 }
 
 
+TARGET_TO_UNIT <- list(
+  "Season peak percentage"="percent",
+  "1 wk ahead"="percent",
+  "2 wk ahead"="percent",
+  "3 wk ahead"="percent",
+  "4 wk ahead"="percent",
+  "Season onset"="week",
+  "Season peak week"="week")
+
+# CDC_POINT_NA_VALUE <- "NA"
+CDC_POINT_NA_VALUE <- NA
+CDC_POINT_ROW_TYPE <- "Point"
+CDC_BIN_ROW_TYPE <- "Bin"
+
+
 #' Converts forecast data from Zoltar's native `list` format to a `data.frame`
 #'
 #' @return Forecast data as a `data.frame`. Only the "predictions" section is included (the "meta" is excluded).
@@ -412,36 +427,80 @@ forecast_data <- function(zoltar_connection, forecast_id) {
 #' @export
 #' @examples \dontrun{
 #'   the_forecast_data <- forecast_data(conn, 46L)
-#'   forecast_data_frame <- forecast_data_as_frame(the_forecast_data)
+#'   forecast_data_frame <- forecast_data_as_cdc_frame(the_forecast_data)
 #' }
-forecast_data_as_frame <- function(the_forecast_data) {
+forecast_data_as_cdc_frame <- function(the_forecast_data) {
+  # todo xx this function should probably use predx's export_flusight_csv(), or at least be coded like it (rather than Python :-)
+
+  # do some initial validation
+  if (is.null(the_forecast_data$predictions)) {
+    stop("no $predictions found in the_forecast_data", call. = FALSE)
+  }
+
   location_column <- c()
   target_column <- c()
+  type_column <- c()
   unit_column <- c()
-  class_column <- c()
-  cat_column <- c()
-  family_column <- c()
-  lwr_column <- c()
-  param1_column <- c()
-  param2_column <- c()
-  param3_column <- c()
-  prob_column <- c()
-  sample_column <- c()
+  bin_start_incl_column <- c()
+  bin_end_notincl_column <- c()
   value_column <- c()
   for (prediction_idx in seq_along(the_forecast_data$predictions)) {
     prediction_json <- the_forecast_data$predictions[[prediction_idx]]
-    # see zoltpy/csv_util.py
-    # id_column <- append(id_column, id_for_url(prediction_json$forecast))
-    # url_column <- append(url_column, prediction_json$forecast)
-    # timezero_date_column <- append(timezero_date_column, as.Date(prediction_json$timezero_date, format=YYYYMMDD_format))
-    # dvd_value <- if (is.null(prediction_json$data_version_date)) NA else prediction_json$data_version_date
-    # data_version_date_column <- append(data_version_date_column, as.Date(dvd_value, format=YYYYMMDD_format))
-    # todo xx
+    prediction_class <- prediction_json$class
+    if (!(prediction_class %in% c("BinCat", "BinLwr", "Point"))) {
+      stop(paste0("invalid prediction_json class: '", prediction_class, "'"), call. = FALSE)
+    }
+
+    target <- prediction_json$target
+    if (!(target %in% names(TARGET_TO_UNIT))) {
+      stop(paste0("invalid prediction_json target: '", target, "'"), call. = FALSE)
+    }
+
+    location <- prediction_json$location
+    row_type <- if (prediction_class == "Point") CDC_POINT_ROW_TYPE else CDC_BIN_ROW_TYPE
+    unit <- TARGET_TO_UNIT[[target]]
+    prediction <- prediction_json$prediction
+    if (row_type == CDC_POINT_ROW_TYPE) {  # output a single point row
+      location_column <- append(location_column, location)
+      target_column <- append(target_column, target)
+      type_column <- append(type_column, row_type)  # todo xx s/be a boolean (is_point_row)?
+      unit_column <- append(unit_column, unit)
+      bin_start_incl_column <- append(bin_start_incl_column, CDC_POINT_NA_VALUE)
+      bin_end_notincl_column <- append(bin_end_notincl_column, CDC_POINT_NA_VALUE)
+      value_column <- append(value_column, as_numeric_or_na(prediction$value))
+    } else if (prediction_class == "BinCat") {  # output multiple bin rows
+      for (cat_prob_idx in seq_along(prediction$cat)) {
+        cat <- as_numeric_or_na(prediction$cat[[cat_prob_idx]])
+        prob <- as_numeric_or_na(prediction$prob[[cat_prob_idx]])
+        location_column <- append(location_column, location)
+        target_column <- append(target_column, target)
+        type_column <- append(type_column, row_type)
+        unit_column <- append(unit_column, unit)
+        bin_start_incl_column <- append(bin_start_incl_column, cat)
+        bin_end_notincl_column <- append(bin_end_notincl_column, cat + 1)
+        value_column <- append(value_column, prob)
+      }
+    } else {  # output multiple bin rows
+      for (lwr_prob_idx in seq_along(prediction$lwr)) {
+        lwr <- as_numeric_or_na(prediction$lwr[[lwr_prob_idx]])
+        prob <- as_numeric_or_na(prediction$prob[[lwr_prob_idx]])
+        location_column <- append(location_column, location)
+        target_column <- append(target_column, target)
+        type_column <- append(type_column, row_type)
+        unit_column <- append(unit_column, unit)
+        bin_start_incl_column <- append(bin_start_incl_column, lwr)
+        bin_end_notincl_column <- append(bin_end_notincl_column, if (lwr == 13) 100 else lwr + 0.1)
+        value_column <- append(value_column, prob)
+      }
+    }
   }
-  data.frame(location=location_column, target=target_column, unit=unit_column, class=class_column, cat=cat_column,
-    family=family_column, lwr=lwr_column, param1=param1_column, param2=param2_column, param3=param3_column,
-    prob=prob_column, sample=sample_column, value=value_column,
+  data.frame(location=location_column, target=target_column, type=type_column, unit=unit_column,
+    bin_start_incl=bin_start_incl_column, bin_end_notincl=bin_end_notincl_column, value=value_column,
     stringsAsFactors=FALSE)
+}
+
+as_numeric_or_na <- function(value) {
+  tryCatch(expr = as.numeric(value), warning = function(w) {return(NA)})
 }
 
 

@@ -1,0 +1,52 @@
+{
+  "predictions": [
+    {
+      "location": "HHS Region 1",
+      "target": "1 wk ahead",
+      "class": "Point",
+      "prediction": {
+        "value": 1.3
+      }
+    },
+    {
+      "location": "HHS Region 1",
+      "target": "1 wk ahead",
+      "class": "BinLwr",
+      "prediction": {
+        "lwr": [
+          0.3,
+          13.0
+        ],
+        "prob": [
+          0.1,
+          0.9
+        ]
+      }
+    },
+    {
+      "location": "HHS Region 1",
+      "target": "Season onset",
+      "class": "Point",
+      "prediction": {
+        "value": "2"
+      }
+    },
+    {
+      "location": "HHS Region 1",
+      "target": "Season onset",
+      "class": "BinCat",
+      "prediction": {
+        "cat": [
+          "17",
+          "44",
+          "None"
+        ],
+        "prob": [
+          0.1,
+          0.2,
+          0.7
+        ]
+      }
+    }
+  ]
+}

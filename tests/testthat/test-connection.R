@@ -509,22 +509,35 @@ test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a 
 })
 
 
-test_that("forecast_data_as_frame(forecast_data) returns a data.frame", {
-  # regarding test data, the "meta" information in this file contains dates, but that information is discarded by
-  # forecast_data_as_frame(), so we can simply load directly from the .json file rather than mocking an httr response
-  the_forecast_data <- jsonlite::read_json("predictions-example.json")
-  forecast_data_frame <- forecast_data_as_frame(the_forecast_data)
+test_that("forecast_data_as_cdc_frame(forecast_data) returns a data.frame", {
+  # no predictions
+  the_forecast_data <- list()
+  expect_error(forecast_data_as_cdc_frame(the_forecast_data), "no $predictions found in the_forecast_data", , fixed=TRUE)
+
+  # invalid prediction class
+  the_forecast_data <- list("predictions"=list(list("class"="invalid class!")))
+  expect_error(forecast_data_as_cdc_frame(the_forecast_data), "invalid prediction_json class", fixed=TRUE)
+
+  # prediction_dict target not recognized
+  # with self.assertRaises(RuntimeError) as context:
+  # cdc_csv_rows_from_json_io_dict({'predictions': [{'class': 'Point', 'target': 'non-CDC target'}]})
+  # self.assertIn('prediction_dict target not recognized', str(context.exception))
+  the_forecast_data <- list("predictions"=list(list("class"="Point", "target"="non-CDC target")))
+  expect_error(forecast_data_as_cdc_frame(the_forecast_data), "invalid prediction_json target", fixed=TRUE)
+
+  # blue sky regarding test data, the "meta" information in this file contains dates, but that information is discarded
+  # by forecast_data_as_cdc_frame(), so we can simply load directly from the .json file rather than mocking an httr
+  # response
+  # the_forecast_data <- jsonlite::read_json("EW1-KoTsarima-2017-01-17-small.json")
+  the_forecast_data <- jsonlite::read_json("20101024-ReichLab_sarima_seasonal_difference_TRUE-20101108.cdc.csv-small.json")
+  forecast_data_frame <- forecast_data_as_cdc_frame(the_forecast_data)
   expect_is(forecast_data_frame, "data.frame")
   expect_equal(names(forecast_data_frame),
-               c("location", "target", "unit", "class", "cat", "family", "lwr", "param1", "param2", "param3", "prob",
-                 "sample", "value"))
+               c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))
   expect_equal(nrow(forecast_data_frame), 7)
-  expect_equal(ncol(forecast_data_frame), 13)
-  exp_data_frame = read.csv("predictions-example-exp-rows.csv")
+  exp_data_frame = read.csv("20101024-ReichLab_sarima_seasonal_difference_TRUE-20101108.cdc.csv-small.csv",
+                            stringsAsFactors=FALSE)  # "NA" -> NA
   expect_equal(forecast_data_frame, exp_data_frame)
-
-  # now test with a forecast that does not include all columns: EW1-KoTsarima-2017-01-17-small.json
-  fail("todo xx")
 })
 
 
