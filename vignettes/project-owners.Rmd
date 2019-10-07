@@ -33,8 +33,8 @@ before starting you should:
     - `USERNAME` and `PASSWORD`: should match your account settings
     - `PROJECT_NAME` and `MODEL_NAME`: should match your project and model
     - `TIMEZERO_DATE`: should match your project
-    - `FORECAST_JSON_FILE`: the path of a forecast data file in the format documented in
-      [Zoltar documentation](https://www.zoltardata.com/docs)
+    - `FORECAST_JSON_FILE`: the path of a forecast data file in the format documented
+       [here](https://www.zoltardata.com/docs#forecasts)
 
 
 ## Connect to the host and authenticate
@@ -81,7 +81,7 @@ conn
 ## Get the sandbox project and model work with and then list its forecasts (if any)
 
 Get the ID of the project named by PROJECT_NAME and then get the ID of that project's model named MODEL_NAME. From the
-model ID, call the `forecasts()` function to get a data.frame of that model's forecasts.
+model ID, call the `forecasts()` function to get a `data.frame` of that model's forecasts.
 
 ```{r}
 the_projects <- projects(conn)
@@ -140,7 +140,8 @@ busy_poll_upload_file_job <- function(upload_file_job_id) {
 
 ```{r}
 forecast_json_file <- Sys.getenv("FORECAST_JSON_FILE")
-upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_json_file)
+forecast_data <- jsonlite::read_json(forecast_json_file)
+upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_data)
 busy_poll_upload_file_job(upload_file_job_id)
 ```
 

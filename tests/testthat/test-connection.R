@@ -160,7 +160,7 @@ test_that("httr functions re-authenticate expired tokens", {
 
   m <- mock()
   testthat::with_mock("zoltr::zoltar_authenticate" = m, {
-    upload_forecast(zoltar_connection, 0L, NULL, "")  # httr::POST. model_id, timezero_date, forecast_json_file
+    upload_forecast(zoltar_connection, 0L, NULL, list())  # httr::POST. model_id, timezero_date, forecast_data
     expect_equal(length(mock_calls(m)), 1)
   })
 
@@ -178,7 +178,7 @@ test_that("upload_forecast() does not call add_headers() for unauthenticated con
   webmockr::stub_request('post', uri='http://example.com/api/model/0/forecasts/')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
-    upload_forecast(zoltar_connection, 0L, NULL, "")  # model_id, timezero_date, forecast_json_file
+    upload_forecast(zoltar_connection, 0L, NULL, list())  # model_id, timezero_date, forecast_data
     expect_equal(length(mock_args(m)), 0)
   })
 })
@@ -218,12 +218,12 @@ test_that("scores() does not call add_headers() for unauthenticated connection",
 })
 
 
-test_that("forecast_data() does not call add_headers() for unauthenticated connection", {
+test_that("download_forecast() does not call add_headers() for unauthenticated connection", {
   zoltar_connection <- new_connection("http://example.com")  # unauthenticated
   webmockr::stub_request('get', uri='http://example.com/api/forecast/0/data/')
   m <- mock()
   testthat::with_mock("httr::add_headers" = m, {
-    forecast_data(zoltar_connection, 0L)
+    download_forecast(zoltar_connection, 0L)
     expect_equal(length(mock_calls(m)), 0)
   })
 })
@@ -417,7 +417,7 @@ test_that("forecasts(model_id) returns a data.frame", {
 })
 
 
-test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_info() is OK", {
+test_that("upload_forecast() returns an UploadFileJob id, and upload_info() is OK", {
   zoltar_connection <- new_connection("http://example.com")
   # test upload_forecast()
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
@@ -428,7 +428,7 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
       status=200,
       headers=list('Content-Type'='application/json; charset=utf-8'))
 
-  upload_file_job_id <- upload_forecast(zoltar_connection, 1L, NULL, NULL)  # model_id, timezero_date, forecast_json_file
+  upload_file_job_id <- upload_forecast(zoltar_connection, 1L, NULL, list())  # model_id, timezero_date, forecast_data
   expect_equal(upload_file_job_id, 2L)
 
   exp_upload_file_job_json <- upload_file_job_json
@@ -447,6 +447,14 @@ test_that("upload_forecast(model_id) returns an UploadFileJob id, and upload_inf
     expect_is(the_upload_info, "list")
     expect_equal(the_upload_info, exp_upload_file_job_json)
   })
+})
+
+
+test_that("upload_forecast() accepts a `list` and not a file", {
+  # just a simple test to drive converting upload_forecast() from file to list
+  zoltar_connection <- new_connection("http://example.com")
+  expect_error(upload_forecast(zoltar_connection, 1L, NULL, NULL),  # model_id, timezero_date, forecast_data
+    "forecast_data was not a `list`", fixed=TRUE)
 })
 
 
@@ -490,12 +498,12 @@ test_that("forecast_info(zoltar_connection, forecast_id) returns a list", {
 })
 
 
-test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a list", {
+test_that("download_forecast(zoltar_connection, forecast_id) returns JSON data as a list", {
   zoltar_connection <- new_connection("http://example.com")
   load("data_response.rda")  # 'data_response' contains JSON response from EW1-KoTsarima-2017-01-17-small.json
   m <- mock(data_response)
   testthat::with_mock("httr::GET" = m, {
-    act_data <- forecast_data(zoltar_connection, forecast_id=71L)
+    act_data <- download_forecast(zoltar_connection, forecast_id=71L)
     expect_is(act_data, "list")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/forecast/71/data/")
@@ -509,48 +517,69 @@ test_that("forecast_data(zoltar_connection, forecast_id) returns JSON data as a 
 })
 
 
-test_that("forecast_data_as_cdc_frame(forecast_data) returns a data.frame", {
-  # no predictions
-  the_forecast_data <- list()
-  expect_error(forecast_data_as_cdc_frame(the_forecast_data), "no $predictions found in the_forecast_data", , fixed=TRUE)
-
-  # invalid prediction class
-  the_forecast_data <- list("predictions"=list(list("class"="invalid class!")))
-  expect_error(forecast_data_as_cdc_frame(the_forecast_data), "invalid prediction_json class", fixed=TRUE)
-
-  # prediction_dict target not recognized
-  # with self.assertRaises(RuntimeError) as context:
-  # cdc_csv_rows_from_json_io_dict({'predictions': [{'class': 'Point', 'target': 'non-CDC target'}]})
-  # self.assertIn('prediction_dict target not recognized', str(context.exception))
-  the_forecast_data <- list("predictions"=list(list("class"="Point", "target"="non-CDC target")))
-  expect_error(forecast_data_as_cdc_frame(the_forecast_data), "invalid prediction_json target", fixed=TRUE)
-
-  # blue sky regarding test data, the "meta" information in this file contains dates, but that information is discarded
-  # by forecast_data_as_cdc_frame(), so we can simply load directly from the .json file rather than mocking an httr
-  # response
-  # the_forecast_data <- jsonlite::read_json("EW1-KoTsarima-2017-01-17-small.json")
-  the_forecast_data <- jsonlite::read_json("20101024-ReichLab_sarima_seasonal_difference_TRUE-20101108.cdc.csv-small.json")
-  forecast_data_frame <- forecast_data_as_cdc_frame(the_forecast_data)
-  expect_is(forecast_data_frame, "data.frame")
-  expect_equal(names(forecast_data_frame),
-               c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))
-  expect_equal(nrow(forecast_data_frame), 7)
-  exp_data_frame = read.csv("20101024-ReichLab_sarima_seasonal_difference_TRUE-20101108.cdc.csv-small.csv",
-                            stringsAsFactors=FALSE)  # "NA" -> NA
-  expect_equal(forecast_data_frame, exp_data_frame)
-})
-
-
 test_that("all forecast-related date information is converted to Date objects", {
   # see as.Date()
   # need implementing [is_coded][is_tested]:
-  # - [x][x] forecast_data() . EW1-KoTsarima-2017-01-17-small.json . $meta$forecast$time_zero$timezero_date , $meta$forecast$time_zero$data_version_date
+  # - [x][x] download_forecast() . EW1-KoTsarima-2017-01-17-small.json . $meta$forecast$time_zero$timezero_date , $meta$forecast$time_zero$data_version_date
   # - [x][x] forecast_info() . forecast-71.json . time_zero$timezero_date, time_zero$data_version_date
   # - [x][x] model_info() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
   # - [x][x] project_info() . projects-list.json . $timezeros[...]$timezero_date , $timezeros[...]$data_version_date
   # done:
   # - [v][v] forecasts() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
   # - [v][v] upload_info() . upload-file-job-2.json . $created_at, $updated_at
+  fail("todo xx")
+})
+
+
+test_that("cdc_data_frame_from_forecast_data(forecast_data) is correct", {
+  # no predictions
+  forecast_data <- list()
+  expect_error(cdc_data_frame_from_forecast_data(forecast_data), "no $predictions found in forecast_data", fixed=TRUE)
+
+  # invalid prediction class
+  forecast_data <- list("predictions"=list(list("class"="invalid class!")))
+  expect_error(cdc_data_frame_from_forecast_data(forecast_data), "invalid prediction_json class", fixed=TRUE)
+
+  # prediction_dict target not recognized
+  # with self.assertRaises(RuntimeError) as context:
+  # cdc_csv_rows_from_json_io_dict({'predictions': [{'class': 'Point', 'target': 'non-CDC target'}]})
+  # self.assertIn('prediction_dict target not recognized', str(context.exception))
+  forecast_data <- list("predictions"=list(list("class"="Point", "target"="non-CDC target")))
+  expect_error(cdc_data_frame_from_forecast_data(forecast_data), "invalid prediction_json target", fixed=TRUE)
+
+  # blue sky regarding test data, the "meta" information in this file contains dates, but that information is discarded
+  # by cdc_data_frame_from_forecast_data(), so we can simply load directly from the .json file rather than mocking an httr
+  # response
+  exp_data_frame <- read.csv("20161023-KoTstable-20161109-small.cdc.csv", stringsAsFactors=FALSE)  # "NA" -> NA
+  forecast_data <- jsonlite::read_json("20161023-KoTstable-20161109-small-exp-predictions.json")
+  act_data_frame <- cdc_data_frame_from_forecast_data(forecast_data)
+  expect_is(act_data_frame, "data.frame")
+  expect_equal(names(act_data_frame),
+               c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))
+  expect_equal(nrow(act_data_frame), 16)
+  names(exp_data_frame) <- sapply(names(exp_data_frame), tolower)
+  expect_equal(act_data_frame, exp_data_frame)
+})
+
+
+test_that("forecast_data_from_cdc_csv_file(cdc_csv_file) is correct", {
+  # test internal forecast_data_from_cdc_data_frame()
+  expect_error(forecast_data_from_cdc_data_frame(list()), "cdc_data_frame was not a `data.frame`", fixed=TRUE)
+
+  cdc_data_frame <- data.frame(wrong_columns=list(), stringsAsFactors=FALSE)
+  expect_error(forecast_data_from_cdc_data_frame(cdc_data_frame), "cdc_data_frame did not have required columns", fixed=TRUE)
+
+  # blue sky
+  cdc_csv_file <- "20161023-KoTstable-20161109-small.cdc.csv"
+  act_forecast_data <- forecast_data_from_cdc_csv_file(cdc_csv_file)
+  exp_forecast_data <- jsonlite::read_json("20161023-KoTstable-20161109-small-exp-predictions.json")
+  expect_is(act_forecast_data, "list")
+  expect_equal(names(act_forecast_data), c("predictions"))
+  expect_equal(length(act_forecast_data$predictions), 10)
+  expect_equal(act_forecast_data, exp_forecast_data)
+
+  # test that forecast_data_from_cdc_csv_file calls internal
+  # mock, etc.
   fail("todo xx")
 })
 
@@ -587,7 +616,7 @@ test_that("upload_forecast() passes correct url to POST()", {
         load("upload_response.rda")  # 'upload_response' contains 200 response from sample upload_forecast() call
         upload_response
       },
-    upload_forecast(zoltar_connection, 1L, NULL, NULL)))  # model_id, timezero_date, forecast_json_file
+    upload_forecast(zoltar_connection, 1L, NULL, list())))  # model_id, timezero_date, forecast_data
 
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
 })

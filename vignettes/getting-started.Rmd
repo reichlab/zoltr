@@ -102,24 +102,23 @@ str(the_forecasts)
 
 ## Finally, download the first forecast's data in two different formats
 
-You can get forecast data using the `forecast_data()` function, which supports a nested `list` or a `data.table`
+You can get forecast data using the `download_forecast()` function, which supports a nested `list` or a `data.table`
 (tabular) format.
 
-First as a `list`. (Please see [here](https://www.zoltardata.com/docs#forecast-data-format) for nested format, AKA JSON,
+First as a `list`. (Please see [here](https://www.zoltardata.com/docs#forecast-data-format) for forecast format
 details.) 
 
 ```{r}
 first_forecast_id <- the_forecasts[1, 'id']  # assumes at least one exists
 
-forecast_data <- forecast_data(conn, first_forecast_id, is_json=TRUE)
-forecast_data$locations[[1]]$name
-forecast_data$locations[[1]]$targets[[1]]$name
-forecast_data$locations[[1]]$targets[[1]]$bins[[1]]
+forecast_data <- download_forecast(conn, first_forecast_id)
+length(forecast_data$predictions)
 ```
 
-And as a `data.frame`:
+Convert the `list` to a CDC CSV format `data.frame`:
 
 ```{r}
-forecast_data <- suppressMessages(forecast_data(conn, first_forecast_id, is_json=FALSE))
-forecast_data
+forecast_data <- suppressMessages(download_forecast(conn, first_forecast_id))
+forecast_data_frame <- cdc_data_frame_from_forecast_data(forecast_data)
+str(forecast_data_frame)
 ```

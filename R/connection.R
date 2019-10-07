@@ -1,7 +1,8 @@
-library(httr)
-library(readr)  # apparently required by httr
 library(base64url)
+library(dplyr)
+library(httr)
 library(jsonlite)
+library(readr)  # apparently required by httr
 
 
 #
@@ -314,29 +315,32 @@ forecasts <- function(zoltar_connection, model_id) {
 
 #' Upload a forecast
 #'
-#' This function submits a forecast file to the server for uploading. Returns an UploadFileJob object that can
-#' be used to track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their
-#' turn comes up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob`
-#' objects.)
+#' This function submits forecast data to the server for uploading. Returns an UploadFileJob object that can be used to
+# 'track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their turn comes
+#' up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob` objects.)
 #'
 #' @return An UploadFileJob id for the upload
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param model_id ID of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
-#' @param forecast_json_file A JSON file in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}
-#'   An example: tests/testthat/EW1-KoTsarima-2017-01-17-small.json
+#' @param forecast_data Forecast data as a `list` in the Zoltar standard format
 #' @export
 #' @examples \dontrun{
 #'   upload_file_job_id <- upload_forecast(conn, 26L, "20170117", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
 #' }
-upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_json_file) {
+upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast_data) {
+  if (!(inherits(forecast_data, "list"))) {
+    stop("forecast_data was not a `list`", call. = FALSE)
+  }
+
   forecasts_url <- url_for_model_forecasts_id(zoltar_connection, model_id)
   re_authenticate_if_necessary(zoltar_connection)
   message(paste0("upload_forecast(): POST: ", forecasts_url))
+  temp_json_file <- tempfile(pattern = "forecast", fileext = ".json")
   response <- httr::POST(
     url=forecasts_url,
     add_auth_headers(zoltar_connection),
-    body=list(data_file=httr::upload_file(forecast_json_file), timezero_date=timezero_date))
+    body=list(data_file=httr::upload_file(temp_json_file), timezero_date=timezero_date))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   if (response$status_code == 400) {
@@ -391,9 +395,9 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 #' @param forecast_id ID of a forecast in zoltar_connection's forecasts
 #' @export
 #' @examples \dontrun{
-#'   the_forecast_data <- forecast_data(conn, 46L)
+#'   forecast_data <- download_forecast(conn, 46L)
 #' }
-forecast_data <- function(zoltar_connection, forecast_id) {
+download_forecast <- function(zoltar_connection, forecast_id) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
   get_resource(zoltar_connection, forecast_data_url)
 }
@@ -408,44 +412,37 @@ TARGET_TO_UNIT <- list(
   "Season onset"="week",
   "Season peak week"="week")
 
-# CDC_POINT_NA_VALUE <- "NA"
-CDC_POINT_NA_VALUE <- NA
+# todo xx these are project-specific to the CDC ensemble
+BINCAT_TARGET_NAMES <- c("Season onset", "Season peak week")
+BINLWR_TARGET_NAMES <- c("Season peak percentage", "1 wk ahead", "2 wk ahead", "3 wk ahead", "4 wk ahead")
 CDC_POINT_ROW_TYPE <- "Point"
 CDC_BIN_ROW_TYPE <- "Bin"
 
 
-#' Converts forecast data from Zoltar's native `list` format to a `data.frame`
+#' Converts forecast data from Zoltar's native `list` format to a CDC-specific `data.frame`
 #'
-#' @return Forecast data as a `data.frame`. Only the "predictions" section is included (the "meta" is excluded).
-#'   The rows are an 'expanded' version of json_io_dict where bin-type classes result in multiple rows:
-#    BinCatDistribution, BinLwrDistribution, SampleDistribution, and SampleCatDistribution. The 'class' of each row
-#    is named according to forecast-repository.utils.forecast.PREDICTION_CLASS_TO_JSON_IO_DICT_CLASS. Column ordering
-#    is: ['location', 'target', 'unit', 'class', 'cat', 'family', 'lwr', 'param1', 'param2', 'param3', 'prob', 'sample',
-#    'value']. Note that the table is 'sparse': not every row uses all columns, and unused ones are empty. However, the
-#    first four columns are always non-empty, i.e., every prediction has them.
-#' @param the_forecast_data A forecast's data in Zoltar's native `list` as returned by \code{\link{forecast_data}}
+#' @return Forecast data as a CDC format `data.frame`. Only the "predictions" section is included (the "meta" is
+#'   excluded).
+#' @param forecast_data A forecast's data in Zoltar's native `list` such as returned by \code{\link{download_forecast}}
 #' @export
 #' @examples \dontrun{
-#'   the_forecast_data <- forecast_data(conn, 46L)
-#'   forecast_data_frame <- forecast_data_as_cdc_frame(the_forecast_data)
+#'   forecast_data <- download_forecast(conn, 46L)
+#'   forecast_data_frame <- cdc_data_frame_from_forecast_data(forecast_data)
 #' }
-forecast_data_as_cdc_frame <- function(the_forecast_data) {
-  # todo xx this function should probably use predx's export_flusight_csv(), or at least be coded like it (rather than Python :-)
-
-  # do some initial validation
-  if (is.null(the_forecast_data$predictions)) {
-    stop("no $predictions found in the_forecast_data", call. = FALSE)
+cdc_data_frame_from_forecast_data <- function(forecast_data) {
+  if (is.null(forecast_data$predictions)) {
+    stop("no $predictions found in forecast_data", call. = FALSE)
   }
 
-  location_column <- c()
-  target_column <- c()
-  type_column <- c()
-  unit_column <- c()
-  bin_start_incl_column <- c()
-  bin_end_notincl_column <- c()
-  value_column <- c()
-  for (prediction_idx in seq_along(the_forecast_data$predictions)) {
-    prediction_json <- the_forecast_data$predictions[[prediction_idx]]
+  location_column <- c()  # chr b/c all locations are strings
+  target_column <- c()  # ""
+  type_column <- c()  # ""
+  unit_column <- c()  # ""
+  bin_start_incl_column <- c()  # also chr, but b/c values can be 'none', which convert the vector to chr
+  bin_end_notincl_column <- c()  # ""
+  value_column <- c()  # ""
+  for (prediction_idx in seq_along(forecast_data$predictions)) {
+    prediction_json <- forecast_data$predictions[[prediction_idx]]
     prediction_class <- prediction_json$class
     if (!(prediction_class %in% c("BinCat", "BinLwr", "Point"))) {
       stop(paste0("invalid prediction_json class: '", prediction_class, "'"), call. = FALSE)
@@ -460,30 +457,30 @@ forecast_data_as_cdc_frame <- function(the_forecast_data) {
     row_type <- if (prediction_class == "Point") CDC_POINT_ROW_TYPE else CDC_BIN_ROW_TYPE
     unit <- TARGET_TO_UNIT[[target]]
     prediction <- prediction_json$prediction
-    if (row_type == CDC_POINT_ROW_TYPE) {  # output a single point row
+    if (row_type == CDC_POINT_ROW_TYPE) {  # "Point". output a single point row
       location_column <- append(location_column, location)
       target_column <- append(target_column, target)
-      type_column <- append(type_column, row_type)  # todo xx s/be a boolean (is_point_row)?
+      type_column <- append(type_column, row_type)
       unit_column <- append(unit_column, unit)
-      bin_start_incl_column <- append(bin_start_incl_column, CDC_POINT_NA_VALUE)
-      bin_end_notincl_column <- append(bin_end_notincl_column, CDC_POINT_NA_VALUE)
-      value_column <- append(value_column, as_numeric_or_na(prediction$value))
-    } else if (prediction_class == "BinCat") {  # output multiple bin rows
+      bin_start_incl_column <- append(bin_start_incl_column, NA)
+      bin_end_notincl_column <- append(bin_end_notincl_column, NA)
+      value_column <- append(value_column, prediction$value)  # m/be "none"
+    } else if (prediction_class == "BinCat") {  # "BinCat". output multiple bin rows
       for (cat_prob_idx in seq_along(prediction$cat)) {
-        cat <- as_numeric_or_na(prediction$cat[[cat_prob_idx]])
-        prob <- as_numeric_or_na(prediction$prob[[cat_prob_idx]])
+        cat <- prediction$cat[[cat_prob_idx]]  # m/be "none"
+        prob <- prediction$prob[[cat_prob_idx]]
         location_column <- append(location_column, location)
         target_column <- append(target_column, target)
         type_column <- append(type_column, row_type)
         unit_column <- append(unit_column, unit)
         bin_start_incl_column <- append(bin_start_incl_column, cat)
-        bin_end_notincl_column <- append(bin_end_notincl_column, cat + 1)
+        bin_end_notincl_column <- append(bin_end_notincl_column, recode_cat_to_bin_end_notincl(cat))
         value_column <- append(value_column, prob)
       }
-    } else {  # output multiple bin rows
+    } else {  # "BinLwr". output multiple bin rows
       for (lwr_prob_idx in seq_along(prediction$lwr)) {
-        lwr <- as_numeric_or_na(prediction$lwr[[lwr_prob_idx]])
-        prob <- as_numeric_or_na(prediction$prob[[lwr_prob_idx]])
+        lwr <- prediction$lwr[[lwr_prob_idx]]
+        prob <- prediction$prob[[lwr_prob_idx]]
         location_column <- append(location_column, location)
         target_column <- append(target_column, target)
         type_column <- append(type_column, row_type)
@@ -499,8 +496,124 @@ forecast_data_as_cdc_frame <- function(the_forecast_data) {
     stringsAsFactors=FALSE)
 }
 
-as_numeric_or_na <- function(value) {
-  tryCatch(expr = as.numeric(value), warning = function(w) {return(NA)})
+
+recode_cat_to_bin_end_notincl <- function(cat) {
+  cat_to_new_cat <- list(
+    "40" = "41",
+    "41" = "42",
+    "42" = "43",
+    "43" = "44",
+    "44" = "45",
+    "45" = "46",
+    "46" = "47",
+    "47" = "48",
+    "48" = "49",
+    "49" = "50",
+    "50" = "51",
+    "51" = "52",
+    "52" = "53",
+    "1" = "2",
+    "2" = "3",
+    "3" = "4",
+    "4" = "5",
+    "5" = "6",
+    "6" = "7",
+    "7" = "8",
+    "8" = "9",
+    "9" = "10",
+    "10" = "11",
+    "11" = "12",
+    "12" = "13",
+    "13" = "14",
+    "14" = "15",
+    "15" = "16",
+    "16" = "17",
+    "17" = "18",
+    "18" = "19",
+    "19" = "20",
+    "20" = "21",
+    "none" = "none")
+  cat_to_new_cat[[cat]]
+}
+
+
+#' Loads and converts a CDC CSV file to Zoltar's native `list` format
+#'
+#' @return cdc_csv_file's data as Zoltar's native `list` format, but only the "predictions" item, and not "meta"
+#' @param cdc_csv_file A CDC CSV file. todo xx note that we currently do minimal validation of the data :-/
+#' @export
+#' @examples \dontrun{
+#'   cdc_csv_file <- "my_forecast.cdc.csv"
+#'   forecast_data <- forecast_data_from_cdc_csv_file(cdc_csv_file)
+#' }
+forecast_data_from_cdc_csv_file <- function(cdc_csv_file) {
+  cdc_data_frame <- read.csv(cdc_csv_file, stringsAsFactors=FALSE)  # "NA" -> NA
+  forecast_data_from_cdc_data_frame(cdc_data_frame)
+}
+
+
+forecast_data_from_cdc_data_frame <- function (cdc_data_frame) {  # testable internal function that does the work
+  # print(c('yy1', dim(cdc_data_frame), names(cdc_data_frame)))
+  names(cdc_data_frame) <- sapply(names(cdc_data_frame), tolower)
+
+
+  # validate cdc_data_frame
+  if (!(inherits(cdc_data_frame, "data.frame"))) {
+    stop("cdc_data_frame was not a `data.frame`", call. = FALSE)
+  }
+
+  if ((length(cdc_data_frame) == 0) || (names(cdc_data_frame) !=
+      c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))) {
+    stop("cdc_data_frame did not have required columns", call. = FALSE)
+  }
+
+  predictions <- list()
+  cdc_data_frame_grouped <- cdc_data_frame %>% dplyr::group_by(location, target, type) %>% group_data()
+  for(group_idx in seq_len(nrow(cdc_data_frame_grouped))) {
+    group_row <- cdc_data_frame_grouped[group_idx,]  # group_row$location,  group_row$target,  group_row$type
+    point_values <- list()  # NB: should only be one point row, but collect all (but don't validate here)
+    bincat_cats <- list() ; bincat_probs <- list()
+    binlwr_lwrs  <- list() ; binlwr_probs <- list()
+    for (group_rows_idx in seq_along(group_row$.rows[[1]])) {
+      cdc_data_frame_idx <- group_row$.rows[[1]][group_rows_idx]
+      # NB: cdc_row values could come in as numbers or strings, depending on the source csv file values
+      cdc_row <- cdc_data_frame[cdc_data_frame_idx,]  # cdc_row$bin_start_incl, cdc_row$bin_end_notincl, cdc_row$value
+      if (group_row$type == CDC_POINT_ROW_TYPE) {
+        point_value <- if (group_row$target %in% BINCAT_TARGET_NAMES) as.character(cdc_row$value) else as.numeric(cdc_row$value)
+        point_values <- append(point_values, point_value)
+      } else if (group_row$target %in% BINCAT_TARGET_NAMES) {
+        bincat_cats <- append(bincat_cats, as.character(cdc_row$bin_start_incl))
+        bincat_probs <- append(bincat_probs, as.numeric(cdc_row$value))
+      } else if (group_row$target %in% BINLWR_TARGET_NAMES) {
+        binlwr_lwrs <- append(binlwr_lwrs, as.numeric(cdc_row$bin_start_incl))
+        binlwr_probs <- append(binlwr_probs, as.numeric(cdc_row$value))
+      } else {
+        stop("unexpected bin target_name")  # todo more details
+      }
+    }
+
+    # add the actual prediction dicts
+    if (length(bincat_cats) > 0) {  # yes warning: "NAs introduced by coercion"
+      prediction <- list("location"=group_row$location, "target"=group_row$target, "class"="BinCat",
+                         "prediction"=list("cat"=bincat_cats, "prob"=bincat_probs))
+      predictions[[length(predictions) + 1]] <- prediction
+    }
+    if (length(binlwr_lwrs) > 0) {  # no warning
+      prediction <- list("location"=group_row$location, "target"=group_row$target, "class"="BinLwr",
+                         "prediction"=list("lwr"=binlwr_lwrs, "prob"=binlwr_probs))
+      predictions[[length(predictions) + 1]] <- prediction
+    }
+    if (length(point_values) > 0) {  # yes warning
+      for (point_value in point_values) {
+        prediction <- list("location"=group_row$location, "target"=group_row$target, "class"="Point",
+                           "prediction"=list("value"=point_value))
+        predictions[[length(predictions) + 1]] <- prediction
+      }
+    }
+
+  }
+
+  list("predictions"=predictions)
 }
 
 

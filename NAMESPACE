@@ -2,7 +2,8 @@
 
 S3method(print,ZoltarConnection)
 export(delete_forecast)
-export(forecast_data)
+export(download_forecast)
+export(forecast_data_from_cdc_csv_file)
 export(forecast_info)
 export(forecasts)
 export(model_info)
