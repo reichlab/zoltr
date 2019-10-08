@@ -284,21 +284,28 @@ test_that("projects(zoltar_connection) can handle NULL owner in project JSON", {
 
 test_that("project_info(zoltar_connection, project_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  project1_json <- two_projects_json[[1]]
-  m <- mock(project1_json)
+  exp_project_info <- two_projects_json[[1]]
+  m <- mock(exp_project_info)
   testthat::with_mock("zoltr::get_resource" = m, {
-    the_project_info <- project_info(zoltar_connection, project_id=1L)
+    act_project_info <- project_info(zoltar_connection, project_id=1L)
+
+    exp_project_info$timezeros[[1]]$timezero_date <- as.Date(exp_project_info$timezeros[[1]]$timezero_date, format="%Y%m%d")
+    exp_project_info$timezeros[[1]]$data_version_date <- as.Date(NA)
+    exp_project_info$timezeros[[2]]$timezero_date <- as.Date(exp_project_info$timezeros[[2]]$timezero_date, format="%Y%m%d")
+    exp_project_info$timezeros[[2]]$data_version_date <- as.Date(NA)
+    exp_project_info$timezeros[[3]]$timezero_date <- as.Date(exp_project_info$timezeros[[3]]$timezero_date, format="%Y%m%d")
+    exp_project_info$timezeros[[3]]$data_version_date <- as.Date(exp_project_info$timezeros[[3]]$data_version_date, format="%Y%m%d")
+
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1")
-    expect_is(the_project_info, "list")
-    expect_equal(the_project_info, project1_json)
+    expect_is(act_project_info, "list")
+    expect_equal(act_project_info, exp_project_info)
   })
 })
 
 
 test_that("scores(zoltar_connection, project_id) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-
   load("scores_response.rda")  # 'scores_response' contains partial response from Impetus_Province_Forecasts-scores.csv
   m <- mock(scores_response)
   testthat::with_mock("httr::GET" = m, {
@@ -314,9 +321,9 @@ test_that("scores(zoltar_connection, project_id) returns a data.frame", {
 
 test_that("models(zoltar_connection, project_id) returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  project1_json <- two_projects_json[[1]]
+  exp_project_info <- two_projects_json[[1]]
   model1_json <- jsonlite::read_json("model-1.json")
-  m <- mock(project1_json, model1_json, model1_json)  # return values in calling order
+  m <- mock(exp_project_info, model1_json, model1_json)  # return values in calling order
   testthat::with_mock("zoltr::get_resource" = m, {
     the_models <- models(zoltar_connection, project_id=1L)
     expect_equal(length(mock_calls(m)), 3)
@@ -333,10 +340,10 @@ test_that("models(zoltar_connection, project_id) returns a data.frame", {
 
 test_that("models(zoltar_connection, project_id) can handle NULL owner in project JSON", {
     zoltar_connection <- new_connection("http://example.com")
-    project1_json <- two_projects_json[[1]]
+    exp_project_info <- two_projects_json[[1]]
     model1_json <- jsonlite::read_json("model-1.json")
     model1_json$owner <- NULL
-    m <- mock(project1_json, model1_json, model1_json)  # return values in calling order
+    m <- mock(exp_project_info, model1_json, model1_json)  # return values in calling order
     testthat::with_mock("zoltr::get_resource" = m, {
         the_models <- models(zoltar_connection, project_id=1L)
         expect_equal(length(mock_calls(m)), 3)
@@ -367,15 +374,22 @@ test_that("delete_project() deletes a Project", {
 
 test_that("model_info(zoltar_connection, model_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  model1_json <- jsonlite::read_json("model-1.json")
-  m <- mock(model1_json)
+  exp_model_info <- jsonlite::read_json("model-1.json")
+  m <- mock(exp_model_info)
   testthat::with_mock("zoltr::get_resource" = m, {
-    exp_model_info_json <- model1_json
-    the_model_info <- model_info(zoltar_connection, model_id=1L)
+    act_model_info <- model_info(zoltar_connection, model_id=1L)
+
+    exp_model_info$forecasts[[1]]$timezero_date <- as.Date(exp_model_info$forecasts[[1]]$timezero_date, format="%Y%m%d")
+    exp_model_info$forecasts[[1]]$data_version_date <- as.Date(exp_model_info$forecasts[[1]]$data_version_date, format="%Y%m%d")
+    exp_model_info$forecasts[[2]]$timezero_date <- as.Date(exp_model_info$forecasts[[2]]$timezero_date, format="%Y%m%d")
+    exp_model_info$forecasts[[2]]$data_version_date <- as.Date(NA)
+    exp_model_info$forecasts[[3]]$timezero_date <- as.Date(exp_model_info$forecasts[[3]]$timezero_date, format="%Y%m%d")
+    exp_model_info$forecasts[[3]]$data_version_date <- as.Date(exp_model_info$forecasts[[3]]$data_version_date, format="%Y%m%d")
+
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/1")
-    expect_is(the_model_info, "list")
-    expect_equal(the_model_info, exp_model_info_json)
+    expect_is(act_model_info, "list")
+    expect_equal(act_model_info, exp_model_info)
   })
 })
 
@@ -417,9 +431,8 @@ test_that("forecasts(model_id) returns a data.frame", {
 })
 
 
-test_that("upload_forecast() returns an UploadFileJob id, and upload_info() is OK", {
+test_that("upload_forecast() returns an UploadFileJob id, and upload_info() is correct", {
   zoltar_connection <- new_connection("http://example.com")
-  # test upload_forecast()
   upload_file_job_json <- jsonlite::read_json("upload-file-job-2.json")
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
   webmockr::stub_request('post', uri='http://example.com/api/model/1/forecasts/') %>%
@@ -486,21 +499,29 @@ test_that("delete_model() deletes a Model", {
 
 test_that("forecast_info(zoltar_connection, forecast_id) returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  forecast1_json <- jsonlite::read_json("forecast-71.json")
-  m <- mock(forecast1_json)
+  exp_forecast_info <- jsonlite::read_json("forecast-71.json")
+  m <- mock(exp_forecast_info)
   testthat::with_mock("zoltr::get_resource" = m, {
-    the_forecast_info <- forecast_info(zoltar_connection, forecast_id=1L)
+    act_forecast_info <- forecast_info(zoltar_connection, forecast_id=1L)
+
+    exp_forecast_info$time_zero$timezero_date <- as.Date(exp_forecast_info$time_zero$timezero_date, format="%Y%m%d")
+    exp_forecast_info$time_zero$data_version_date <- as.Date(exp_forecast_info$time_zero$data_version_date, format="%Y%m%d")
+
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/forecast/1")
-    expect_is(the_forecast_info, "list")
-    expect_equal(the_forecast_info, forecast1_json)
+    expect_is(act_forecast_info, "list")
+    expect_equal(act_forecast_info, exp_forecast_info)
+
+    # test that date fields are Date objects
+    expect_equal(act_forecast_info$time_zero$timezero_date, as.Date("20170117", format="%Y%m%d"))
+    expect_equal(act_forecast_info$time_zero$data_version_date, as.Date("20170117", format="%Y%m%d"))
   })
 })
 
 
 test_that("download_forecast(zoltar_connection, forecast_id) returns JSON data as a list", {
   zoltar_connection <- new_connection("http://example.com")
-  load("data_response.rda")  # 'data_response' contains JSON response from EW1-KoTsarima-2017-01-17-small.json
+  load("data_response.rda")  # 'data_response' contains JSON response similar to (!) EW1-KoTsarima-2017-01-17-small.json
   m <- mock(data_response)
   testthat::with_mock("httr::GET" = m, {
     act_data <- download_forecast(zoltar_connection, forecast_id=71L)
@@ -513,21 +534,11 @@ test_that("download_forecast(zoltar_connection, forecast_id) returns JSON data a
     expect_equal(names(act_data), names(exp_data))
     expect_equal(names(act_data$meta), names(exp_data$meta))
     expect_equal(length(act_data$predictions), length(exp_data$predictions))
+
+    # test that date fields are Date objects
+    expect_equal(act_data$meta$forecast$time_zero$timezero_date, as.Date("20170101", format="%Y%m%d"))
+    expect_equal(act_data$meta$forecast$time_zero$data_version_date, as.Date(NA))
   })
-})
-
-
-test_that("all forecast-related date information is converted to Date objects", {
-  # see as.Date()
-  # need implementing [is_coded][is_tested]:
-  # - [x][x] download_forecast() . EW1-KoTsarima-2017-01-17-small.json . $meta$forecast$time_zero$timezero_date , $meta$forecast$time_zero$data_version_date
-  # - [x][x] forecast_info() . forecast-71.json . time_zero$timezero_date, time_zero$data_version_date
-  # - [x][x] model_info() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
-  # - [x][x] project_info() . projects-list.json . $timezeros[...]$timezero_date , $timezeros[...]$data_version_date
-  # done:
-  # - [v][v] forecasts() . model-1.json . $forecasts[...]$timezero_date , $forecasts[...]$data_version_date
-  # - [v][v] upload_info() . upload-file-job-2.json . $created_at, $updated_at
-  fail("todo xx")
 })
 
 
@@ -577,10 +588,6 @@ test_that("forecast_data_from_cdc_csv_file(cdc_csv_file) is correct", {
   expect_equal(names(act_forecast_data), c("predictions"))
   expect_equal(length(act_forecast_data$predictions), 10)
   expect_equal(act_forecast_data, exp_forecast_data)
-
-  # test that forecast_data_from_cdc_csv_file calls internal
-  # mock, etc.
-  fail("todo xx")
 })
 
 

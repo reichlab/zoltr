@@ -196,7 +196,16 @@ projects <- function(zoltar_connection) {
 #'   the_project_info <- project_info(conn, 4L)
 #' }
 project_info <- function(zoltar_connection, project_id) {
-  get_resource(zoltar_connection, url_for_project_id(zoltar_connection, project_id))
+  the_project_info <- get_resource(zoltar_connection, url_for_project_id(zoltar_connection, project_id))
+  for (timezero_idx in seq_along(the_project_info$timezeros)) {
+    time_zero <- the_project_info$timezeros[[timezero_idx]]
+    time_zero$timezero_date <- as.Date(time_zero$timezero_date, format="%Y%m%d")
+    time_zero$data_version_date <-
+      if (is.null(time_zero$data_version_date)) as.Date(NA)
+      else as.Date(time_zero$data_version_date, format="%Y%m%d")
+    the_project_info$timezeros[[timezero_idx]] <- time_zero
+  }
+  the_project_info
 }
 
 
@@ -274,7 +283,16 @@ YYYYMMDD_format <- "%Y%m%d"  # for as.Date()
 #'   the_model_info <- model_info(conn, 26L)
 #' }
 model_info <- function(zoltar_connection, model_id) {
-  get_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
+  the_model_info <- get_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
+  for (forecast_idx in seq_along(the_model_info$forecasts)) {
+    forecast <- the_model_info$forecasts[[forecast_idx]]
+    forecast$timezero_date <- as.Date(forecast$timezero_date, format="%Y%m%d")
+    forecast$data_version_date <-
+      if (is.null(forecast$data_version_date)) as.Date(NA)
+      else as.Date(forecast$data_version_date, format="%Y%m%d")
+    the_model_info$forecasts[[forecast_idx]] <- forecast
+  }
+  the_model_info
 }
 
 
@@ -383,7 +401,10 @@ delete_forecast <- function(zoltar_connection, forecast_id) {
 #'   the_forecast_info <- forecast_info(conn, 46L)
 #' }
 forecast_info <- function(zoltar_connection, forecast_id) {
-  get_resource(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
+  the_forecast_info <- get_resource(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
+  the_forecast_info$time_zero$timezero_date <- as.Date(the_forecast_info$time_zero$timezero_date, format="%Y%m%d")
+  the_forecast_info$time_zero$data_version_date <- as.Date(the_forecast_info$time_zero$data_version_date, format="%Y%m%d")
+  the_forecast_info
 }
 
 
@@ -399,7 +420,17 @@ forecast_info <- function(zoltar_connection, forecast_id) {
 #' }
 download_forecast <- function(zoltar_connection, forecast_id) {
   forecast_data_url <- url_for_forecast_data_id(zoltar_connection, forecast_id)
-  get_resource(zoltar_connection, forecast_data_url)
+  forecast_data <- get_resource(zoltar_connection, forecast_data_url)
+  if(is.null(forecast_data)) {  # true for tests
+    return(NULL)
+  }
+
+  forecast_data$meta$forecast$time_zero$timezero_date <-
+    as.Date(forecast_data$meta$forecast$time_zero$timezero_date, format="%Y%m%d")
+  forecast_data$meta$forecast$time_zero$data_version_date <-
+    if (is.null(forecast_data$meta$forecast$time_zero$data_version_date)) as.Date(NA)
+    else as.Date(forecast_data$meta$forecast$time_zero$data_version_date, format="%Y%m%d")
+  forecast_data
 }
 
 
@@ -553,7 +584,6 @@ forecast_data_from_cdc_csv_file <- function(cdc_csv_file) {
 
 
 forecast_data_from_cdc_data_frame <- function (cdc_data_frame) {  # testable internal function that does the work
-  # print(c('yy1', dim(cdc_data_frame), names(cdc_data_frame)))
   names(cdc_data_frame) <- sapply(names(cdc_data_frame), tolower)
 
 

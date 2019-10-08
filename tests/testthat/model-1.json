@@ -19,11 +19,6 @@
       "forecast": "http://example.com/api/forecast/71/"
     },
     {
-      "timezero_date": "20170124",
-      "data_version_date": null,
-      "forecast": null
-    },
-    {
       "timezero_date": "20170130",
       "data_version_date": "20170131",
       "forecast": "http://example.com/api/forecast/72/"
