@@ -29,6 +29,11 @@ url_for_project_id <- function(zoltar_connection, project_id) {
 }
 
 
+url_for_project_models <- function(zoltar_connection, project_id) {
+  paste0(zoltar_connection$host, '/api/project/', project_id, '/models/')
+}
+
+
 url_for_model_id <- function(zoltar_connection, model_id) {
   paste0(zoltar_connection$host, '/api/model/', model_id)
 }
@@ -289,12 +294,13 @@ delete_project <- function(zoltar_connection, project_id) {
 
 #' Create a project
 #'
-#' Creates the project using the passed list. Fails if a project with the passed name already exists.
+#' Creates the project using the passed project configuration list. Fails if a project with the passed name already
+#'   exists.
 #'
 #' @return project_id of the newly-created project
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param project_config A `list` containing a Zoltar project configuration. todo xx document.
-#    An example: example-project-config.json
+#' @param project_config A `list` containing a Zoltar project configuration. note that this list validated by the
+#'   server and not here. An example: example-project-config.json. todo xx document
 #' @export
 #' @examples \dontrun{
 #'   new_project_id <- create_project(conn, jsonlite::read_json("example-project-config.json"))
@@ -449,6 +455,37 @@ delete_forecast <- function(zoltar_connection, forecast_id) {
 #' }
 delete_model <- function(zoltar_connection, model_id) {
   delete_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
+}
+
+
+#' Create a model
+#'
+#' Creates the model in the passed project using the passed list. Fails if a model with the passed name already exists.
+#'
+#' @return model_id of the newly-created model
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_id ID of a project in zoltar_connection's projects. this is the project the new model will be created
+#'   in
+#' @param model_config A `list` containing a Zoltar model configuration. todo xx document.
+#    An example: example-model-config.json
+#' @export
+#' @examples \dontrun{
+#'   new_model_id <- create_model(conn, 46L, jsonlite::read_json("example-model-config.json"))
+#' }
+create_model <- function(zoltar_connection, project_id, model_config) {
+  models_url <- url_for_project_models(zoltar_connection, project_id)
+  response <- httr::POST(
+    url=models_url,
+    add_auth_headers(zoltar_connection),
+    body=list(model_config=model_config))
+  # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
+  # error message
+  json_response <- httr::content(response, "parsed")
+  if (response$status_code == 400) {
+    stop(json_response$error, call. = FALSE)
+  }
+
+  json_response$id  # throw away rest of json and let model_info() reload/refresh it
 }
 
 
