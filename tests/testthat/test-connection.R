@@ -42,9 +42,16 @@ mock_authenticate <- function(zoltar_connection, token=mock_token) {
 # ---- utility tests ----
 #
 
+
 test_that("id_for_url(url) returns an integer", {
   expect_equal(id_for_url("http://example.com/api/forecast/1/"), 1L)
   expect_equal(id_for_url("http://example.com/api/forecast/1"), 1L)
+})
+
+
+test_that("url_for_projects(zoltar_connection) returns a URL", {
+  zoltar_connection <- new_connection("http://example.com")
+  expect_equal(url_for_projects(zoltar_connection), "http://example.com/api/projects/")
 })
 
 
@@ -359,12 +366,27 @@ test_that("models(zoltar_connection, project_id) can handle NULL owner in projec
 
 
 test_that("create_project() creates a Project", {
-    fail("todo xx")
+  zoltar_connection <- new_connection("http://example.com")
+  project_info <- two_projects_json[[1]]
+  webmockr::stub_request('post', uri='http://example.com/api/projects/') %>%
+    to_return(
+      body=project_info,
+      status=200,
+      headers=list('Content-Type'='application/json; charset=utf-8'))
+  project_config <- jsonlite::read_json("example-project-config.json")
+  new_project_id <- create_project(zoltar_connection, project_config)
+  expect_equal(new_project_id, 1L)
 })
 
 
-test_that("delete_project() deletes a Project", {
-    fail("todo xx")
+test_that("delete_project() calls delete_resource", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  testthat::with_mock("zoltr::delete_resource" = m, {
+    delete_project(zoltar_connection, project_id=0L)
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/0")
+  })
 })
 
 
@@ -488,8 +510,14 @@ test_that("create_model() creates a Model", {
 })
 
 
-test_that("delete_model() deletes a Model", {
-    fail("todo xx")
+test_that("delete_model() calls delete_resource", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  testthat::with_mock("zoltr::delete_resource" = m, {
+    delete_model(zoltar_connection, model_id=0L)
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/0")
+  })
 })
 
 

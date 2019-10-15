@@ -18,6 +18,11 @@ id_for_url <- function(url) {
 }
 
 
+url_for_projects <- function(zoltar_connection) {
+  paste0(zoltar_connection$host, '/api/projects/')
+}
+
+
 # returns an API URL for the passed project_id, sans trailing slash
 url_for_project_id <- function(zoltar_connection, project_id) {
   paste0(zoltar_connection$host, '/api/project/', project_id)
@@ -154,7 +159,7 @@ get_resource <- function(zoltar_connection, url) {
 #'   the_projects <- projects(conn)
 #' }
 projects <- function(zoltar_connection) {
-  projects_json <- get_resource(zoltar_connection, paste0(zoltar_connection$host, '/api/projects/'))
+  projects_json <- get_resource(zoltar_connection, url_for_projects(zoltar_connection))
   id_column <- c()
   url_column <- c()
   owner_id_column <- c()
@@ -266,6 +271,51 @@ models <- function(zoltar_connection, project_id) {
 }
 
 
+#' Delete a project
+#'
+#' Deletes the project with the passed ID. This is permanent and cannot be undone.
+#'
+#' @return None
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_id ID of a project in zoltar_connection's projects
+#' @export
+#' @examples \dontrun{
+#'   delete_project(conn, 46L)
+#' }
+delete_project <- function(zoltar_connection, project_id) {
+  delete_resource(zoltar_connection, url_for_project_id(zoltar_connection, project_id))
+}
+
+
+#' Create a project
+#'
+#' Creates the project using the passed list. Fails if a project with the passed name already exists.
+#'
+#' @return project_id of the newly-created project
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_config A `list` containing a Zoltar project configuration. todo xx document.
+#    An example: example-project-config.json
+#' @export
+#' @examples \dontrun{
+#'   new_project_id <- create_project(conn, jsonlite::read_json("example-project-config.json"))
+#' }
+create_project <- function(zoltar_connection, project_config) {
+  projects_url <- url_for_projects(zoltar_connection)
+  response <- httr::POST(
+    url=projects_url,
+    add_auth_headers(zoltar_connection),
+    body=list(project_config=project_config))
+  # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
+  # error message
+  json_response <- httr::content(response, "parsed")
+  if (response$status_code == 400) {
+    stop(json_response$error, call. = FALSE)
+  }
+
+  json_response$id  # throw away rest of json and let project_info() reload/refresh it
+}
+
+
 #
 # ---- model functions ----
 #
@@ -361,13 +411,12 @@ upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast
     body=list(data_file=httr::upload_file(temp_json_file), timezero_date=timezero_date))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
+  json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    json_response <- httr::content(response, "parsed")
     stop(json_response$error, call. = FALSE)
   }
 
-  upload_file_job_json <- httr::content(response, "parsed")
-  upload_file_job_json$id  # throw away rest of json and let upload_file_job_info() reload/refresh it
+  json_response$id  # throw away rest of json and let upload_file_job_info() reload/refresh it
 }
 
 
@@ -384,6 +433,22 @@ upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast
 #' }
 delete_forecast <- function(zoltar_connection, forecast_id) {
   delete_resource(zoltar_connection, url_for_forecast_id(zoltar_connection, forecast_id))
+}
+
+
+#' Delete a model
+#'
+#' Deletes the model with the passed ID. This is permanent and cannot be undone.
+#'
+#' @return None
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param model_id ID of a model in zoltar_connection's models
+#' @export
+#' @examples \dontrun{
+#'   delete_model(conn, 46L)
+#' }
+delete_model <- function(zoltar_connection, model_id) {
+  delete_resource(zoltar_connection, url_for_model_id(zoltar_connection, model_id))
 }
 
 
