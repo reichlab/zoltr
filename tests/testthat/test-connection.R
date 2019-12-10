@@ -647,7 +647,6 @@ test_that("new_session() calls get_token() correctly", {
       get_token_response
     },
     zoltar_authenticate(zoltar_connection, "username", "password"))
-
   expect_equal(called_args$url, "http://example.com/api-token-auth/")
   expect_equal(called_args$body$username, zoltar_connection$username)
   expect_equal(called_args$body$password, zoltar_connection$password)
@@ -657,17 +656,17 @@ test_that("new_session() calls get_token() correctly", {
 test_that("upload_forecast() passes correct url to POST()", {
   zoltar_connection <- new_connection("http://example.com")
   called_args <- NULL
-  testthat::with_mock("zoltr::upload_file" = function(...) {
-      NULL
+  timezero_date <- "20191021"
+  forecast_data <- jsonlite::read_json("EW1-KoTsarima-2017-01-17-small.json")
+  testthat::with_mock(
+    "httr::POST" = function(...) {
+      called_args <<- list(...)
+      load("upload_response.rda")  # 'upload_response' contains 200 response from sample upload_forecast() call
+      upload_response
     },
-    testthat::with_mock(  # a nested mock because I couldn't find a better way to mock multiple functions at once
-      "httr::POST" = function(...) {
-        called_args <<- list(...)
-        load("upload_response.rda")  # 'upload_response' contains 200 response from sample upload_forecast() call
-        upload_response
-      },
-    upload_forecast(zoltar_connection, 1L, NULL, list())))  # model_id, timezero_date, forecast_data
-
+  upload_forecast(zoltar_connection, 1L, timezero_date, forecast_data))  # model_id, timezero_date, forecast_data
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
+  expect_equal(called_args$body$timezero_date, timezero_date)
+  expect_s3_class(called_args$body$data_file, "form_file")
 })
 

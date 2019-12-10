@@ -411,6 +411,7 @@ upload_forecast <- function(zoltar_connection, model_id, timezero_date, forecast
   re_authenticate_if_necessary(zoltar_connection)
   message(paste0("upload_forecast(): POST: ", forecasts_url))
   temp_json_file <- tempfile(pattern = "forecast", fileext = ".json")
+  jsonlite::write_json(forecast_data, temp_json_file)
   response <- httr::POST(
     url=forecasts_url,
     add_auth_headers(zoltar_connection),
