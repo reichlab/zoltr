@@ -9,20 +9,6 @@ library(zoltr)
 
 TWO_PROJECTS_JSON <- jsonlite::read_json("data/projects-list.json")
 
-test_that("project_info() returns a list", {
-  zoltar_connection <- new_connection("http://example.com")
-  exp_project_info <- TWO_PROJECTS_JSON[[1]]
-  m <- mock(exp_project_info)
-  testthat::with_mock("zoltr::get_resource" = m, {
-    act_project_info <- project_info(zoltar_connection, "http://example.com/api/project/1/")
-    expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/")
-    expect_is(act_project_info, "list")
-    expect_equal(act_project_info, exp_project_info)
-  })
-})
-
-
 test_that("create_project() creates a Project", {
   zoltar_connection <- new_connection("http://example.com")
   webmockr::stub_request("post", uri = "http://example.com/api/projects/") %>%
@@ -175,11 +161,66 @@ test_that("timezeros() returns a data.frame", {
 
 
 test_that("all functions that need to can handle NULL fields in project JSON", {
-  # ForecastModel: owner, aux_data_url
-  # Project: owner, logo_url
-  # Target: step_ahead_increment, unit
-  # TimeZero: data_version_date, season_name
-  # TruthData: unit, target
-  # UploadFileJob: user, input_json, output_json
+  # Project: owner, logo_url                      project_info(zoltar_connection, project_url)
+  # ForecastModel: owner, aux_data_url            model_info(zoltar_connection, model_url)
+  # Target: step_ahead_increment, unit            target_info(zoltar_connection, target_url) *
+  # TimeZero: data_version_date, season_name      timezero_info(zoltar_connection, timezero_url) *
+  # TruthData: unit, target                       truth(zoltar_connection, project_url)
+  # Unit: n/a                                     unit_info(zoltar_connection, unit_url) *
+  # UploadFileJob: user, input_json, output_json  upload_info(zoltar_connection, upload_file_job_url)
   fail("todo xx")
 })
+
+
+#
+# ---- info functions ----
+#
+
+#   units_list_json <- jsonlite::read_json("data/units-list.json")
+
+test_that("target_info() returns a list", {
+  zoltar_connection <- new_connection("http://example.com")
+  targets_list_json <- jsonlite::read_json("data/targets-list.json")
+  exp_target_info <- targets_list_json[[1]]
+  m <- mock(exp_target_info)
+  testthat::with_mock("zoltr::get_resource" = m, {
+    act_target_info <- target_info(zoltar_connection, "http://example.com/api/target/1/")
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/target/1/")
+    expect_is(act_target_info, "list")
+    expect_equal(act_target_info, exp_target_info)
+  })
+})
+
+
+
+test_that("timezero_info() returns a list", {
+  zoltar_connection <- new_connection("http://example.com")
+  timezeros_list_json <- jsonlite::read_json("data/timezeros-list.json")
+  exp_timezero_info <- timezeros_list_json[[1]]
+  m <- mock(exp_timezero_info)
+  testthat::with_mock("zoltr::get_resource" = m, {
+    act_timezero_info <- timezero_info(zoltar_connection, "http://example.com/api/timezero/2/")
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/timezero/2/")
+    expect_is(act_timezero_info, "list")
+    expect_equal(act_timezero_info, exp_timezero_info)
+  })
+})
+
+
+
+test_that("unit_info() returns a list", {
+  zoltar_connection <- new_connection("http://example.com")
+  units_list_json <- jsonlite::read_json("data/units-list.json")
+  exp_unit_info <- units_list_json[[1]]
+  m <- mock(exp_unit_info)
+  testthat::with_mock("zoltr::get_resource" = m, {
+    act_unit_info <- unit_info(zoltar_connection, "http://example.com/api/unit/3/")
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/unit/3/")
+    expect_is(act_unit_info, "list")
+    expect_equal(act_unit_info, exp_unit_info)
+  })
+})
+

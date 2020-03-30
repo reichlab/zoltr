@@ -6,20 +6,6 @@ library(readr)  # apparently required by httr
 # ---- project functions ----
 #
 
-#' Get information about a project
-#'
-#' @return A `list` of project information for the passed project_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param project_url URL of a project in zoltar_connection's projects
-#' @export
-#' @examples \dontrun{
-#'   the_project_info <- project_info(conn, "https://www.zoltardata.com/project/9/")
-#' }
-project_info <- function(zoltar_connection, project_url) {
-  get_resource(zoltar_connection, project_url)
-}
-
-
 #' Create a project
 #'
 #' Creates the project using the passed project configuration list. Fails if a project with the passed name already
@@ -245,3 +231,64 @@ timezeros <- function(zoltar_connection, project_url) {
              data_version_date = data_version_date_column, is_season_start = is_season_start_column,
              season_name = season_name_column, stringsAsFactors = FALSE)
 }
+
+
+#
+# ---- info functions ----
+#
+
+#' Get information about a project
+#'
+#' @return A `list` of project information for the passed project_url
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @export
+#' @examples \dontrun{
+#'   the_project_info <- project_info(conn, "https://www.zoltardata.com/project/9/")
+#' }
+project_info <- function(zoltar_connection, project_url) {
+  get_resource(zoltar_connection, project_url)
+}
+
+
+#' Get information about a target
+#'
+#' @return A `list` of target information for the passed target_url
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param target_url URL of a target in zoltar_connection's targets
+#' @export
+#' @examples \dontrun{
+#'   the_target_info <- target_info(conn, "https://www.zoltardata.com/target/3/")
+#' }
+target_info <- function(zoltar_connection, target_url) {
+  get_resource(zoltar_connection, target_url)
+}
+
+
+#' Get information about a timezero
+#'
+#' @return A `list` of timezero information for the passed timezero_url
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param timezero_url URL of a timezero in zoltar_connection's timezeros
+#' @export
+#' @examples \dontrun{
+#'   the_timezero_info <- timezero_info(conn, "https://www.zoltardata.com/timezero/3/")
+#' }
+timezero_info <- function(zoltar_connection, timezero_url) {
+  get_resource(zoltar_connection, timezero_url)
+}
+
+
+#' Get information about a unit
+#'
+#' @return A `list` of unit information for the passed unit_url
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param unit_url URL of a unit in zoltar_connection's units
+#' @export
+#' @examples \dontrun{
+#'   the_unit_info <- unit_info(conn, "https://www.zoltardata.com/unit/3/")
+#' }
+unit_info <- function(zoltar_connection, unit_url) {
+  get_resource(zoltar_connection, unit_url)
+}
+
