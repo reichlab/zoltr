@@ -1,0 +1,17 @@
+[
+  {
+    "id": 23,
+    "url": "http://example.com/api/unit/23/",
+    "name": "location1"
+  },
+  {
+    "id": 24,
+    "url": "http://example.com/api/unit/24/",
+    "name": "location2"
+  },
+  {
+    "id": 25,
+    "url": "http://example.com/api/unit/25/",
+    "name": "location3"
+  }
+]

@@ -1,0 +1,121 @@
+{
+  "predictions": [
+    {
+      "unit": "HHS Region 1",
+      "target": "1 wk ahead",
+      "class": "bin",
+      "prediction": {
+        "cat": [
+          0,
+          0.1
+        ],
+        "prob": [
+          0.1,
+          0.9
+        ]
+      }
+    },
+    {
+      "unit": "HHS Region 1",
+      "target": "1 wk ahead",
+      "class": "point",
+      "prediction": {
+        "value": 0.70001247803342
+      }
+    },
+    {
+      "unit": "HHS Region 1",
+      "target": "2 wk ahead",
+      "class": "bin",
+      "prediction": {
+        "cat": [
+          0,
+          0.1
+        ],
+        "prob": [
+          0.2,
+          0.8
+        ]
+      }
+    },
+    {
+      "unit": "HHS Region 1",
+      "target": "2 wk ahead",
+      "class": "point",
+      "prediction": {
+        "value": 0.799802488968438
+      }
+    },
+    {
+      "unit": "HHS Region 10",
+      "target": "Season onset",
+      "class": "bin",
+      "prediction": {
+        "cat": [
+          "2017-01-02",
+          "2017-03-06",
+          "none"
+        ],
+        "prob": [
+          0.3,
+          0.4,
+          0.3
+        ]
+      }
+    },
+    {
+      "unit": "HHS Region 10",
+      "target": "Season onset",
+      "class": "point",
+      "prediction": {
+        "value": "2017-01-02"
+      }
+    },
+    {
+      "unit": "HHS Region 10",
+      "target": "Season peak percentage",
+      "class": "bin",
+      "prediction": {
+        "cat": [
+          0
+        ],
+        "prob": [
+          1.0
+        ]
+      }
+    },
+    {
+      "unit": "HHS Region 10",
+      "target": "Season peak percentage",
+      "class": "point",
+      "prediction": {
+        "value": 3.13643053183349
+      }
+    },
+    {
+      "unit": "US National",
+      "target": "Season peak week",
+      "class": "bin",
+      "prediction": {
+        "cat": [
+          "2017-01-02",
+          "2017-03-06",
+          "2017-03-13"
+        ],
+        "prob": [
+          0.4,
+          0.5,
+          0.1
+        ]
+      }
+    },
+    {
+      "unit": "US National",
+      "target": "Season peak week",
+      "class": "point",
+      "prediction": {
+        "value": "2016-12-26"
+      }
+    }
+  ]
+}

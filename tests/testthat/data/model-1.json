@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "url": "http://example.com/api/model/1/",
+  "project": "http://example.com/api/project/1/",
+  "owner": "http://example.com/api/user/3/",
+  "name": "Test ForecastModel1",
+  "abbreviation": "",
+  "description": "a ForecastModel for testing",
+  "home_url": "http://example.com",
+  "aux_data_url": null,
+  "forecasts": [
+    "http://example.com/api/forecast/71/",
+    "http://example.com/api/forecast/72/"
+  ]
+}

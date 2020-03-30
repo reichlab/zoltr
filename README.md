@@ -42,7 +42,7 @@ names(the_project_info)
 #>  [1] "id"           "url"          "owner"        "is_public"   
 #>  [5] "name"         "description"  "home_url"     "core_data"   
 #>  [9] "config_dict"  "template"     "truth"        "model_owners"
-#> [13] "score_data"   "models"       "locations"    "targets"     
+#> [13] "score_data"   "models"       "unit"         "targets"     
 #> [17] "timezeros"
 the_project_info$name
 #> [1] "CDC Flu challenge"

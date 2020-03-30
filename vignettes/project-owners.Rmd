@@ -51,7 +51,7 @@ and password for your account. Notes:
   re-authenticating as needed by passing your username and password back to the server to get another token. Note that
   the connection object returned by the `new_connection` function stores a token internally, so be careful if saving
   that object into a file.
-- Below you will see the host shown as _127.0.0.1:8000_ - this is a temporary one that was used to generate this 
+- Below you will see the host shown as _example.com_ - this is a temporary one that was used to generate this 
   documentation.
 
 
@@ -99,7 +99,7 @@ Get the forecast for the timezero date specified by TIMEZERO_DATE and then call 
 
 ```{r}
 timezero_date_str <- Sys.getenv("TIMEZERO_DATE")
-timezero_date <- as.Date(timezero_date_str, format = "%Y%m%d")  # YYYYMMDD
+timezero_date <- as.Date(timezero_date_str, format = YYYY_MM_DD_DATE_FORMAT)
 existing_forecast_id <- the_forecasts[the_forecasts$timezero_date == timezero_date, 'id']
 
 the_forecast_info <- forecast_info(conn, existing_forecast_id)  # `Not Found (HTTP 404)` this if forecast doesn't exist 

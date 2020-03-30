@@ -63,15 +63,9 @@ the_project_info$name
 
 The native forecast data format supported by the Zoltar API is a `list`. See 
 [this page](https://www.zoltardata.com/docs#forecasts) for format details. You can find an example at
-tests/testthat/20101024-ReichLab_sarima_seasonal_difference_TRUE-20101108.cdc.csv-small.json . By convention this
-package referred to this as `forecast_data`. Conversion functions are provided to convert between this format (which is 
-required by `upload_forecast()` and `forecast_data()`) and CDC CSV format (currently our only `data.frame`-compatible
-format):
+tests/testthat/docs-predictions.json . By convention this package referred to this as `forecast_data`. In the future
+conversion functions will be provided to convert between this format (which is required by `upload_forecast()` and
+`forecast_data()`) to CSV formats, such as the CDC format [1] that's input to `forecast_data_from_cdc_csv_file()`.
 
-- `cdc_data_frame_from_forecast_data()`: Converts forecast data from Zoltar's native `list` format to a CDC-specific `data.frame`. Suitable
-  for saving to csv file.
-- `forecast_data_from_cdc_csv_file()`: Loads a CDC-specific CSV file into Zoltar's native `list` format. Suitable for passing to
-  `upload_forecast()`.
-
-Details about the CDC CSV format can be found at 
+[1] Details about the CDC CSV format can be found at 
 [flu_challenge_2016-17_update.docx](https://predict.cdc.gov/api/v1/attachments/flusight/flu_challenge_2016-17_update.docx).

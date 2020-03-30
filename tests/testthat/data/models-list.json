@@ -1,0 +1,16 @@
+[
+  {
+    "id": 5,
+    "url": "http://example.com/api/model/5/",
+    "project": "http://example.com/api/project/3/",
+    "owner": null,
+    "name": "docs forecast model",
+    "abbreviation": "",
+    "description": "",
+    "home_url": "",
+    "aux_data_url": null,
+    "forecasts": [
+      "http://example.com/api/forecast/3/"
+    ]
+  }
+]

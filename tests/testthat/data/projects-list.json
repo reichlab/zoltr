@@ -1,0 +1,82 @@
+[
+  {
+    "id": 1,
+    "url": "http://example.com/api/project/1/",
+    "owner": "http://example.com/api/user/2/",
+    "is_public": true,
+    "name": "public project",
+    "description": "d",
+    "home_url": "http://example.com",
+    "time_interval_type": "Biweek",
+    "visualization_y_label": "label 1",
+    "core_data": "http://example.com",
+    "truth": "http://example.com/api/project/1/truth/",
+    "model_owners": [
+      "http://example.com/api/user/3/"
+    ],
+    "score_data": "http://example.com/api/project/1/score_data/",
+    "models": [
+      "http://example.com/api/model/1/",
+      "http://example.com/api/model/2/"
+    ],
+    "units": [
+      "http://example.com/api/unit/1/",
+      "http://example.com/api/unit/2/",
+      "http://example.com/api/unit/3/",
+      "http://example.com/api/unit/4/",
+      "http://example.com/api/unit/5/",
+      "http://example.com/api/unit/6/",
+      "http://example.com/api/unit/7/",
+      "http://example.com/api/unit/8/",
+      "http://example.com/api/unit/9/",
+      "http://example.com/api/unit/10/",
+      "http://example.com/api/unit/11/"
+    ],
+    "targets": [
+      "http://example.com/api/target/1/",
+      "http://example.com/api/target/2/",
+      "http://example.com/api/target/3/",
+      "http://example.com/api/target/4/",
+      "http://example.com/api/target/5/",
+      "http://example.com/api/target/6/",
+      "http://example.com/api/target/7/"
+    ],
+    "timezeros": [
+      "http://example.com/api/timezero/1/",
+      "http://example.com/api/timezero/2/"
+    ]
+  },
+  {
+    "id": 2,
+    "url": "http://example.com/api/project/2/",
+    "owner": "http://example.com/api/user/2/",
+    "is_public": false,
+    "name": "private project",
+    "description": "",
+    "home_url": "",
+    "time_interval_type": "Week",
+    "visualization_y_label": "label 2",
+    "core_data": "",
+    "truth": "http://example.com/api/project/2/truth/",
+    "model_owners": [
+      "http://example.com/api/user/3/"
+    ],
+    "score_data": "http://example.com/api/project/2/score_data/",
+    "models": [
+      "http://example.com/api/model/5/"
+    ],
+    "units": [
+      "http://example.com/api/unit/12/",
+      "http://example.com/api/unit/13/"
+    ],
+    "targets": [
+      "http://example.com/api/target/8/",
+      "http://example.com/api/target/9/",
+      "http://example.com/api/target/10/",
+      "http://example.com/api/target/11/"
+    ],
+    "timezeros": [
+      "http://example.com/api/timezero/3/"
+    ]
+  }
+]
