@@ -98,7 +98,7 @@ forecasts <- function(zoltar_connection, model_url) {
     url_column <- append(url_column, forecast_json$url)
     forecast_model_url_column <- append(forecast_model_url_column, forecast_json$forecast_model)
     source_column <- append(source_column, forecast_json$source)
-    timezero_url_column <- append(timezero_url_column, forecast_json$time_zero)
+    timezero_url_column <- append(timezero_url_column, forecast_json$time_zero$url)  # "unnest" timezeros to URL
     created_at_column <- append(created_at_column, as.Date(forecast_json$created_at))  # "2020-03-05T15:47:47.369231-05:00"
     forecast_data_url_column <- append(forecast_data_url_column, forecast_json$forecast_data)
   }

@@ -12,15 +12,13 @@
     "url": "http://example.com/api/timezero/6/",
     "timezero_date": "2011-10-09",
     "data_version_date": null,
-    "is_season_start": false,
-    "season_name": null
+    "is_season_start": false
   },
   {
     "id": 7,
     "url": "http://example.com/api/timezero/7/",
     "timezero_date": "2011-10-16",
     "data_version_date": null,
-    "is_season_start": false,
-    "season_name": null
+    "is_season_start": false
   }
 ]

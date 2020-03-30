@@ -76,9 +76,15 @@ forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame)
       if (group_row$type == CDC_POINT_ROW_TYPE) {
         point_value <- process_csv_point_row(season_start_year, group_row$target, as.numeric(cdc_row$value))
         point_values <- append(point_values, point_value)
-      } else {
+      } else {  # bin row
+        # recall that the "Season onset" target is nominal and not date. This is due to how the CDC decided to represent
+        # the case when predicting no season onset, i.e., the threshold is not exceeded. This is done via a "none" bin
+        # where both Bin_start_incl and Bin_end_notincl are the strings "none" and not an EW week number. Thus we need
+        # to check for that case and replace with NAs, which is what process_csv_bin_row() expects
+        bin_start_incl <- if (cdc_row$bin_start_incl == "none") as.numeric(NA) else as.numeric(cdc_row$bin_start_incl)
+        bin_end_notincl <- if (cdc_row$bin_end_notincl == "none") as.numeric(NA) else as.numeric(cdc_row$bin_end_notincl)
         bin_cat_and_prob <- process_csv_bin_row(season_start_year, group_row$target, as.numeric(cdc_row$value),
-                                                as.numeric(cdc_row$bin_start_incl), as.numeric(cdc_row$bin_end_notincl))
+                                                bin_start_incl, bin_end_notincl)
         bincat_cats <- append(bincat_cats, bin_cat_and_prob[[1]])
         bincat_probs <- append(bincat_probs, bin_cat_and_prob[[2]])
       }

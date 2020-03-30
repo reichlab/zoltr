@@ -14,7 +14,6 @@ test_that("forecast_data_from_cdc_csv_file(cdc_csv_file) is correct", {
 
   # blue sky
   cdc_csv_file <- "data/20161023-KoTstable-20161109-small.cdc.csv"
-  browser()
   act_forecast_data <- forecast_data_from_cdc_csv_file(2016, cdc_csv_file)
   exp_forecast_data <- jsonlite::read_json("data/20161023-KoTstable-20161109-small-exp-predictions.json")
   expect_is(act_forecast_data, "list")

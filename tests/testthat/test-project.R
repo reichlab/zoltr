@@ -175,6 +175,11 @@ test_that("timezeros() returns a data.frame", {
 
 
 test_that("all functions that need to can handle NULL fields in project JSON", {
-  # project$core_data
+  # ForecastModel: owner, aux_data_url
+  # Project: owner, logo_url
+  # Target: step_ahead_increment, unit
+  # TimeZero: data_version_date, season_name
+  # TruthData: unit, target
+  # UploadFileJob: user, input_json, output_json
   fail("todo xx")
 })
