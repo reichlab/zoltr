@@ -33,12 +33,12 @@ test_that("create_model() creates a Model", {
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
   model_config <- jsonlite::read_json("data/example-model-config.json")
-  new_model_url <- create_model(zoltar_connection, "http://example.com/api/project/1/", model_config)
-  expect_equal(new_model_url, 1L)
+  model_url <- create_model(zoltar_connection, "http://example.com/api/project/1/", model_config)
+  expect_equal(model_url, "http://example.com/api/model/1/")
 })
 
 
-test_that("create_model() calls re_authenticate_if_necessary()", {
+test_that("create_model() calls re_authenticate_if_necessary() and returns a Model URL", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
   model_info <- jsonlite::read_json("data/model-1.json")
@@ -49,8 +49,9 @@ test_that("create_model() calls re_authenticate_if_necessary()", {
         status = 200,
         headers = list('Content-Type' = 'application/json; charset=utf-8'))
     model_config <- jsonlite::read_json("data/example-model-config.json")
-    create_model(zoltar_connection, "http://example.com/api/project/1/", model_config)
+    model_url <- create_model(zoltar_connection, "http://example.com/api/project/1/", model_config)
     expect_equal(length(mock_calls(m)), 1)
+    expect_equal(model_url, "http://example.com/api/model/1/")
   })
 })
 

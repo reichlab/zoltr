@@ -56,7 +56,7 @@ create_model <- function(zoltar_connection, project_url, model_config) {
     stop(json_response$error, call. = FALSE)
   }
 
-  json_response$id  # throw away rest of json and let model_info() reload/refresh it
+  json_response$url  # throw away rest of json and let model_info() reload/refresh it
 }
 
 

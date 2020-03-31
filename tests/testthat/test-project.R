@@ -22,7 +22,7 @@ test_that("create_project() creates a Project", {
 })
 
 
-test_that("create_project() calls re_authenticate_if_necessary()", {
+test_that("create_project() calls re_authenticate_if_necessary(), and returns a Project URL", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
   testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
@@ -32,8 +32,9 @@ test_that("create_project() calls re_authenticate_if_necessary()", {
         status = 200,
         headers = list('Content-Type' = 'application/json; charset=utf-8'))
     project_config <- jsonlite::read_json("data/cdc-project.json")
-    create_project(zoltar_connection, project_config)
+    project_url <- create_project(zoltar_connection, project_config)
     expect_equal(length(mock_calls(m)), 1)
+    expect_equal(project_url, "http://example.com/api/project/1/")
   })
 })
 
