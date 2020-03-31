@@ -136,63 +136,6 @@ test_that("httr functions re-authenticate expired tokens", {
 })
 
 
-test_that("upload_forecast() does not call add_headers() for unauthenticated connection", {
-  zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  mockery::stub(upload_forecast, 'httr::upload_file', NULL)
-  webmockr::stub_request("post", uri = "http://example.com/api/model/0/forecasts/")
-  m <- mock()
-  testthat::with_mock("httr::add_headers" = m, {
-    upload_forecast(zoltar_connection, "http://example.com/api/model/0/", NULL, list())  # model_url, timezero_date, forecast_data
-    expect_equal(length(mock_args(m)), 0)
-  })
-})
-
-
-test_that("delete_forecast() does not call add_headers() for unauthenticated connection", {
-  zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request("delete", uri = "http://example.com/api/forecast/0/")
-  m <- mock()
-  testthat::with_mock("httr::add_headers" = m, {
-    delete_forecast(zoltar_connection, "http://example.com/api/forecast/0/")
-    expect_equal(length(mock_calls(m)), 1)
-    expect_equal(names(mock_args(m)[[1]]), "Content-Type")  # httr::DELETE() adds
-  })
-})
-
-
-test_that("get_resource() does not call add_headers() for unauthenticated connection", {
-  zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request("get", uri = "http://example.com")
-  m <- mock()
-  testthat::with_mock("httr::add_headers" = m, {
-    get_resource(zoltar_connection, "http://example.com")
-    expect_equal(length(mock_calls(m)), 0)
-  })
-})
-
-
-test_that("scores() does not call add_headers() for unauthenticated connection", {
-  zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request("get", uri = "http://example.com/api/project/0/score_data/")
-  m <- mock()
-  testthat::with_mock("httr::add_headers" = m, {
-    scores(zoltar_connection, "http://example.com/api/project/0/")
-    expect_equal(length(mock_calls(m)), 0)
-  })
-})
-
-
-test_that("download_forecast() does not call add_headers() for unauthenticated connection", {
-  zoltar_connection <- new_connection("http://example.com")  # unauthenticated
-  webmockr::stub_request("get", uri = "http://example.com/api/forecast/0/data/")
-  m <- mock()
-  testthat::with_mock("httr::add_headers" = m, {
-    download_forecast(zoltar_connection, "http://example.com/api/forecast/0/")
-    expect_equal(length(mock_calls(m)), 0)
-  })
-})
-
-
 test_that("get_resource() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()

@@ -116,7 +116,7 @@ forecasts <- function(zoltar_connection, model_url) {
 # 'track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their turn comes
 #' up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob` objects.)
 #'
-#' @return An UploadFileJob id for the upload
+#' @return An UploadFileJob URL for the upload
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param model_url URL of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
@@ -134,9 +134,14 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
   forecasts_url <- paste0(model_url, 'forecasts/')
   message(paste0("upload_forecast(): POST: ", forecasts_url))
   temp_json_file <- tempfile(pattern = "forecast", fileext = ".json")
-  jsonlite::write_json(forecast_data, temp_json_file)
+
+  # w/out auto_unbox: primitives are written as lists of one item, e.g.,
+  # {"unit":["HHS Region 1"], "target":["1 wk ahead"], "class":["bin"], "prediction":{"cat":[[0] ,[0.1]],"prob":[[0.1], [0.9]]}}
+  jsonlite::write_json(forecast_data, temp_json_file, auto_unbox = TRUE)
+
   response <- httr::POST(
     url = forecasts_url,
+    httr::accept_json(),
     add_auth_headers(zoltar_connection),
     body = list(data_file = httr::upload_file(temp_json_file), timezero_date = timezero_date))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the

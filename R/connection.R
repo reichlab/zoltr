@@ -25,6 +25,20 @@ add_auth_headers <- function(zoltar_connection) {
 }
 
 
+#' Get JSON for a resource (URL). Authenticates if necessary
+#'
+#' @return A `list` that contiains JSON information for the passed URL
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param url A string of the resource's URL
+get_resource <- function(zoltar_connection, url) {
+  re_authenticate_if_necessary(zoltar_connection)
+  message(paste0("get_resource(): GET: ", url))
+  response <- httr::GET(url = url, add_auth_headers(zoltar_connection))
+  httr::stop_for_status(response)
+  httr::content(response, as = "parsed", encoding = "UTF-8")
+}
+
+
 # deletes the resource at the passed URL
 delete_resource <- function(zoltar_connection, url) {
   re_authenticate_if_necessary(zoltar_connection)
@@ -100,20 +114,6 @@ re_authenticate_if_necessary <- function(zoltar_connection) {
     message(paste0("re-authenticating expired token '", zoltar_connection$host, "'"))
     zoltar_authenticate(zoltar_connection, zoltar_connection$username, zoltar_connection$password)
   }
-}
-
-
-#' Get JSON for a resource (URL). Authenticates if necessary
-#'
-#' @return A `list` that contiains JSON information for the passed URL
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param url A string of the resource's URL
-get_resource <- function(zoltar_connection, url) {
-  re_authenticate_if_necessary(zoltar_connection)
-  message(paste0("get_resource(): GET: ", url))
-  response <- httr::GET(url = url, add_auth_headers(zoltar_connection))
-  httr::stop_for_status(response)
-  httr::content(response, as = "parsed", encoding = "UTF-8")
 }
 
 

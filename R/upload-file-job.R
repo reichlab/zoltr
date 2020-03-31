@@ -37,3 +37,23 @@ upload_info <- function(zoltar_connection, upload_file_job_url) {
   ufj_json$updated_at <- as.Date(ufj_json$updated_at)
   ufj_json
 }
+
+
+#' Get a new forecast upload's url
+#'
+#' A helper function that returns the URL of a newly-uploaded forecast from upload_info.
+#'
+#' @return A URL of the new forecast
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param the_upload_info a `list` object as returned by \code{\link{upload_info}}
+#' @export
+#' @examples \dontrun{
+#'   new_forecast_url <- upload_info_forecast_url(conn, "http://example.com/api/uploadfilejob/2/")
+#' }
+upload_info_forecast_url <- function(zoltar_connection, the_upload_info) {
+  if (is.null(the_upload_info$output_json$forecast_pk)) {
+    NULL
+  } else {
+    paste0(zoltar_connection$host, "/api/forecast/", the_upload_info$output_json$forecast_pk, "/")
+  }
+}

@@ -8,18 +8,33 @@ library(zoltr)
 
 test_that("forecast_info() returns a list", {
   zoltar_connection <- new_connection("http://example.com")
-  exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
-  exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
-  m <- mock(exp_forecast_info)
+
+  # test case 1/2: no data_version_date
+  forecast_info_json <- jsonlite::read_json("data/forecast-71.json")
+  m <- mock(forecast_info_json)
   testthat::with_mock("zoltr::get_resource" = m, {
+    exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
+    exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
+    exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
+    exp_forecast_info$time_zero$data_version_date <- as.Date(NA)
     act_forecast_info <- forecast_info(zoltar_connection, "http://example.com/api/forecast/1/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/forecast/1/")
     expect_is(act_forecast_info, "list")
     expect_equal(act_forecast_info, exp_forecast_info)
+  })
 
-    # test that date field is a Date object
-    expect_equal(act_forecast_info$created_at, as.Date("2020-03-05T15:47:47.369231-05:00"))
+  # test case 2/2: yes data_version_date
+  forecast_info_json <- jsonlite::read_json("data/forecast-71.json")
+  forecast_info_json$time_zero$data_version_date <- as.Date("2011-10-03")
+  m <- mock(forecast_info_json)
+  testthat::with_mock("zoltr::get_resource" = m, {
+    exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
+    exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
+    exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
+    exp_forecast_info$time_zero$data_version_date <- as.Date("2011-10-03")
+    act_forecast_info <- forecast_info(zoltar_connection, "http://example.com/api/forecast/1/")
+    expect_equal(act_forecast_info, exp_forecast_info)
   })
 })
 

@@ -153,6 +153,22 @@ test_that("upload_forecast() returns an UploadFileJob URL, and upload_info() is 
 })
 
 
+# upload_info_forecast_url
+test_that("upload_info_forecast_url() is correct", {
+  zoltar_connection <- new_connection("http://example.com")
+
+  # case 1/2: the_upload_info$output_json DOES have a $forecast_pk
+  the_upload_info <- list("output_json" = list("forecast_pk" = 3))
+  forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
+  expect_equal(forecast_url, "http://example.com/api/forecast/3/")
+
+  # case 2/2: the_upload_info$output_json does NOT have a $forecast_pk
+  the_upload_info <- list("output_json" = list("NOT forecast_pk" = 3))
+  forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
+  expect_null(forecast_url)
+})
+
+
 test_that("upload_forecast() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
