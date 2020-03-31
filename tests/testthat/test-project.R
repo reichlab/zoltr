@@ -17,8 +17,14 @@ test_that("create_project() creates a Project", {
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
   project_config <- jsonlite::read_json("data/cdc-project.json")
-  new_project_url <- create_project(zoltar_connection, project_config)
-  expect_equal(new_project_url, "http://example.com/api/project/1/")
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
+    get_token_response  # actual response doesn't matter, just its class
+  },
+                      create_project(zoltar_connection, project_config))
+  expect_equal(called_args$url, "http://example.com/api/projects/")
+  expect_equal(called_args$body$project_config, project_config)
 })
 
 

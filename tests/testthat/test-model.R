@@ -33,8 +33,14 @@ test_that("create_model() creates a Model", {
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
   model_config <- jsonlite::read_json("data/example-model-config.json")
-  model_url <- create_model(zoltar_connection, "http://example.com/api/project/1/", model_config)
-  expect_equal(model_url, "http://example.com/api/model/1/")
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
+    get_token_response  # actual response doesn't matter, just its class
+  },
+                      create_model(zoltar_connection, "http://example.com/api/project/1/", model_config))
+  expect_equal(called_args$url, "http://example.com/api/project/1/models/")
+  expect_equal(called_args$body$model_config, model_config)
 })
 
 
@@ -91,6 +97,28 @@ test_that("forecasts() returns a data.frame", {
     forecast_row <- the_forecasts[1,]
     expect_equal(forecast_row, exp_row)
   })
+})
+
+
+test_that("upload_forecast() creates an UploadFileJob", {
+  zoltar_connection <- new_connection("http://example.com")
+  upload_file_job_json <- jsonlite::read_json("data/upload-file-job-2.json")
+  mockery::stub(upload_forecast, 'httr::upload_file', NULL)
+  webmockr::stub_request("post", uri = "http://example.com/api/model/1/forecasts/") %>%
+    to_return(
+      body = upload_file_job_json,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
+    get_token_response  # actual response doesn't matter, just its class
+  },
+                      upload_forecast(zoltar_connection, "http://example.com/api/model/1/", "2020-02-22", list())) # timezero_date, forecast_data
+  expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
+  expect_equal(called_args$body$data_file, NULL)  # due to mockery::stub() calls elsewhere
+  expect_equal(called_args$body$timezero_date, "2020-02-22")
 })
 
 
