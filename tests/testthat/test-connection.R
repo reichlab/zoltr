@@ -193,6 +193,36 @@ test_that("download_forecast() does not call add_headers() for unauthenticated c
 })
 
 
+test_that("get_resource() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("get", uri = "http://example.com/api/model/0/") %>%
+      to_return(
+        body = list(),
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    get_resource(zoltar_connection, "http://example.com/api/model/0/")
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
+test_that("delete_resource() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("delete", uri = "http://example.com/api/model/0/") %>%
+      to_return(
+        body = list(),
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    delete_resource(zoltar_connection, "http://example.com/api/model/0/")
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
 #
 # ---- projects tests ----
 #

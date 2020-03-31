@@ -20,11 +20,13 @@ library(readr)  # apparently required by httr
 #'   new_project_url <- create_project(conn, jsonlite::read_json("cdc-project.json"))
 #' }
 create_project <- function(zoltar_connection, project_config) {
+  re_authenticate_if_necessary(zoltar_connection)
   projects_url <- url_for_projects(zoltar_connection)
   response <- httr::POST(
     url = projects_url,
     add_auth_headers(zoltar_connection),
-    body = list(project_config = project_config))
+    body = list(project_config = project_config),
+    encode="json")
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")

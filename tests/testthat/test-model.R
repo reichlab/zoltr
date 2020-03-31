@@ -38,6 +38,23 @@ test_that("create_model() creates a Model", {
 })
 
 
+test_that("create_model() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  model_info <- jsonlite::read_json("data/model-1.json")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("post", uri = "http://example.com/api/project/1/models/") %>%
+      to_return(
+        body = model_info,
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    model_config <- jsonlite::read_json("data/example-model-config.json")
+    create_model(zoltar_connection, "http://example.com/api/project/1/", model_config)
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
 test_that("delete_model() calls delete_resource", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
@@ -85,7 +102,6 @@ test_that("upload_forecast() returns an UploadFileJob URL, and upload_info() is 
       body = upload_file_job_json,
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
-
   upload_file_job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
   expect_equal(upload_file_job_url, "http://example.com/api/uploadfilejob/2/")
 
@@ -104,6 +120,17 @@ test_that("upload_forecast() returns an UploadFileJob URL, and upload_info() is 
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/uploadfilejob/2/")
     expect_is(the_upload_info, "list")
     expect_equal(the_upload_info, exp_upload_file_job_json)
+  })
+})
+
+
+test_that("upload_forecast() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  upload_file_job_json <- jsonlite::read_json("data/upload-file-job-2.json")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
+    expect_equal(length(mock_calls(m)), 1)
   })
 })
 

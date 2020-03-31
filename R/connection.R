@@ -99,6 +99,8 @@ re_authenticate_if_necessary <- function(zoltar_connection) {
   if (inherits(zoltar_connection$session, "ZoltarSession") && is_token_expired(zoltar_connection$session)) {
     message(paste0("re-authenticating expired token '", zoltar_connection$host, "'"))
     zoltar_authenticate(zoltar_connection, zoltar_connection$username, zoltar_connection$password)
+  } else {
+    message(paste0("token not expired '", zoltar_connection$host, "'"))
   }
 }
 

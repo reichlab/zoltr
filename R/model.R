@@ -42,11 +42,13 @@ model_info <- function(zoltar_connection, model_url) {
 #'   new_model_url <- create_model(conn, "https://www.zoltardata.com/project/9/", jsonlite::read_json("example-model-config.json"))
 #' }
 create_model <- function(zoltar_connection, project_url, model_config) {
+  re_authenticate_if_necessary(zoltar_connection)
   models_url <- paste0(project_url, 'models/')
   response <- httr::POST(
     url = models_url,
     add_auth_headers(zoltar_connection),
-    body = list(model_config = model_config))
+    body = list(model_config = model_config),
+    encode = "json")
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")
