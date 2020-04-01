@@ -16,7 +16,7 @@ test_that("forecast_info() returns a list", {
     exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
     exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
     exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
-    exp_forecast_info$time_zero$data_version_date <- as.Date(NA)
+    exp_forecast_info$time_zero$data_version_date <- NA
     act_forecast_info <- forecast_info(zoltar_connection, "http://example.com/api/forecast/1/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/forecast/1/")
