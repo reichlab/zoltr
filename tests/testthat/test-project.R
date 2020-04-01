@@ -85,19 +85,6 @@ test_that("truth() returns a data.frame", {
 })
 
 
-test_that("truth() returns date values for date targets", {
-  zoltar_connection <- new_connection("http://example.com")
-  load("data/truth_response.rda")  # 'response' variable contains "api/project/<pk>/truth_data/" response from "Docs Example Project" (downloads as "docs-ground-truth-validated.csv")
-  m <- mock(response)
-  testthat::with_mock("httr::GET" = m, {
-    the_truth <- truth(zoltar_connection, "http://example.com/api/project/1/")
-    season_pk_wk_val <- the_truth[the_truth$target == "Season peak week", "value"][1,][[1]]
-    expect_equal(the_truth[the_truth$target == "Season peak week" & the_truth$unit == "location2", "value"][[1]],
-                 as.Date("2019-12-29"))
-  })
-})
-
-
 test_that("models() returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
   models_list_json <- jsonlite::read_json("data/models-list.json")
