@@ -102,12 +102,12 @@ test_that("models() returns a data.frame", {
 })
 
 
-test_that("units() returns a data.frame", {
+test_that("zoltar_units() returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
   units_list_json <- jsonlite::read_json("data/units-list.json")
   m <- mock(units_list_json)  # return values in calling order
   testthat::with_mock("zoltr::get_resource" = m, {
-    the_units <- units(zoltar_connection, "http://example.com/api/project/1/")
+    the_units <- zoltar_units(zoltar_connection, "http://example.com/api/project/1/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/units/")
     expect_is(the_units, "data.frame")

@@ -95,47 +95,6 @@ test_that("is_token_expired() works for an expired and unexpired tokens", {
 })
 
 
-test_that("httr functions re-authenticate expired tokens", {
-  # test that all httr methods re-authenticate. the current functions that call httr methods follow.
-  # todo update this when adding new functionality
-  # - GET     <- get_resource()
-  # - DELETE  <- delete_resource()
-  # - POST    <- upload_forecast() , get_token()
-
-  zoltar_connection <- new_connection("http://example.com")
-  mock_authenticate(zoltar_connection)  # default token (mock_token) is expired
-  webmockr::stub_request("get", uri = "http://example.com")
-  webmockr::stub_request("delete", uri = "http://example.com/api/forecast/0/")
-  webmockr::stub_request("post", uri = "http://example.com/api/model/0/forecasts/")
-  webmockr::stub_request("post", uri = "http://example.com/api-token-auth/")
-  mockery::stub(upload_forecast, 'httr::upload_file', NULL)
-
-  m <- mock()
-  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
-    get_resource(zoltar_connection, "http://example.com")  # httr::GET
-    expect_equal(length(mock_calls(m)), 1)
-  })
-
-  m <- mock()
-  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
-    delete_forecast(zoltar_connection, "http://example.com/api/forecast/0/")  # httr::DELETE
-    expect_equal(length(mock_calls(m)), 1)
-  })
-
-  m <- mock()
-  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
-    upload_forecast(zoltar_connection, "http://example.com/api/model/0/", NULL, list())  # httr::POST. model_url, timezero_date, forecast_data
-    expect_equal(length(mock_calls(m)), 1)
-  })
-
-  m <- mock()
-  testthat::with_mock("zoltr::zoltar_authenticate" = m, {
-    get_token(zoltar_connection$session)  # httr::POST
-    expect_equal(length(mock_calls(m)), 0)  # ensure get_token() does *not* call zoltar_authenticate() - o/w inf loop!
-  })
-})
-
-
 test_that("get_resource() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()

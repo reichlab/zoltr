@@ -127,16 +127,16 @@ models <- function(zoltar_connection, project_url) {
 }
 
 
-#' Get a project's units
+#' Get a project's zoltar_units
 #'
 #' @return A `data.frame` of unit contents for the passed project
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_units <- units(conn, "https://www.zoltardata.com/project/9/")
+#'   the_units <- zoltar_units(conn, "https://www.zoltardata.com/project/9/")
 #' }
-units <- function(zoltar_connection, project_url) {
+zoltar_units <- function(zoltar_connection, project_url) {
   units_url <- paste0(project_url, 'units/')
   units_json <- get_resource(zoltar_connection, units_url)
   id_column <- c()                    # integer
@@ -285,7 +285,7 @@ timezero_info <- function(zoltar_connection, timezero_url) {
 #'
 #' @return A `list` of unit information for the passed unit_url
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param unit_url URL of a unit in zoltar_connection's units
+#' @param unit_url URL of a unit in zoltar_connection's zoltar_units
 #' @export
 #' @examples \dontrun{
 #'   the_unit_info <- unit_info(conn, "https://www.zoltardata.com/unit/3/")

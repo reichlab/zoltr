@@ -35,8 +35,8 @@ model_info <- function(zoltar_connection, model_url) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url url of a project in zoltar_connection's projects. this is the project the new model will be created
 #'   in
-#' @param model_config A `list` containing a Zoltar model configuration. todo xx document.
-#    An example: example-model-config.json
+#' @param model_config A `list` containing a Zoltar model configuration. An example: example-model-config.json .
+#'   (full documentation at https://docs.zoltardata.com/ )
 #' @export
 #' @examples \dontrun{
 #'   new_model_url <- create_model(conn, "https://www.zoltardata.com/project/9/", jsonlite::read_json("example-model-config.json"))

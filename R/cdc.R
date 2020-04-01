@@ -2,7 +2,9 @@ library(dplyr)
 library(MMWRweek)
 
 
-CDC_POINT_ROW_TYPE <- "Point"
+CDC_POINT_ROW_TYPE <- "Point"  # incoming cdc.csv file row type
+POINT_PREDICTION_CLASS <- "point"  # JSON prediction class for point prediction elements
+BIN_PREDICTION_CLASS <- "bin"  # "" bin ""
 
 
 #' Loads and converts a CDC CSV file to Zoltar's native `list` format
@@ -97,12 +99,12 @@ forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame)
       }
 
       point_value <- point_values[[1]]
-      prediction <- list("unit" = group_row$location, "target" = group_row$target, "class" = "point",  # todo xx var
+      prediction <- list("unit" = group_row$location, "target" = group_row$target, "class" = POINT_PREDICTION_CLASS,
                          "prediction" = list("value" = point_value))
       predictions[[length(predictions) + 1]] <- prediction
     }
     if (length(bincat_cats) > 0) {  # yes warning: "NAs introduced by coercion"
-      prediction <- list("unit" = group_row$location, "target" = group_row$target, "class" = "bin",  # todo xx var
+      prediction <- list("unit" = group_row$location, "target" = group_row$target, "class" = BIN_PREDICTION_CLASS,
                          "prediction" = list("cat" = bincat_cats, "prob" = bincat_probs))
       predictions[[length(predictions) + 1]] <- prediction
     }

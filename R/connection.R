@@ -171,7 +171,7 @@ new_session <- function(zoltar_connection) {
 }
 
 
-# returns the JWT token string obtained from zoltar. it has decoded contents that look like this:
+# POSTs to obtain and return a new JWT token string from zoltar. it has decoded contents that look like this:
 # - header:  {"typ": "JWT", "alg": "HS256"}
 # - payload: {"user_id": 3, "username": "model_owner1", "exp": 1558442805, "email": ""}
 get_token <- function(zoltar_session) {
