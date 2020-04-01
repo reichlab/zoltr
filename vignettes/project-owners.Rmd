@@ -21,160 +21,125 @@ knitr::opts_chunk$set(
 
 
 # Zoltr for Project Owners
+
 Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating
 and managing your own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the 
-Zoltar API. Building on the _Getting Started_ vignette, this one covers deleting and uploading forecasts. Note that
-before starting you should:
+Zoltar API. Building on the _Getting Started_ vignette, this one covers creating projects and models, and uploading
+forecasts.
 
-- Create an account on [zoltardata.com](https://www.zoltardata.com/).
-- Create a 'sandbox' project with one timezero for testing.
-- Create a model in that project.
-- Edit your [`.Renviron`](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron) file:
-    - `USERNAME` and `PASSWORD`: should match your account settings
-    - `PROJECT_NAME` and `MODEL_NAME`: should match your project and model
-    - `TIMEZERO_DATE`: should match your project
-    - `FORECAST_JSON_FILE`: the path of a forecast data file in the format documented
-       [here](https://www.zoltardata.com/docs#forecasts)
+Before starting you should have an account on [zoltardata.com](https://www.zoltardata.com/), and an
+[`.Renviron`](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron) file set up as described in
+_Getting Started_.
 
 
 ## Connect to the host and authenticate
-
-To access your project, you'll first need to authenticate via the `zoltar_authenticate()` function. Pass it the username
-and password for your account. Notes:
-
-- Be careful to store and use your username and password so that they're not accessible to others. A good practice is to
-  put them them in your `.Renviron` file and then use `Sys.getenv()` to retrieve them, as outlined in
-  [Use Environment variables](https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables) and
-  as done below.
-- The Zoltar service uses a "token"-based scheme for authentication. These tokens have a five minute expiration for
-  security, which requires re-authentication after that period of time. The zoltr library takes care of 
-  re-authenticating as needed by passing your username and password back to the server to get another token. Note that
-  the connection object returned by the `new_connection` function stores a token internally, so be careful if saving
-  that object into a file.
-- Below you will see the host shown as _example.com_ - this is a temporary one that was used to generate this 
-  documentation.
-
 
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r setup, include=FALSE}
 library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
 ```
 
-
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r, include=FALSE}
 library(zoltr)
-conn <- new_connection(host = Sys.getenv("HOST"))
-zoltar_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
-conn
+zoltar_connection <- new_connection(host = Sys.getenv("Z_HOST"))
+zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 ```
 
 <!-- show but don't run-->
 ```{r, eval=FALSE, include=TRUE}
 library(zoltr)
-conn <- new_connection()
-zoltar_authenticate(conn, Sys.getenv("USERNAME"), Sys.getenv("PASSWORD"))
-conn
+zoltar_connection <- new_connection()
+zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 ```
 
 
-## Get the sandbox project and model work with and then list its forecasts (if any)
+## Create a sandbox project to play with
 
-Get the ID of the project named by PROJECT_NAME and then get the ID of that project's model named MODEL_NAME. From the
-model ID, call the `forecasts()` function to get a `data.frame` of that model's forecasts.
+Let's use the `create_project()` function to make a temporary project to work with. (Note that if you're repeating this
+step and need to delete a previously-created project, you can either use the web UI's delete button on the project
+detail page or call the zoltr `delete_project()` function to do it programmatically.) `create_project()` takes a
+`project_config` parameter that is a `list` specifying everything Zoltar needs to create a project, including meta
+information like name, whether it's public, etc. In addition it lists the units, targets, and timezeros to create. The
+new project's URL is returned, which you can pass to other functions. Here we use `docs-project.json`, which is the one
+that creates the example documentation project.
 
 ```{r}
-the_projects <- projects(conn)
-project_id <- the_projects[the_projects$name == Sys.getenv("PROJECT_NAME"), 'id']  # integer(0) if not found, which is an invalid project ID
-the_models <- models(conn, project_id)
-model_id <- the_models[the_models$name == Sys.getenv("MODEL_NAME"), 'id']  # integer(0) if not found
-the_forecasts <- forecasts(conn, model_id)
-str(the_forecasts)
+project_config <- jsonlite::read_json("data/docs-project.json")  # "name": "My project"
+project_url <- create_project(zoltar_connection, project_config)
+the_project_info <- project_info(zoltar_connection, project_url)
 ```
 
 
-## Delete the model's existing forecast for TIMEZERO_DATE, if any, first printing its info
+## Add a model to the project and then upload a forecast into it
 
-Get the forecast for the timezero date specified by TIMEZERO_DATE and then call `delete_forecast()`, if one was found.
+We can use the `create_model()` function to create a model in a particular project. Like `create_project()`, it takes
+a `list` that is the configuration to use when creating the model. There is an example at `example-model-config.json`,
+but here we will construct the `list` ourselves.
 
 ```{r}
-timezero_date_str <- Sys.getenv("TIMEZERO_DATE")
-timezero_date <- as.Date(timezero_date_str, format = YYYY_MM_DD_DATE_FORMAT)
-existing_forecast_id <- the_forecasts[the_forecasts$timezero_date == timezero_date, 'id']
-
-the_forecast_info <- forecast_info(conn, existing_forecast_id)  # `Not Found (HTTP 404)` this if forecast doesn't exist 
-str(the_forecast_info)
-
-delete_forecast(conn, the_forecast_info$id)
+model_config <- list("name" = "a model_name",
+                     "abbreviation" = "an abbreviation",
+                     "team_name" = "a team_name",
+                     "description" = "a description",
+                     "home_url" = "http://example.com/",
+                     "aux_data_url" = "http://example.com/")
+model_url <- create_model(zoltar_connection, project_url, model_config)
 ```
 
-
-## Upload a forecast
-
-Now let's upload the forecast data file FORECAST_JSON_FILE for TIMEZERO_DATE via the `upload_forecast()` function.
-
-Keep in mind that Zoltar queues long operations like forecast uploading, which keeps the site responsive, but makes the
-Zoltar API a little more complicated. Rather than having the `upload_forecast()` function _block_ until the upload is 
-done, you instead get a quick response in the form of an `UploadFileJob` ID that you can pass to the `upload_info()`
-function to check its status to find out when the upload is done (or failed). (This is called _polling_ the host to ask
-the status.) Here we poll every second using a helper function.
+Now let's upload a forecast to the model using `upload_forecast()` and then see how to list all of a model's forecasts
+(in this case just the one). Keep in mind that Zoltar enqueues long operations like forecast uploading, which keeps the
+site responsive but makes the Zoltar API a little more complicated. Rather than having the `upload_forecast()` function
+_block_ until the upload is done, you instead get a quick response in the form of an `UploadFileJob` URL that you can
+pass to the `upload_info()` function to check its status and find out when the upload is pending, done, or failed).
+(This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
 
 ```{r}
-busy_poll_upload_file_job <- function(upload_file_job_id) {
-    cat(paste0("polling for status change. upload_file_job: ", upload_file_job_id, "\n"))
-    while (TRUE) {
-        status <- upload_info(conn, upload_file_job_id)$status
-        cat(paste0(status, "\n"))
-        if (status == "FAILED") {
-            cat(paste0("x failed\n"))
-            break
-        }
-        if (status == "SUCCESS") {
-            break
-        }
-        Sys.sleep(1)
+busy_poll_upload_file_job <- function(zoltar_connection, upload_file_job_url) {
+  cat(paste0("polling for status change. upload_file_job: ", upload_file_job_url, "\n"))
+  while (TRUE) {
+    status <- upload_info(zoltar_connection, upload_file_job_url)$status
+    cat(paste0(status, "\n"))
+    if (status == "FAILED") {
+      cat(paste0("x failed\n"))
+      break
     }
+    if (status == "SUCCESS") {
+      break
+    }
+    Sys.sleep(1)
+  }
 }
 ```
 
+`upload_forecast()` takes the `model_url` to upload to, the `timezero_date` in the project to associate the forecast
+with, and the `forecast_data` itself. The latter is a nested `list` of _predictions_ as documented in
+[docs.zoltardata.com](https://docs.zoltardata.com/), but you can learn about it by looking at the example
+`docs-predictions.json`. Briefly, you can see that there is a `predictions` list of `prediction elements` (the `meta`
+section is ignored), each of which encodes data for a particular unit and target combination. Each `prediction element`
+has a class that's one of four possibilities: `bin`, `named`, `point`, and `sample`. The structure of the
+`prediction element's` contents (the `prediction` section) is determined by the particular class. For example, a `point`
+just has a `value`, but a `bin` has a table of `cat` and `prob` values.
+
+Here we will upload the `docs-predictions.json` file. Note that the passed `timezero_date` matches one of the timezeros
+in `docs-project.json`, the file that was used to create the project. It is an error otherwise.
 
 ```{r}
-forecast_json_file <- Sys.getenv("FORECAST_JSON_FILE")
-forecast_data <- jsonlite::read_json(forecast_json_file)
-upload_file_job_id <- upload_forecast(conn, model_id, timezero_date_str, forecast_data)
-busy_poll_upload_file_job(upload_file_job_id)
+forecast_data <- jsonlite::read_json("data/docs-predictions.json")
+upload_file_job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02", forecast_data)
+busy_poll_upload_file_job(zoltar_connection, upload_file_job_url)
 ```
 
+Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. (How long it takes will depend on how
+much other work Zoltar is handling.)
 
-And here's the upload's final information:
-
-```{r}
-the_upload_info <- upload_info(conn, upload_file_job_id)
-str(the_upload_info)
-```
-
-
-## Print information about the newly-uploaded forecast
-
-Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. Now let's get the new forecast's
-information.
-
-Due to there being multiple kinds of files you might upload to Zoltar (including project truth, project template, and
-model forecasts), the API returns information about uploaded files in the `$output_json` field of successful upload
-job's info. For newly-uploaded forecasts, that field contains a `$forecast_pk` field.
+Finally, get the new forecast's URL from the `UploadFileJob` object and then call the `forecasts()` function to get a
+`data.frame` of that model's forecasts (just the one in our case).
 
 ```{r}
-
-new_forecast_id <- upload_info(conn, upload_file_job_id)$output_json$forecast_pk
-the_forecast_info <- forecast_info(conn, new_forecast_id)
-str(the_forecast_info)
-```
-
-
-## Look at the model's forecast list to see the new forecast
-
-Finally, let's again examine the model's forecasts and notice the new one is there.
-
-```{r}
-the_forecasts <- forecasts(conn, model_id)
+the_upload_info <- upload_info(zoltar_connection, upload_file_job_url)
+forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
+the_forecast_info <- forecast_info(zoltar_connection, forecast_url)
+the_forecasts <- forecasts(zoltar_connection, the_forecast_info$forecast_model)
 str(the_forecasts)
+```

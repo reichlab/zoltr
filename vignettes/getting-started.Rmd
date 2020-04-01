@@ -1,7 +1,7 @@
 ---
 title: "Getting Started"
 author: "Matthew Cornell"
-date: "2019-05-28"
+date: "2020-04-01"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -23,91 +23,135 @@ knitr::opts_chunk$set(
 # Getting Started with zoltr
 
 zoltr is an R package that simplifies access to the [zoltardata.com](https://www.zoltardata.com/) API. This vignette 
-takes you through the package's main features. So that you can experiment without needing a Zoltar account, we use our 
-"flagship" project for the CDC Flu challenge, which should always be available for public read-only access.
+takes you through the package's main features. So that you can experiment without needing a Zoltar account, we use the
+example project from [docs.zoltardata.com](https://docs.zoltardata.com/), which should always be available for public
+read-only access.
+
+    NOTE: You will need an account to access the zoltar API - please see
+    [docs.zoltardata.com](https://docs.zoltardata.com/) for details.
 
 
-## Connect to the host
+## Connect to the host and authenticate
 
 The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection`
-function. Most zoltr functions take a `ZoltarConnection` along with the _ID_ of the thing of interest, e.g., a
-project, model, or forecast ID. You can obtain the ID using one of the `*_info` functions, and you can always use the
-web interface to navigate to the resource and look at its ID in the browser address field. The ID should be self evident
-for all resources. For example, the project [CDC Flu challenge](https://www.zoltardata.com/project/4)'s URL is
-[https://www.zoltardata.com/project/4](https://www.zoltardata.com/project/4), and you can see that its ID is _4_.
+function. Most zoltr functions take a `ZoltarConnection` along with the _URL_ of the thing of interest, e.g., a
+project, model, or forecast. For example, the URL of the _Docs Example Project_ project is
+[https://www.zoltardata.com/project/3/](https://www.zoltardata.com/project/3/), and the URL of its _docs forecast model_
+model is [https://www.zoltardata.com/model/5/](https://www.zoltardata.com/model/5/). An important note regarding URLs:
 
-(Note: To access protected resources, you need to call the `zoltar_authenticate()` function before calling any zoltr
-functions. But this is unnecessary in this vignette because we're accessing a public project, models, and forecasts.)
+    Zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
+    optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/project/3` is invalid,
+    but `https://www.zoltardata.com/project/3/` is correct.
 
+You can obtain a URL using one of the `*_info` functions, and you can always use the web interface to navigate to the
+item of interest (called a "resource" in APIs) and look at its URL in the browser address field. Note that if you
+copy/paste then you will have to add the trailing slash character yourself.
+
+As noted above, all API calls require an account. To access your project, you'll first need to authenticate via the
+`zoltar_authenticate()` function. Pass it the username and password for your account. Notes:
+
+- Be careful to store and use your username and password so that they're not accessible to others. A good practice is to
+  put them them in your `.Renviron` file and then use `Sys.getenv()` to retrieve them, as outlined in
+  [Use Environment variables](https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables) and
+  as done below.
+- The Zoltar service uses a "token"-based scheme for authentication. These tokens have a five minute expiration for
+  security, which requires re-authentication after that period of time. The zoltr library takes care of 
+  re-authenticating as needed by passing your username and password back to the server to get another token. Note that
+  the connection object returned by the `new_connection` function stores a token internally, so be careful if saving
+  that object into a file.
+- Below you will see the host shown as _example.com_ - this is a temporary one that was used to generate this 
+  documentation.
+
+For this and other vignettes, you will need to create an [`.Renviron`](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron)
+file that contains `Z_USERNAME` and `Z_PASSWORD` variables that match your account settings (note the `Z_` prefix).
+Then you'll be able to create an authenticated connection:
 
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r setup, include=FALSE}
 library(httr)  # o/w devtools::check() gets `could not find function "POST"` error
 ```
 
-
-```{r}
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
+```{r, include=FALSE}
 library(zoltr)
-conn <- new_connection()
-conn
+zoltar_connection <- new_connection(host = Sys.getenv("Z_HOST"))
+zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
+zoltar_connection
+```
+
+<!-- show but don't run-->
+```{r, eval=FALSE, include=TRUE}
+library(zoltr)
+zoltar_connection <- new_connection()
+zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
+zoltar_connection
 ```
 
 
 ## Get a list of all projects on the host
 
-Use the `projects()` function to get a connection's projects as a data.frame. Note that it will only list those that you
-are authenticated to access.
+Now that you have a connection, you can use the `projects()` function to get all projects as a `data.frame`. Note that
+it will only list those that you are authorized to access, i.e., all public projects plus any private ones that you
+own or are a model owner.
 
 ```{r}
-the_projects <- projects(conn)
+the_projects <- projects(zoltar_connection)
 str(the_projects)
 ```
 
 
-## Get a project to work with, list its info and models, and download its scores
+## Get a project to work with and list its info, models, and scores
 
 Let's start by getting a public project to work with. We will search the projects list for it by name. Then we will pass
-its ID to the `project_info()` function to get details, and pass it to the `models()` function to get a data.frame of
-its models.
+its URL to the `project_info()` function to get a `list` of details, and then pass it to the `models()` function to get
+a `data.frame` of its models.
 
 ```{r}
-project_id <- the_projects[the_projects$name == "CDC Flu challenge", 'id']  # integer(0) if not found, which is an invalid project ID
-the_project_info <- project_info(conn, project_id)
+project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
+the_project_info <- project_info(zoltar_connection, project_url)
 names(the_project_info)
 the_project_info$description
 
-the_models <- models(conn, project_id)  # may take some time
+the_models <- models(zoltar_connection, project_url)
 str(the_models)
+```
 
-score_data <- scores(conn, project_id)
+There is other project-related information that you can access, such as its configuration (`zoltar_units()`, 
+`targets()`, and `timezeros()` - concepts that are explained at [docs.zoltardata.com](https://docs.zoltardata.com/) ),
+`scores()` and `truth()`. As an example, let's get its score data. (Note that available scores are limited due to the
+nature of the example project.)
+
+```{r}
+score_data <- scores(zoltar_connection, project_url)
 score_data
 ```
 
 
-## Get a model to work with and then list its info and forecasts (if any)
+## Get a model to work with and list its info and forecasts
 
-Now let's work with a particular model, getting its ID by name and then passing it to the `model_info()` function to get 
-details. Then use the `forecasts()` function to get a data.frame of that model's forecasts.
+Now let's work with a particular model, getting its URL by name and then passing it to the `model_info()` function to
+get details. Then use the `forecasts()` function to get a `data.frame` of that model's forecasts (there is only one).
+Note that obtaining the model's URL is straightforward because it is provided in the `url` column of `the_models`.
 
 ```{r}
-model_id <- the_models[the_models$name == "SARIMA model with seasonal differencing", 'id']  # integer(0) if not found
-the_model_info <- model_info(conn, model_id)
+model_url <- the_models[the_models$name == "docs forecast model", "url"]
+the_model_info <- model_info(zoltar_connection, model_url)
 names(the_model_info)
-the_model_info$description
+the_model_info$name
 
-the_forecasts <- forecasts(conn, model_id)
+the_forecasts <- forecasts(zoltar_connection, model_url)
 str(the_forecasts)
 ```
 
 
-## Finally, download the first forecast's data
+## Finally, download the forecast's data
 
-You can get forecast data using the `download_forecast()` function, which supports a nested `list` format. (Please see
-[here](https://www.zoltardata.com/docs#forecast-data-format) for forecast format details.) 
+You can get forecast data using the `download_forecast()` function, which is in a nested `list` format. Please see
+[docs.zoltardata.com](https://docs.zoltardata.com/) for forecast format details.
 
 ```{r}
-first_forecast_id <- the_forecasts[1, 'id']  # assumes at least one exists
-
-forecast_data <- download_forecast(conn, first_forecast_id)
+forecast_url <- the_forecasts[1, "url"]
+forecast_info <- forecast_info(zoltar_connection, forecast_url)
+forecast_data <- download_forecast(zoltar_connection, forecast_url)
 length(forecast_data$predictions)
 ```
