@@ -184,7 +184,9 @@ test_that("upload_forecast() passes correct url to POST()", {
   zoltar_connection <- new_connection("http://example.com")
   called_args <- NULL
   timezero_date <- "2019-10-21"
-  forecast_data <- jsonlite::read_json("../../vignettes/docs-predictions.json")
+  # Note: this file is a duplicate of vignettes one b/c I could not figure out how to access that directory for both
+  # devtools::test() and devtools::check() (different working dirs):
+  forecast_data <- jsonlite::read_json("data/docs-predictions.json")
   testthat::with_mock(
     "httr::POST" = function(...) {
       called_args <<- list(...)

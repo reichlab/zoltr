@@ -133,7 +133,7 @@ busy_poll_upload_file_job(zoltar_connection, upload_file_job_url)
 Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. (How long it takes will depend on how
 much other work Zoltar is handling.)
 
-Finally, get the new forecast's URL from the `UploadFileJob` object and then call the `forecasts()` function to get a
+Get the new forecast's URL from the `UploadFileJob` object and then call the `forecasts()` function to get a
 `data.frame` of that model's forecasts (just the one in our case).
 
 ```{r}
@@ -142,4 +142,13 @@ forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
 the_forecast_info <- forecast_info(zoltar_connection, forecast_url)
 the_forecasts <- forecasts(zoltar_connection, the_forecast_info$forecast_model)
 str(the_forecasts)
+```
+
+
+## Clean up by deleting the sandbox project
+
+**NB: This will delete all of the data associated with the project without warning, including models and forecasts.** 
+
+```{r}
+delete_project(zoltar_connection, project_url)
 ```

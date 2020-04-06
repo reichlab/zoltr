@@ -53,7 +53,9 @@ test_that("delete_forecast() passes correct URL", {
 
 test_that("download_forecast() returns JSON data as a list", {
   zoltar_connection <- new_connection("http://example.com")
-  predictions_list_json <- jsonlite::read_json("../../vignettes/docs-predictions.json")
+  # Note: this file is a duplicate of vignettes one b/c I could not figure out how to access that directory for both
+  # devtools::test() and devtools::check() (different working dirs):
+  predictions_list_json <- jsonlite::read_json("data/docs-predictions.json")
   m <- mock(predictions_list_json)  # return values in calling order
   testthat::with_mock("zoltr::get_resource" = m, {
     act_data <- download_forecast(zoltar_connection, "http://example.com/api/forecast/1/")

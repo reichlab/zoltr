@@ -8,11 +8,13 @@
 
 <title>Function reference • zoltr</title>
 
+
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <!-- Bootstrap -->
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w=" crossorigin="anonymous" />
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-U5ZEeKfGNOja007MMD3YBI0A3OSZOQbeG6z2f2Y0hu8=" crossorigin="anonymous"></script>
 
 <!-- Font Awesome icons -->
@@ -30,7 +32,9 @@
 
 
 
+
 <meta property="og:title" content="Function reference" />
+
 
 
 
@@ -60,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -94,7 +98,6 @@
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-      
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/reichlab/zoltr">
@@ -135,15 +138,51 @@
       <tr>
         
         <td>
+          <p><code><a href="create_model.html">create_model()</a></code> </p>
+        </td>
+        <td><p>Create a model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_project.html">create_project()</a></code> </p>
+        </td>
+        <td><p>Create a project</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="delete_forecast.html">delete_forecast()</a></code> </p>
         </td>
         <td><p>Delete a forecast</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="forecast_data.html">forecast_data()</a></code> </p>
+          <p><code><a href="delete_model.html">delete_model()</a></code> </p>
+        </td>
+        <td><p>Delete a model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="delete_project.html">delete_project()</a></code> </p>
+        </td>
+        <td><p>Delete a project</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="download_forecast.html">download_forecast()</a></code> </p>
         </td>
         <td><p>Gets a forecast's data</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="forecast_data_from_cdc_csv_file.html">forecast_data_from_cdc_csv_file()</a></code> </p>
+        </td>
+        <td><p>Loads and converts a CDC CSV file to Zoltar's native `list` format</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="forecast_data_from_cdc_data_frame.html">forecast_data_from_cdc_data_frame()</a></code> </p>
+        </td>
+        <td><p>`forecast_data_from_cdc_csv_file()`helper</p></td>
       </tr><tr>
         
         <td>
@@ -156,6 +195,12 @@
           <p><code><a href="forecasts.html">forecasts()</a></code> </p>
         </td>
         <td><p>Get a model's forecasts</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="get_resource.html">get_resource()</a></code> </p>
+        </td>
+        <td><p>Get JSON for a resource (URL). Authenticates if necessary</p></td>
       </tr><tr>
         
         <td>
@@ -195,6 +240,42 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="target_info.html">target_info()</a></code> </p>
+        </td>
+        <td><p>Get information about a target</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="targets.html">targets()</a></code> </p>
+        </td>
+        <td><p>Get a project's targets</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="timezero_info.html">timezero_info()</a></code> </p>
+        </td>
+        <td><p>Get information about a timezero</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="timezeros.html">timezeros()</a></code> </p>
+        </td>
+        <td><p>Get a project's timezeros</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="truth.html">truth()</a></code> </p>
+        </td>
+        <td><p>Get a project's truth</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="unit_info.html">unit_info()</a></code> </p>
+        </td>
+        <td><p>Get information about a unit</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="upload_forecast.html">upload_forecast()</a></code> </p>
         </td>
         <td><p>Upload a forecast</p></td>
@@ -207,9 +288,21 @@
       </tr><tr>
         
         <td>
+          <p><code><a href="upload_info_forecast_url.html">upload_info_forecast_url()</a></code> </p>
+        </td>
+        <td><p>Get a new forecast upload's url</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="zoltar_authenticate.html">zoltar_authenticate()</a></code> </p>
         </td>
         <td><p>Log in to a Zoltar host</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="zoltar_units.html">zoltar_units()</a></code> </p>
+        </td>
+        <td><p>Get a project's zoltar_units</p></td>
       </tr>
     </tbody>
     </table>

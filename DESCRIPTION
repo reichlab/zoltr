@@ -24,6 +24,11 @@ Imports:
     readr,
     mockery,
     webmockr,
-    base64url
+    base64url,
+    dplyr,
+    MMWRweek,
+    utils,
+    rlang,
+    magrittr
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr

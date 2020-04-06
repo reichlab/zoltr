@@ -30,7 +30,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
       <h1>Getting Started</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2019-05-28</h4>
+            <h4 class="date">2020-04-01</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/getting-started.Rmd"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="hidden name"><code>getting-started.Rmd</code></div>
@@ -98,154 +98,139 @@
 <div id="getting-started-with-zoltr" class="section level1">
 <h1 class="hasAnchor">
 <a href="#getting-started-with-zoltr" class="anchor"></a>Getting Started with zoltr</h1>
-<p>zoltr is an R package that simplifies access to the <a href="https://www.zoltardata.com/">zoltardata.com</a> API. This vignette takes you through the package’s main features. So that you can experiment without needing a Zoltar account, we use our “flagship” project for the CDC Flu challenge, which should always be available for public read-only access.</p>
-<div id="connect-to-the-host" class="section level2">
+<p>zoltr is an R package that simplifies access to the <a href="https://www.zoltardata.com/">zoltardata.com</a> API. This vignette takes you through the package’s main features. So that you can experiment without needing a Zoltar account, we use the example project from <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a>, which should always be available for public read-only access.</p>
+<pre><code>NOTE: You will need an account to access the zoltar API - please see
+[docs.zoltardata.com](https://docs.zoltardata.com/) for details.</code></pre>
+<div id="connect-to-the-host-and-authenticate" class="section level2">
 <h2 class="hasAnchor">
-<a href="#connect-to-the-host" class="anchor"></a>Connect to the host</h2>
-<p>The starting point for working with Zoltar’s API is a <code>ZoltarConnection</code> object, obtained via the <code>new_connection</code> function. Most zoltr functions take a <code>ZoltarConnection</code> along with the <em>ID</em> of the thing of interest, e.g., a project, model, or forecast ID. You can obtain the ID using one of the <code>*_info</code> functions, and you can always use the web interface to navigate to the resource and look at its ID in the browser address field. The ID should be self evident for all resources. For example, the project <a href="https://www.zoltardata.com/project/4">CDC Flu challenge</a>’s URL is <a href="https://www.zoltardata.com/project/4" class="uri">https://www.zoltardata.com/project/4</a>, and you can see that its ID is <em>4</em>.</p>
-<p>(Note: To access protected resources, you need to call the <code><a href="../reference/zoltar_authenticate.html">zoltar_authenticate()</a></code> function before calling any zoltr functions. But this is unnecessary in this vignette because we’re accessing a public project, models, and forecasts.)</p>
+<a href="#connect-to-the-host-and-authenticate" class="anchor"></a>Connect to the host and authenticate</h2>
+<p>The starting point for working with Zoltar’s API is a <code>ZoltarConnection</code> object, obtained via the <code>new_connection</code> function. Most zoltr functions take a <code>ZoltarConnection</code> along with the <em>URL</em> of the thing of interest, e.g., a project, model, or forecast. For example, the URL of the <em>Docs Example Project</em> project is <a href="https://www.zoltardata.com/project/3/" class="uri">https://www.zoltardata.com/project/3/</a>, and the URL of its <em>docs forecast model</em> model is <a href="https://www.zoltardata.com/model/5/" class="uri">https://www.zoltardata.com/model/5/</a>. An important note regarding URLs:</p>
+<pre><code>zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
+optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/project/3` is invalid,
+but `https://www.zoltardata.com/project/3/` is correct.</code></pre>
+<p>You can obtain a URL using one of the <code>*_info</code> functions, and you can always use the web interface to navigate to the item of interest (called a “resource” in APIs) and look at its URL in the browser address field. Note that if you copy/paste then you will have to add the trailing slash character yourself.</p>
+<p>As noted above, all API calls require an account. To access your project, you’ll first need to authenticate via the <code><a href="../reference/zoltar_authenticate.html">zoltar_authenticate()</a></code> function. Pass it the username and password for your account. Notes:</p>
+<ul>
+<li>Be careful to store and use your username and password so that they’re not accessible to others. A good practice is to put them them in your <code>.Renviron</code> file and then use <code><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv()</a></code> to retrieve them, as outlined in <a href="https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables">Use Environment variables</a> and as done below.</li>
+<li>The Zoltar service uses a “token”-based scheme for authentication. These tokens have a five minute expiration for security, which requires re-authentication after that period of time. The zoltr library takes care of re-authenticating as needed by passing your username and password back to the server to get another token. Note that the connection object returned by the <code>new_connection</code> function stores a token internally, so be careful if saving that object into a file.</li>
+<li>Below you will see the host shown as <em>example.com</em> - this is a temporary one that was used to generate this documentation.</li>
+</ul>
+<p>For this and other vignettes, you will need to create an <a href="https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron"><code>.Renviron</code></a> file that contains <code>Z_USERNAME</code> and <code>Z_PASSWORD</code> variables that match your account settings (note the <code>Z_</code> prefix). Then you’ll be able to create an authenticated connection:</p>
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
+<!-- run but don't show. NB: will run only if above eval=TRUE -->
+<!-- show but don't run-->
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(zoltr)
-conn &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_connection.html">new_connection</a></span>()
-conn
-<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' not authenticated</span></code></pre></div>
+zoltar_connection &lt;-<span class="st"> </span><span class="kw"><a href="../reference/new_connection.html">new_connection</a></span>()
+<span class="kw"><a href="../reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(zoltar_connection, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"Z_USERNAME"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"Z_PASSWORD"</span>))
+zoltar_connection</code></pre></div>
 </div>
 <div id="get-a-list-of-all-projects-on-the-host" class="section level2">
 <h2 class="hasAnchor">
 <a href="#get-a-list-of-all-projects-on-the-host" class="anchor"></a>Get a list of all projects on the host</h2>
-<p>Use the <code><a href="../reference/projects.html">projects()</a></code> function to get a connection’s projects as a data.frame. Note that it will only list those that you are authenticated to access.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">the_projects &lt;-<span class="st"> </span><span class="kw"><a href="../reference/projects.html">projects</a></span>(conn)
+<p>Now that you have a connection, you can use the <code><a href="../reference/projects.html">projects()</a></code> function to get all projects as a <code>data.frame</code>. Note that it will only list those that you are authorized to access, i.e., all public projects plus any private ones that you own or are a model owner.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">the_projects &lt;-<span class="st"> </span><span class="kw"><a href="../reference/projects.html">projects</a></span>(zoltar_connection)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_projects)
-<span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id         : int 4</span>
-<span class="co">#&gt;  $ url        : chr "https://zoltardata.com/api/project/4/"</span>
-<span class="co">#&gt;  $ owner_id   : int 5</span>
-<span class="co">#&gt;  $ public     : logi TRUE</span>
-<span class="co">#&gt;  $ name       : chr "CDC Flu challenge"</span>
-<span class="co">#&gt;  $ description: chr "Guidelines and forecasts for a collaborative U.S. influenza forecasting project."</span>
-<span class="co">#&gt;  $ home_url   : chr "https://github.com/FluSightNetwork/cdc-flusight-ensemble"</span>
-<span class="co">#&gt;  $ core_data  : chr "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models"</span></code></pre></div>
+<span class="co">#&gt; 'data.frame':    4 obs. of  10 variables:</span>
+<span class="co">#&gt;  $ id                   : int  5 16 17 18</span>
+<span class="co">#&gt;  $ url                  : chr  "http://127.0.0.1:8000/api/project/5/" "http://127.0.0.1:8000/api/project/16/" "http://127.0.0.1:8000/api/project/17/" "http://127.0.0.1:8000/api/project/18/"</span>
+<span class="co">#&gt;  $ owner_url            : chr  "http://127.0.0.1:8000/api/user/4/" "http://127.0.0.1:8000/api/user/4/" "http://127.0.0.1:8000/api/user/4/" "http://127.0.0.1:8000/api/user/4/"</span>
+<span class="co">#&gt;  $ public               : logi  FALSE TRUE FALSE TRUE</span>
+<span class="co">#&gt;  $ name                 : chr  "Impetus Province Forecasts" "public project" "private project" "Docs Example Project"</span>
+<span class="co">#&gt;  $ description          : chr  "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ "description" "description" "A full description of my project is here. You could include narrative details about what seasons are included, "| __truncated__</span>
+<span class="co">#&gt;  $ home_url             : chr  "http://www.iddynamics.jhsph.edu/projects/impetus" "http://example.com/" "http://example.com/" "https://reichlab.io"</span>
+<span class="co">#&gt;  $ time_interval_type   : chr  "Biweek" "Week" "Week" "Week"</span>
+<span class="co">#&gt;  $ visualization_y_label: chr  "DHF cases" "" "" "the scale for your variable of interest"</span>
+<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/dengue-data" "http://example.com/" "http://example.com/" ""</span></code></pre></div>
 </div>
-<div id="get-a-project-to-work-with-list-its-info-and-models-and-download-its-scores" class="section level2">
+<div id="get-a-project-to-work-with-and-list-its-info-models-and-scores" class="section level2">
 <h2 class="hasAnchor">
-<a href="#get-a-project-to-work-with-list-its-info-and-models-and-download-its-scores" class="anchor"></a>Get a project to work with, list its info and models, and download its scores</h2>
-<p>Let’s start by getting a public project to work with. We will search the projects list for it by name. Then we will pass its ID to the <code><a href="../reference/project_info.html">project_info()</a></code> function to get details, and pass it to the <code><a href="../reference/models.html">models()</a></code> function to get a data.frame of its models.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">project_id &lt;-<span class="st"> </span>the_projects[the_projects<span class="op">$</span>name <span class="op">==</span><span class="st"> "CDC Flu challenge"</span>, <span class="st">'id'</span>]  <span class="co"># integer(0) if not found, which is an invalid project ID</span>
-the_project_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/project_info.html">project_info</a></span>(conn, project_id)
+<a href="#get-a-project-to-work-with-and-list-its-info-models-and-scores" class="anchor"></a>Get a project to work with and list its info, models, and scores</h2>
+<p>Let’s start by getting a public project to work with. We will search the projects list for it by name. Then we will pass its URL to the <code><a href="../reference/project_info.html">project_info()</a></code> function to get a <code>list</code> of details, and then pass it to the <code><a href="../reference/models.html">models()</a></code> function to get a <code>data.frame</code> of its models.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">project_url &lt;-<span class="st"> </span>the_projects[the_projects<span class="op">$</span>name <span class="op">==</span><span class="st"> "Docs Example Project"</span>, <span class="st">"url"</span>]
+the_project_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/project_info.html">project_info</a></span>(zoltar_connection, project_url)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(the_project_info)
-<span class="co">#&gt;  [1] "id"           "url"          "owner"        "is_public"   </span>
-<span class="co">#&gt;  [5] "name"         "description"  "home_url"     "core_data"   </span>
-<span class="co">#&gt;  [9] "config_dict"  "template"     "truth"        "model_owners"</span>
-<span class="co">#&gt; [13] "score_data"   "models"       "locations"    "targets"     </span>
-<span class="co">#&gt; [17] "timezeros"</span>
+<span class="co">#&gt;  [1] "id"                    "url"                  </span>
+<span class="co">#&gt;  [3] "owner"                 "is_public"            </span>
+<span class="co">#&gt;  [5] "name"                  "description"          </span>
+<span class="co">#&gt;  [7] "home_url"              "logo_url"             </span>
+<span class="co">#&gt;  [9] "core_data"             "time_interval_type"   </span>
+<span class="co">#&gt; [11] "visualization_y_label" "truth"                </span>
+<span class="co">#&gt; [13] "model_owners"          "score_data"           </span>
+<span class="co">#&gt; [15] "models"                "units"                </span>
+<span class="co">#&gt; [17] "targets"               "timezeros"</span>
 the_project_info<span class="op">$</span>description
-<span class="co">#&gt; [1] "Guidelines and forecasts for a collaborative U.S. influenza forecasting project."</span>
+<span class="co">#&gt; [1] "A full description of my project is here. You could include narrative details about what seasons are included, what group has provided data, whether the project focuses on real-time or retrospective forecasts."</span>
 
-the_models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/models.html">models</a></span>(conn, project_id)  <span class="co"># may take some time</span>
+the_models &lt;-<span class="st"> </span><span class="kw"><a href="../reference/models.html">models</a></span>(zoltar_connection, project_url)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_models)
-<span class="co">#&gt; 'data.frame':    21 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id          : int  12 26 25 24 23 11 10 18 20 21 ...</span>
-<span class="co">#&gt;  $ url         : chr  "https://zoltardata.com/api/model/12/" "https://zoltardata.com/api/model/26/" "https://zoltardata.com/api/model/25/" "https://zoltardata.com/api/model/24/" ...</span>
-<span class="co">#&gt;  $ project_id  : int  4 4 4 4 4 4 4 4 4 4 ...</span>
-<span class="co">#&gt;  $ owner_id    : int  5 5 5 5 5 5 5 5 5 5 ...</span>
-<span class="co">#&gt;  $ name        : chr  "Rank Histogram Filter SIRS" "SARIMA model with seasonal differencing" "SARIMA model without seasonal differencing" "Kernel Density Estimation" ...</span>
-<span class="co">#&gt;  $ description : chr  "&lt;em&gt;Team name&lt;/em&gt;: CU.\n        &lt;em&gt;Team members&lt;/em&gt;: J Shaman, T Yamana, S Kandula, S Pei, W Yang, H Morita."| __truncated__ "&lt;em&gt;Team name&lt;/em&gt;: ReichLab.\n        &lt;em&gt;Team members&lt;/em&gt;: Evan L. Ray, Nicholas G. Reich.\n        &lt;em&gt;Data"| __truncated__ "&lt;em&gt;Team name&lt;/em&gt;: ReichLab.\n        &lt;em&gt;Team members&lt;/em&gt;: Evan L. Ray, Nicholas G. Reich.\n        &lt;em&gt;Data"| __truncated__ "&lt;em&gt;Team name&lt;/em&gt;: ReichLab.\n        &lt;em&gt;Team members&lt;/em&gt;: Evan L. Ray, Nicholas G. Reich.\n        &lt;em&gt;Data"| __truncated__ ...</span>
-<span class="co">#&gt;  $ home_url    : chr  "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models/CU_RHF_SIRS" "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models/ReichLab_"| __truncated__ "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models/ReichLab_"| __truncated__ "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models/ReichLab_kde" ...</span>
-<span class="co">#&gt;  $ aux_data_url: logi  NA NA NA NA NA NA ...</span>
-
-score_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/scores.html">scores</a></span>(conn, project_id)
+<span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
+<span class="co">#&gt;  $ id          : int 19</span>
+<span class="co">#&gt;  $ url         : chr "http://127.0.0.1:8000/api/model/19/"</span>
+<span class="co">#&gt;  $ project_url : chr "http://127.0.0.1:8000/api/project/18/"</span>
+<span class="co">#&gt;  $ owner_url   : logi NA</span>
+<span class="co">#&gt;  $ name        : chr "docs forecast model"</span>
+<span class="co">#&gt;  $ description : chr ""</span>
+<span class="co">#&gt;  $ home_url    : chr ""</span>
+<span class="co">#&gt;  $ aux_data_url: logi NA</span></code></pre></div>
+<p>There is other project-related information that you can access, such as its configuration (<code><a href="../reference/zoltar_units.html">zoltar_units()</a></code>, <code><a href="../reference/targets.html">targets()</a></code>, and <code><a href="../reference/timezeros.html">timezeros()</a></code> - concepts that are explained at <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a> ), <code><a href="../reference/scores.html">scores()</a></code> and <code><a href="../reference/truth.html">truth()</a></code>. As an example, let’s get its score data. (Note that available scores are limited due to the nature of the example project.)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">score_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/scores.html">scores</a></span>(zoltar_connection, project_url)
 score_data
-<span class="co">#&gt; # A tibble: 259,820 x 10</span>
-<span class="co">#&gt;    model timezero season location target   error abs_error log_single_bin</span>
-<span class="co">#&gt;    &lt;chr&gt;    &lt;dbl&gt; &lt;chr&gt;  &lt;chr&gt;    &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 Baye… 20101024 2010-… HHS Reg… Seaso… -0.878     0.878           -3.62</span>
-<span class="co">#&gt;  2 Baye… 20101024 2010-… HHS Reg… 1 wk … -0.196     0.196           -1.37</span>
-<span class="co">#&gt;  3 Baye… 20101024 2010-… HHS Reg… 2 wk … -0.243     0.243           -2.39</span>
-<span class="co">#&gt;  4 Baye… 20101024 2010-… HHS Reg… 3 wk … -0.0948    0.0948          -1.99</span>
-<span class="co">#&gt;  5 Baye… 20101024 2010-… HHS Reg… 4 wk … -0.0791    0.0791          -2.35</span>
-<span class="co">#&gt;  6 Baye… 20101024 2010-… HHS Reg… Seaso… -0.422     0.422           -3.47</span>
-<span class="co">#&gt;  7 Baye… 20101024 2010-… HHS Reg… 1 wk … -0.278     0.278           -1.10</span>
-<span class="co">#&gt;  8 Baye… 20101024 2010-… HHS Reg… 2 wk … -0.105     0.105           -4.77</span>
-<span class="co">#&gt;  9 Baye… 20101024 2010-… HHS Reg… 3 wk … -0.270     0.270           -2.76</span>
-<span class="co">#&gt; 10 Baye… 20101024 2010-… HHS Reg… 4 wk … -0.446     0.446           -4.40</span>
-<span class="co">#&gt; # … with 259,810 more rows, and 2 more variables: log_multi_bin &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   pit &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 1 x 10</span>
+<span class="co">#&gt;   model timezero   season unit  target error abs_error log_single_bin</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;         </span>
+<span class="co">#&gt; 1 docs… 2011-10-02 2011-… loca… pct n…  2.44      2.44 NA            </span>
+<span class="co">#&gt; # … with 2 more variables: log_multi_bin &lt;lgl&gt;, pit &lt;lgl&gt;</span></code></pre></div>
 </div>
-<div id="get-a-model-to-work-with-and-then-list-its-info-and-forecasts-if-any" class="section level2">
+<div id="get-a-model-to-work-with-and-list-its-info-and-forecasts" class="section level2">
 <h2 class="hasAnchor">
-<a href="#get-a-model-to-work-with-and-then-list-its-info-and-forecasts-if-any" class="anchor"></a>Get a model to work with and then list its info and forecasts (if any)</h2>
-<p>Now let’s work with a particular model, getting its ID by name and then passing it to the <code><a href="../reference/model_info.html">model_info()</a></code> function to get details. Then use the <code><a href="../reference/forecasts.html">forecasts()</a></code> function to get a data.frame of that model’s forecasts.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_id &lt;-<span class="st"> </span>the_models[the_models<span class="op">$</span>name <span class="op">==</span><span class="st"> "SARIMA model with seasonal differencing"</span>, <span class="st">'id'</span>]  <span class="co"># integer(0) if not found</span>
-the_model_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/model_info.html">model_info</a></span>(conn, model_id)
+<a href="#get-a-model-to-work-with-and-list-its-info-and-forecasts" class="anchor"></a>Get a model to work with and list its info and forecasts</h2>
+<p>Now let’s work with a particular model, getting its URL by name and then passing it to the <code><a href="../reference/model_info.html">model_info()</a></code> function to get details. Then use the <code><a href="../reference/forecasts.html">forecasts()</a></code> function to get a <code>data.frame</code> of that model’s forecasts (there is only one). Note that obtaining the model’s URL is straightforward because it is provided in the <code>url</code> column of <code>the_models</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">model_url &lt;-<span class="st"> </span>the_models[the_models<span class="op">$</span>name <span class="op">==</span><span class="st"> "docs forecast model"</span>, <span class="st">"url"</span>]
+the_model_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/model_info.html">model_info</a></span>(zoltar_connection, model_url)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(the_model_info)
-<span class="co">#&gt;  [1] "id"           "url"          "project"      "owner"       </span>
-<span class="co">#&gt;  [5] "name"         "abbreviation" "description"  "home_url"    </span>
-<span class="co">#&gt;  [9] "aux_data_url" "forecasts"</span>
-the_model_info<span class="op">$</span>description
-<span class="co">#&gt; [1] "&lt;em&gt;Team name&lt;/em&gt;: ReichLab.\n        &lt;em&gt;Team members&lt;/em&gt;: Evan L. Ray, Nicholas G. Reich.\n        &lt;em&gt;Data source(s)&lt;/em&gt;: ilinet.\n        &lt;em&gt;Methods&lt;/em&gt;: A seasonal ARIMA model is fit using the auto.arima function in the forecast package for R.  The data are log-transformed, any infinite or missing values after the transformation are linearly imputed, and a first-order seasonal difference (at lag 52 weeks) is taken before fitting the model.  A separate model is fit for each region.  Through iterating the one-step-ahead predictions, this model fit yields a joint predictive distribution for incidence in all remaining weeks of the season.  Appropriate integrals of this joint distribution are calculated via Monte Carlo integration to obtain predictions for the seasonal quantities.  For making prospective predictions for each season, only data before the start of that season were used in fitting model parameters.  All code used in estimation and prediction is available at https://github.com/reichlab/2017-2018-cdc-flu-contest\n        "</span>
+<span class="co">#&gt; [1] "id"           "url"          "project"      "owner"       </span>
+<span class="co">#&gt; [5] "name"         "abbreviation" "description"  "home_url"    </span>
+<span class="co">#&gt; [9] "aux_data_url"</span>
+the_model_info<span class="op">$</span>name
+<span class="co">#&gt; [1] "docs forecast model"</span>
 
-the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecasts.html">forecasts</a></span>(conn, model_id)
+the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecasts.html">forecasts</a></span>(zoltar_connection, model_url)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecasts)
-<span class="co">#&gt; 'data.frame':    225 obs. of  4 variables:</span>
-<span class="co">#&gt;  $ id               : int  4539 4540 4541 4542 4543 4544 4545 4546 4547 4548 ...</span>
-<span class="co">#&gt;  $ url              : chr  "https://zoltardata.com/api/forecast/4539/" "https://zoltardata.com/api/forecast/4540/" "https://zoltardata.com/api/forecast/4541/" "https://zoltardata.com/api/forecast/4542/" ...</span>
-<span class="co">#&gt;  $ timezero_date    : Date, format: "2010-10-24" "2010-10-31" ...</span>
-<span class="co">#&gt;  $ data_version_date: Date, format: "2010-11-08" "2010-11-15" ...</span></code></pre></div>
+<span class="co">#&gt; 'data.frame':    1 obs. of  7 variables:</span>
+<span class="co">#&gt;  $ id                : int 49</span>
+<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/49/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/19/"</span>
+<span class="co">#&gt;  $ source            : chr "docs-predictions.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/61/"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-04-01"</span>
+<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/49/data/"</span></code></pre></div>
 </div>
-<div id="finally-download-the-first-forecasts-data-in-two-different-formats" class="section level2">
+<div id="finally-download-the-forecasts-data" class="section level2">
 <h2 class="hasAnchor">
-<a href="#finally-download-the-first-forecasts-data-in-two-different-formats" class="anchor"></a>Finally, download the first forecast’s data in two different formats</h2>
-<p>You can get forecast data using the <code><a href="../reference/forecast_data.html">forecast_data()</a></code> function, which supports a nested <code>list</code> or a <code>data.table</code> (tabular) format.</p>
-<p>First as a <code>list</code>. (Please see <a href="https://www.zoltardata.com/docs#forecast-data-format">here</a> for nested format, AKA JSON, details.)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">first_forecast_id &lt;-<span class="st"> </span>the_forecasts[<span class="dv">1</span>, <span class="st">'id'</span>]  <span class="co"># assumes at least one exists</span>
-
-forecast_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecast_data.html">forecast_data</a></span>(conn, first_forecast_id, <span class="dt">is_json=</span><span class="ot">TRUE</span>)
-forecast_data<span class="op">$</span>locations[[<span class="dv">1</span>]]<span class="op">$</span>name
-<span class="co">#&gt; [1] "HHS Region 1"</span>
-forecast_data<span class="op">$</span>locations[[<span class="dv">1</span>]]<span class="op">$</span>targets[[<span class="dv">1</span>]]<span class="op">$</span>name
-<span class="co">#&gt; [1] "Season onset"</span>
-forecast_data<span class="op">$</span>locations[[<span class="dv">1</span>]]<span class="op">$</span>targets[[<span class="dv">1</span>]]<span class="op">$</span>bins[[<span class="dv">1</span>]]
-<span class="co">#&gt; [[1]]</span>
-<span class="co">#&gt; [1] 44</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[2]]</span>
-<span class="co">#&gt; [1] 45</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; [[3]]</span>
-<span class="co">#&gt; [1] 0.186</span></code></pre></div>
-<p>And as a <code>data.frame</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">forecast_data &lt;-<span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/message">suppressMessages</a></span>(<span class="kw"><a href="../reference/forecast_data.html">forecast_data</a></span>(conn, first_forecast_id, <span class="dt">is_json=</span><span class="ot">FALSE</span>))
-forecast_data
-<span class="co">#&gt; # A tibble: 4,468 x 7</span>
-<span class="co">#&gt;    location   target     type  unit  bin_start_incl bin_end_notincl   value</span>
-<span class="co">#&gt;    &lt;chr&gt;      &lt;chr&gt;      &lt;chr&gt; &lt;chr&gt;          &lt;dbl&gt;           &lt;dbl&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 US Nation… Season on… point week              NA              NA 5.00e+0</span>
-<span class="co">#&gt;  2 US Nation… Season on… bin   week              45              46 3.00e-4</span>
-<span class="co">#&gt;  3 US Nation… Season on… bin   week              46              47 8.00e-4</span>
-<span class="co">#&gt;  4 US Nation… Season on… bin   week              47              48 7.00e-4</span>
-<span class="co">#&gt;  5 US Nation… Season on… bin   week              48              49 1.00e-3</span>
-<span class="co">#&gt;  6 US Nation… Season on… bin   week              49              50 3.00e-3</span>
-<span class="co">#&gt;  7 US Nation… Season on… bin   week              50              51 9.60e-3</span>
-<span class="co">#&gt;  8 US Nation… Season on… bin   week              51              52 1.15e-2</span>
-<span class="co">#&gt;  9 US Nation… Season on… bin   week              52              53 5.10e-3</span>
-<span class="co">#&gt; 10 US Nation… Season on… bin   week               1               2 5.00e-4</span>
-<span class="co">#&gt; # … with 4,458 more rows</span></code></pre></div>
+<a href="#finally-download-the-forecasts-data" class="anchor"></a>Finally, download the forecast’s data</h2>
+<p>You can get forecast data using the <code><a href="../reference/download_forecast.html">download_forecast()</a></code> function, which is in a nested <code>list</code> format. Please see <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a> for forecast format details.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">forecast_url &lt;-<span class="st"> </span>the_forecasts[<span class="dv">1</span>, <span class="st">"url"</span>]
+forecast_info &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecast_info.html">forecast_info</a></span>(zoltar_connection, forecast_url)
+forecast_data &lt;-<span class="st"> </span><span class="kw"><a href="../reference/download_forecast.html">download_forecast</a></span>(zoltar_connection, forecast_url)
+<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/length">length</a></span>(forecast_data<span class="op">$</span>predictions)
+<span class="co">#&gt; [1] 26</span></code></pre></div>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
+
         <div id="tocnav">
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
 <li>
 <a href="#getting-started-with-zoltr">Getting Started with zoltr</a><ul class="nav nav-pills nav-stacked">
-<li><a href="#connect-to-the-host">Connect to the host</a></li>
+<li><a href="#connect-to-the-host-and-authenticate">Connect to the host and authenticate</a></li>
       <li><a href="#get-a-list-of-all-projects-on-the-host">Get a list of all projects on the host</a></li>
-      <li><a href="#get-a-project-to-work-with-list-its-info-and-models-and-download-its-scores">Get a project to work with, list its info and models, and download its scores</a></li>
-      <li><a href="#get-a-model-to-work-with-and-then-list-its-info-and-forecasts-if-any">Get a model to work with and then list its info and forecasts (if any)</a></li>
-      <li><a href="#finally-download-the-first-forecasts-data-in-two-different-formats">Finally, download the first forecast’s data in two different formats</a></li>
+      <li><a href="#get-a-project-to-work-with-and-list-its-info-models-and-scores">Get a project to work with and list its info, models, and scores</a></li>
+      <li><a href="#get-a-model-to-work-with-and-list-its-info-and-forecasts">Get a model to work with and list its info and forecasts</a></li>
+      <li><a href="#finally-download-the-forecasts-data">Finally, download the forecast’s data</a></li>
       </ul>
 </li>
       </ul>

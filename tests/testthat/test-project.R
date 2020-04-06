@@ -58,7 +58,7 @@ test_that("delete_project() calls delete_resource", {
 
 test_that("scores() returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  docs_scores <- read.csv(file.path("data/Docs_Example_Project-scores.csv"))
+  docs_scores <- utils::read.csv(file.path("data/Docs_Example_Project-scores.csv"))
   m <- mock(docs_scores)
   testthat::with_mock("zoltr::get_resource" = m, {
     the_scores <- scores(zoltar_connection, "http://example.com/api/project/1/")
@@ -73,7 +73,7 @@ test_that("scores() returns a data.frame", {
 
 test_that("truth() returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  docs_truth <- read.csv(file.path("data/docs-ground-truth-validated.csv"))
+  docs_truth <- utils::read.csv(file.path("data/docs-ground-truth-validated.csv"))
   m <- mock(docs_truth)
   testthat::with_mock("zoltr::get_resource" = m, {
     the_truth <- truth(zoltar_connection, "http://example.com/api/project/1/")

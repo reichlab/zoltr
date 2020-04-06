@@ -1,8 +1,3 @@
-library(httr)
-library(jsonlite)
-library(readr)  # apparently required by httr
-
-
 #
 # ---- model functions ----
 #
@@ -39,7 +34,8 @@ model_info <- function(zoltar_connection, model_url) {
 #'   (full documentation at https://docs.zoltardata.com/ )
 #' @export
 #' @examples \dontrun{
-#'   new_model_url <- create_model(conn, "https://www.zoltardata.com/project/9/", jsonlite::read_json("example-model-config.json"))
+#'   new_model_url <- create_model(conn, "https://www.zoltardata.com/project/9/",
+#'                      jsonlite::read_json("example-model-config.json"))
 #' }
 create_model <- function(zoltar_connection, project_url, model_config) {
   re_authenticate_if_necessary(zoltar_connection)
@@ -123,7 +119,8 @@ forecasts <- function(zoltar_connection, model_url) {
 #' @param forecast_data Forecast data as a `list` in the Zoltar standard format
 #' @export
 #' @examples \dontrun{
-#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/", "2017-01-17", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
+#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
+#'                            "2017-01-17", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
 #' }
 upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data) {
   if (!(inherits(forecast_data, "list"))) {

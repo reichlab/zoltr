@@ -1,7 +1,3 @@
-library(httr)
-library(readr)  # apparently required by httr
-
-
 #
 # ---- project functions ----
 #

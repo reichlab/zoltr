@@ -34,7 +34,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
       </span>
     </div>
 
@@ -97,7 +97,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>This package contains functions for working with the <a href="https://www.zoltardata.com/">Zoltar</a> forecast repository’s API, including projects, models, forecasts, and scores. Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>.</p>
+<p>This package contains functions for working with the <a href="https://www.zoltardata.com/">Zoltar</a> forecast repository’s API, including projects, models, forecasts, and scores. Read more about this package at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>. Documentation on Zolar itself is at <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a>.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -111,23 +111,34 @@ devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumen
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>, but briefly you use the <code><a href="reference/new_connection.html">new_connection()</a></code> function to create a connection to <a href="https://www.zoltardata.com/">Zoltar</a> and then pass that connection along with the <em>ID</em> of the resource of interest (e.g., a project, model, or forecast) to this package’s various functions like <code><a href="reference/projects.html">projects()</a></code>, <code><a href="reference/project_info.html">project_info()</a></code>, or <code><a href="reference/scores.html">scores()</a></code>.</p>
+<p>Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>, but briefly you use the <code><a href="reference/new_connection.html">new_connection()</a></code> function to create a connection to <a href="https://www.zoltardata.com/">Zoltar</a> and then pass that connection along with the <em>URL</em> of the resource of interest (e.g., a project, model, or forecast) to this package’s various functions like <code><a href="reference/projects.html">projects()</a></code>, <code><a href="reference/project_info.html">project_info()</a></code>, or <code><a href="reference/scores.html">scores()</a></code>.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(zoltr)
-conn &lt;-<span class="st"> </span><span class="kw"><a href="reference/new_connection.html">new_connection</a></span>()
-conn
-<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' not authenticated</span>
+zoltar_connection &lt;-<span class="st"> </span><span class="kw"><a href="reference/new_connection.html">new_connection</a></span>()
+<span class="kw"><a href="reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(zoltar_connection, <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"Z_USERNAME"</span>), <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/Sys.getenv">Sys.getenv</a></span>(<span class="st">"Z_PASSWORD"</span>))
+zoltar_connection
+<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-04-06 22:28:19 UTC)</span>
 
-the_projects &lt;-<span class="st"> </span><span class="kw"><a href="reference/projects.html">projects</a></span>(conn)
-project_id &lt;-<span class="st"> </span>the_projects[<span class="dv">1</span>,]<span class="op">$</span>id
-the_project_info &lt;-<span class="st"> </span><span class="kw"><a href="reference/project_info.html">project_info</a></span>(conn, project_id)
+the_projects &lt;-<span class="st"> </span><span class="kw"><a href="reference/projects.html">projects</a></span>(zoltar_connection)
+project_url &lt;-<span class="st"> </span>the_projects[the_projects<span class="op">$</span>name <span class="op">==</span><span class="st"> "Docs Example Project"</span>, <span class="st">"url"</span>]
+the_project_info &lt;-<span class="st"> </span><span class="kw"><a href="reference/project_info.html">project_info</a></span>(zoltar_connection, project_url)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/names">names</a></span>(the_project_info)
-<span class="co">#&gt;  [1] "id"           "url"          "owner"        "is_public"   </span>
-<span class="co">#&gt;  [5] "name"         "description"  "home_url"     "core_data"   </span>
-<span class="co">#&gt;  [9] "config_dict"  "template"     "truth"        "model_owners"</span>
-<span class="co">#&gt; [13] "score_data"   "models"       "locations"    "targets"     </span>
-<span class="co">#&gt; [17] "timezeros"</span>
+<span class="co">#&gt;  [1] "id"                    "url"                  </span>
+<span class="co">#&gt;  [3] "owner"                 "is_public"            </span>
+<span class="co">#&gt;  [5] "name"                  "description"          </span>
+<span class="co">#&gt;  [7] "home_url"              "logo_url"             </span>
+<span class="co">#&gt;  [9] "core_data"             "time_interval_type"   </span>
+<span class="co">#&gt; [11] "visualization_y_label" "truth"                </span>
+<span class="co">#&gt; [13] "model_owners"          "score_data"           </span>
+<span class="co">#&gt; [15] "models"                "units"                </span>
+<span class="co">#&gt; [17] "targets"               "timezeros"</span>
 the_project_info<span class="op">$</span>name
-<span class="co">#&gt; [1] "CDC Flu challenge"</span></code></pre></div>
+<span class="co">#&gt; [1] "Docs Example Project"</span></code></pre></div>
+</div>
+<div id="forecast-data-format" class="section level2">
+<h2 class="hasAnchor">
+<a href="#forecast-data-format" class="anchor"></a>Forecast data format</h2>
+<p>The native forecast data format supported by the Zoltar API is a <code>list</code>. See <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a> for format details. You can find an example at vignettes/docs-predictions.json . By convention this package referred to this as <code>forecast_data</code>. This package supports conversion to this format (which is used throughout the package) from the CDC’s CSV file format [1] via the <code>forecast_data_from_cdc_csv_file</code>() function. Future versions will support bidirectional conversion, as well as support for a more general CSV format.</p>
+<p>[1] Details about the CDC CSV format can be found at <a href="https://predict.cdc.gov/api/v1/attachments/flusight/flu_challenge_2016-17_update.docx">flu_challenge_2016-17_update.docx</a>.</p>
 </div>
 </div>
   </div>
@@ -158,6 +169,7 @@ the_project_info<span class="op">$</span>name
 <li>Nicholas Reich <br><small class="roles"> Author, copyright holder </small>  </li>
 </ul>
 </div>
+
 
       </div>
 

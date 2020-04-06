@@ -48,14 +48,16 @@ create a connection to [Zoltar](https://www.zoltardata.com/) and then pass that 
 resource of interest (e.g., a project, model, or forecast) to this package's various functions like `projects()`,
 `project_info()`, or `scores()`.
 
-```{r example}
+```{r}
 library(zoltr)
 zoltar_connection <- new_connection()
+zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 zoltar_connection
 
-the_projects <- projects(conn)
+the_projects <- projects(zoltar_connection)
 project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
 the_project_info <- project_info(zoltar_connection, project_url)
+names(the_project_info)
 the_project_info$name
 ```
 
@@ -64,7 +66,7 @@ the_project_info$name
 
 The native forecast data format supported by the Zoltar API is a `list`. See 
 [docs.zoltardata.com](https://docs.zoltardata.com/) for format details. You can find an example at
-tests/testthat/docs-predictions.json . By convention this package referred to this as `forecast_data`. This package
+vignettes/docs-predictions.json . By convention this package referred to this as `forecast_data`. This package
 supports conversion to this format (which is used throughout the package) from the CDC's CSV file format [1] via the 
 `forecast_data_from_cdc_csv_file`() function. Future versions will support bidirectional conversion, as well as support
 for a more general CSV format. 

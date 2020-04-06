@@ -1,7 +1,3 @@
-library(dplyr)
-library(MMWRweek)
-
-
 CDC_POINT_ROW_TYPE <- "Point"  # incoming cdc.csv file row type
 POINT_PREDICTION_CLASS <- "point"  # JSON prediction class for point prediction elements
 BIN_PREDICTION_CLASS <- "bin"  # "" bin ""
@@ -19,7 +15,7 @@ BIN_PREDICTION_CLASS <- "bin"  # "" bin ""
 #'   forecast_data <- forecast_data_from_cdc_csv_file(2016, "my_forecast.cdc.csv")
 #' }
 forecast_data_from_cdc_csv_file <- function(season_start_year, cdc_csv_file) {
-  cdc_data_frame <- read.csv(cdc_csv_file, stringsAsFactors = FALSE)  # "NA" -> NA
+  cdc_data_frame <- utils::read.csv(cdc_csv_file, stringsAsFactors = FALSE)  # "NA" -> NA
   forecast_data_from_cdc_data_frame(season_start_year, cdc_data_frame)
 }
 
@@ -43,24 +39,31 @@ forecast_data_from_cdc_csv_file <- function(season_start_year, cdc_csv_file) {
 # both Bin_start_incl and Bin_end_notincl are the strings "none" and not an EW week number. Thus, we have to store
 # all bin starts as strings and not dates.
 #
+
+
+#' `forecast_data_from_cdc_csv_file()`helper
+#'
+#' @return same as `forecast_data_from_cdc_csv_file()`
+#' @param season_start_year as passed to `forecast_data_from_cdc_csv_file()`
+#' @param cdc_data_frame ""
+#' @importFrom rlang .data
 forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame) {  # testable internal function that does the work
   names(cdc_data_frame) <- sapply(names(cdc_data_frame), tolower)
-
 
   # validate cdc_data_frame
   if (!(inherits(cdc_data_frame, "data.frame"))) {
     stop("cdc_data_frame was not a `data.frame`", call. = FALSE)
   }
 
-  if ((length(cdc_data_frame) == 0) || (names(cdc_data_frame) !=
-    c("location", "target", "type", "unit", "bin_start_incl", "bin_end_notincl", "value"))) {
+  if ((length(cdc_data_frame) == 0) || !all(names(cdc_data_frame) != c("Location", "Target", "Type", "Unit",
+                                                                       "Bin_start_incl", "Bin_end_notincl", "Value"))) {
     stop("cdc_data_frame did not have required columns", call. = FALSE)
   }
 
   predictions <- list()
   cdc_data_frame_grouped <- cdc_data_frame %>%
-    dplyr::group_by(location, target, type) %>%
-    group_data()
+    dplyr::group_by(.data$location, .data$target, .data$type) %>%
+    dplyr::group_data()
   for (group_idx in seq_len(nrow(cdc_data_frame_grouped))) {
     group_row <- cdc_data_frame_grouped[group_idx,]  # group_row$location,  group_row$target,  group_row$type
     if (!group_row$target %in% c("Season onset", "Season peak week", "Season peak percentage",
@@ -103,7 +106,7 @@ forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame)
                          "prediction" = list("value" = point_value))
       predictions[[length(predictions) + 1]] <- prediction
     }
-    if (length(bincat_cats) > 0) {  # yes warning: "NAs introduced by coercion"
+    if (length(bincat_cats) >= 1) {  # yes warning: "NAs introduced by coercion"
       prediction <- list("unit" = group_row$location, "target" = group_row$target, "class" = BIN_PREDICTION_CLASS,
                          "prediction" = list("cat" = bincat_cats, "prob" = bincat_probs))
       predictions[[length(predictions) + 1]] <- prediction
@@ -135,7 +138,7 @@ process_csv_point_row <- function(season_start_year, target_name, value) {
       strftime(monday_date, YYYY_MM_DD_DATE_FORMAT)
     }
   } else if (is.na(value)) {
-    stop(paste0("None point values are only valid for 'Season onset' targets. target_name='", group_row$target, "'"),
+    stop(paste0("None point values are only valid for 'Season onset' targets. target_name='", target_name, "'"),
          call. = FALSE)
   } else if (target_name == 'Season peak week') {  # date target. value: an EW Monday date
     # same 'wrapping' logic as above to handle rounding boundaries
@@ -167,7 +170,7 @@ process_csv_bin_row <- function(season_start_year, target_name, value, bin_start
            call. = FALSE)
     }
   } else if (is.na(bin_start_incl) || is.na(bin_end_notincl)) {
-    stop(paste0("None bins are only valid for 'Season onset' targets. target_name='", group_row$target, "', ",
+    stop(paste0("None bins are only valid for 'Season onset' targets. target_name='", target_name, "', ",
                 ". bin_start_incl, bin_end_notincl: ", bin_start_incl, ", ", bin_end_notincl),
          call. = FALSE)
   } else if (target_name == 'Season peak week') {  # date target. value: an EW Monday date
@@ -197,9 +200,9 @@ monday_date_from_ew_and_season_start_year <- function(ew_week, season_start_year
   # :param season_start_year
   # :return: a datetime.date that is the Monday of the EW corresponding to the args
   if (ew_week < SEASON_START_EW_NUMBER) {
-    sunday_date <- MMWRweek2Date(season_start_year + 1, ew_week)
+    sunday_date <- MMWRweek::MMWRweek2Date(season_start_year + 1, ew_week)
   } else {
-    sunday_date <- MMWRweek2Date(season_start_year, ew_week)
+    sunday_date <- MMWRweek::MMWRweek2Date(season_start_year, ew_week)
   }
   sunday_date + 1  # add one day
 }
@@ -207,7 +210,7 @@ monday_date_from_ew_and_season_start_year <- function(ew_week, season_start_year
 
 mmwr_weeks_in_year <- function(year) {
   # returns the number of epiweeks in a year. based on `pymmwr.epiweeks_in_year()` - https://github.com/reichlab/pymmwr/blob/b5ebdd88cc1e4d33548010e04b25ece4cb982b8e/pymmwr.py#L83
-  if (MMWRweek(MMWRweek2Date(year, 53))$MMWRyear == year) {
+  if (MMWRweek::MMWRweek(MMWRweek::MMWRweek2Date(year, 53))$MMWRyear == year) {
     53
   } else {
     52

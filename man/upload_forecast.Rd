@@ -24,6 +24,7 @@ up, which depends on the number of current uploads in the queue. Zoltar tracks t
 }
 \examples{
 \dontrun{
-  upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/", "2017-01-17", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
+  upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
+                           "2017-01-17", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
 }
 }

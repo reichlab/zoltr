@@ -1,9 +1,3 @@
-library(base64url)
-library(httr)
-library(jsonlite)
-library(readr)  # apparently required by httr
-
-
 #
 # ---- utility functions ----
 #
