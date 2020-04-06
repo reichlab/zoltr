@@ -19,6 +19,10 @@ url_for_token_auth <- function(zoltar_connection) {
 
 
 add_auth_headers <- function(zoltar_connection) {
+  if (!inherits(zoltar_connection, "ZoltarConnection")) {
+    stop(paste0("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'"), call. = FALSE)
+  }
+
   if (inherits(zoltar_connection$session, "ZoltarSession")) {
     httr::add_headers("Authorization" = paste0("JWT ", zoltar_connection$session$token))
   }
@@ -103,6 +107,10 @@ print.ZoltarConnection <-
 #'   zoltar_authenticate(conn, "USERNAME", "PASSWORD")
 #' }
 zoltar_authenticate <- function(zoltar_connection, username, password) {
+  if (!inherits(zoltar_connection, "ZoltarConnection")) {
+    stop(paste0("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'"), call. = FALSE)
+  }
+
   zoltar_connection$username <- username
   zoltar_connection$password <- password
   zoltar_connection$session <- new_session(zoltar_connection)
@@ -110,6 +118,10 @@ zoltar_authenticate <- function(zoltar_connection, username, password) {
 
 
 re_authenticate_if_necessary <- function(zoltar_connection) {
+  if (!inherits(zoltar_connection, "ZoltarConnection")) {
+    stop(paste0("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'"), call. = FALSE)
+  }
+
   if (inherits(zoltar_connection$session, "ZoltarSession") && is_token_expired(zoltar_connection$session)) {
     message(paste0("re-authenticating expired token '", zoltar_connection$host, "'"))
     zoltar_authenticate(zoltar_connection, zoltar_connection$username, zoltar_connection$password)

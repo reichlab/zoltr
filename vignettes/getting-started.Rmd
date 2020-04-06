@@ -39,7 +39,7 @@ project, model, or forecast. For example, the URL of the _Docs Example Project_ 
 [https://www.zoltardata.com/project/3/](https://www.zoltardata.com/project/3/), and the URL of its _docs forecast model_
 model is [https://www.zoltardata.com/model/5/](https://www.zoltardata.com/model/5/). An important note regarding URLs:
 
-    Zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
+    zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
     optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/project/3` is invalid,
     but `https://www.zoltardata.com/project/3/` is correct.
 

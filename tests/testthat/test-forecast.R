@@ -41,8 +41,8 @@ test_that("forecast_info() returns a list", {
 
 test_that("delete_forecast() passes correct URL", {
   zoltar_connection <- new_connection("http://example.com")
-  load("data/delete_response.rda")  # 'delete_response' contains 204 response from sample 'DELETE' call
-  m <- mock(delete_response)
+  load("data/delete_response.rda")  # 'response' contains 204 response from sample 'DELETE' call
+  m <- mock(response)
   testthat::with_mock("httr::DELETE" = m, {
     delete_forecast(zoltar_connection, "http://example.com/api/forecast/1/")
     expect_equal(length(mock_calls(m)), 1)
@@ -53,7 +53,7 @@ test_that("delete_forecast() passes correct URL", {
 
 test_that("download_forecast() returns JSON data as a list", {
   zoltar_connection <- new_connection("http://example.com")
-  predictions_list_json <- jsonlite::read_json("data/docs-predictions.json")
+  predictions_list_json <- jsonlite::read_json("../../vignettes/docs-predictions.json")
   m <- mock(predictions_list_json)  # return values in calling order
   testthat::with_mock("zoltr::get_resource" = m, {
     act_data <- download_forecast(zoltar_connection, "http://example.com/api/forecast/1/")

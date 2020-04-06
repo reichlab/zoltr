@@ -7,7 +7,7 @@
 new_connection(host = "https://zoltardata.com")
 }
 \arguments{
-\item{host}{The Zoltar site to connect to. Defaults to \url{https://zoltardata.com}}
+\item{host}{The Zoltar site to connect to. Does *not* include a trailing slash ('/'). Defaults to \url{https://zoltardata.com}}
 }
 \value{
 A `ZoltarConnection` object
@@ -16,6 +16,10 @@ A `ZoltarConnection` object
 Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
 connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list
 of Project objects to start working with.
+}
+\details{
+A note on URLs: We require a trailing slash ('/') on all URLs. The only exception is the host arg passed to this
+function. This convention matches Django REST framework one, which is what Zoltar is written in.
 }
 \examples{
 \dontrun{

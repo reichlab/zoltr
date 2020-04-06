@@ -19,8 +19,8 @@ test_that("create_project() creates a Project", {
   project_config <- jsonlite::read_json("data/cdc-project.json")
   testthat::with_mock("httr::POST" = function(...) {
     called_args <<- list(...)
-    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
-    get_token_response  # actual response doesn't matter, just its class
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
   },
                       create_project(zoltar_connection, project_config))
   expect_equal(called_args$url, "http://example.com/api/projects/")
@@ -58,12 +58,12 @@ test_that("delete_project() calls delete_resource", {
 
 test_that("scores() returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  load("data/scores_response.rda")  # 'response' variable contains "api/project/<pk>/score_data/" response from "Docs Example Project" (downloads as "Docs_Example_Project-scores.csv")
-  m <- mock(response)
-  testthat::with_mock("httr::GET" = m, {
+  docs_scores <- read.csv(file.path("data/Docs_Example_Project-scores.csv"))
+  m <- mock(docs_scores)
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_scores <- scores(zoltar_connection, "http://example.com/api/project/1/")
     expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/project/1/score_data/")
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/score_data/")
     expect_equal(dim(the_scores), c(1, 10))
     expect_equal(names(the_scores), c("model", "timezero", "season", "unit", "target", "error", "abs_error",
                                       "log_single_bin", "log_multi_bin", "pit"))
@@ -73,12 +73,12 @@ test_that("scores() returns a data.frame", {
 
 test_that("truth() returns a data.frame", {
   zoltar_connection <- new_connection("http://example.com")
-  load("data/truth_response.rda")  # 'response' variable contains "api/project/<pk>/truth_data/" response from "Docs Example Project" (downloads as "docs-ground-truth-validated.csv")
-  m <- mock(response)
-  testthat::with_mock("httr::GET" = m, {
+  docs_truth <- read.csv(file.path("data/docs-ground-truth-validated.csv"))
+  m <- mock(docs_truth)
+  testthat::with_mock("zoltr::get_resource" = m, {
     the_truth <- truth(zoltar_connection, "http://example.com/api/project/1/")
     expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/project/1/truth_data/")
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/truth_data/")
     expect_equal(dim(the_truth), c(14, 4))
     expect_equal(names(the_truth), c("timezero", "unit", "target", "value"))
   })

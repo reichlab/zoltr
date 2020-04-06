@@ -35,8 +35,8 @@ test_that("create_model() creates a Model", {
   model_config <- jsonlite::read_json("data/example-model-config.json")
   testthat::with_mock("httr::POST" = function(...) {
     called_args <<- list(...)
-    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
-    get_token_response  # actual response doesn't matter, just its class
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
   },
                       create_model(zoltar_connection, "http://example.com/api/project/1/", model_config))
   expect_equal(called_args$url, "http://example.com/api/project/1/models/")
@@ -112,8 +112,8 @@ test_that("upload_forecast() creates an UploadFileJob", {
 
   testthat::with_mock("httr::POST" = function(...) {
     called_args <<- list(...)
-    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
-    get_token_response  # actual response doesn't matter, just its class
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
   },
                       upload_forecast(zoltar_connection, "http://example.com/api/model/1/", "2020-02-22", list())) # timezero_date, forecast_data
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
@@ -184,7 +184,7 @@ test_that("upload_forecast() passes correct url to POST()", {
   zoltar_connection <- new_connection("http://example.com")
   called_args <- NULL
   timezero_date <- "2019-10-21"
-  forecast_data <- jsonlite::read_json("data/docs-predictions.json")
+  forecast_data <- jsonlite::read_json("../../vignettes/docs-predictions.json")
   testthat::with_mock(
     "httr::POST" = function(...) {
       called_args <<- list(...)

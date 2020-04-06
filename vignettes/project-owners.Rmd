@@ -1,7 +1,7 @@
 ---
 title: "Project Owners"
 author: "Matthew Cornell"
-date: "2019-05-28"
+date: "2020-04-01"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Project Owners}
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 ```
 
 
-# Zoltr for Project Owners
+# zoltr for Project Owners
 
 Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating
 and managing your own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the 
@@ -65,7 +65,7 @@ new project's URL is returned, which you can pass to other functions. Here we us
 that creates the example documentation project.
 
 ```{r}
-project_config <- jsonlite::read_json("data/docs-project.json")  # "name": "My project"
+project_config <- jsonlite::read_json("docs-project.json")  # "name": "My project"
 project_url <- create_project(zoltar_connection, project_config)
 the_project_info <- project_info(zoltar_connection, project_url)
 ```
@@ -125,7 +125,7 @@ Here we will upload the `docs-predictions.json` file. Note that the passed `time
 in `docs-project.json`, the file that was used to create the project. It is an error otherwise.
 
 ```{r}
-forecast_data <- jsonlite::read_json("data/docs-predictions.json")
+forecast_data <- jsonlite::read_json("docs-predictions.json")
 upload_file_job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02", forecast_data)
 busy_poll_upload_file_job(zoltar_connection, upload_file_job_url)
 ```

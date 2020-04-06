@@ -191,8 +191,8 @@ test_that("new_session() calls get_token() correctly", {
   called_args <- NULL
   testthat::with_mock("httr::POST" = function(...) {
     called_args <<- list(...)
-    load("data/get_token_response.rda")  # 'get_token_response' contains a 200 response from sample zoltar_authenticate() call
-    get_token_response
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response
   },
                       zoltar_authenticate(zoltar_connection, "username", "password"))
   expect_equal(called_args$url, "http://example.com/api-token-auth/")
