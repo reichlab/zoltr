@@ -27,8 +27,8 @@ takes you through the package's main features. So that you can experiment withou
 example project from [docs.zoltardata.com](https://docs.zoltardata.com/), which should always be available for public
 read-only access.
 
-    NOTE: You will need an account to access the zoltar API - please see
-    [docs.zoltardata.com](https://docs.zoltardata.com/) for details.
+**NOTE: You will need an account to access the zoltar API - please see [docs.zoltardata.com](https://docs.zoltardata.com/)
+for details.**
 
 
 ## Connect to the host and authenticate
