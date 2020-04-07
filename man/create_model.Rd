@@ -13,7 +13,7 @@ create_model(zoltar_connection, project_url, model_config)
 in}
 
 \item{model_config}{A `list` containing a Zoltar model configuration. An example: example-model-config.json .
-(full documentation at https://docs.zoltardata.com/ )}
+Full documentation at \url{https://docs.zoltardata.com/}.}
 }
 \value{
 model_url of the newly-created model

@@ -10,7 +10,7 @@ create_project(zoltar_connection, project_config)
 \item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
 \item{project_config}{A `list` containing a Zoltar project configuration. note that this list validated by the
-server and not here. An example: cdc-project.json (full documentation at https://docs.zoltardata.com/ )}
+server and not here. An example: cdc-project.json Full documentation at \url{https://docs.zoltardata.com/}.}
 }
 \value{
 project_url of the newly-created project

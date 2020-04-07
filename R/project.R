@@ -10,7 +10,7 @@
 #' @return project_url of the newly-created project
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_config A `list` containing a Zoltar project configuration. note that this list validated by the
-#'   server and not here. An example: cdc-project.json (full documentation at https://docs.zoltardata.com/ )
+#'   server and not here. An example: cdc-project.json Full documentation at \url{https://docs.zoltardata.com/}.
 #' @export
 #' @examples \dontrun{
 #'   new_project_url <- create_project(conn, jsonlite::read_json("cdc-project.json"))

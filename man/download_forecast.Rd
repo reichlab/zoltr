@@ -12,8 +12,8 @@ download_forecast(zoltar_connection, forecast_url)
 \item{forecast_url}{URL of a forecast in zoltar_connection's forecasts}
 }
 \value{
-Forecast data as a `list` in the Zoltar standard format - see \url{https://www.zoltardata.com/docs#forecasts}.
-  meta information is ignored.
+Forecast data as a `list` in the Zoltar standard format. meta information is ignored. Full documentation at
+  \url{https://docs.zoltardata.com/}.
 }
 \description{
 Gets a forecast's data

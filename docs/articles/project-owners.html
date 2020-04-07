@@ -150,7 +150,7 @@ model_url &lt;-<span class="st"> </span><span class="kw"><a href="../reference/c
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">forecast_data &lt;-<span class="st"> </span>jsonlite<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/jsonlite/topics/read_json">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 upload_file_job_url &lt;-<span class="st"> </span><span class="kw"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(zoltar_connection, model_url, <span class="st">"2011-10-02"</span>, forecast_data)
 <span class="kw">busy_poll_upload_file_job</span>(zoltar_connection, upload_file_job_url)
-<span class="co">#&gt; polling for status change. upload_file_job: https://www.zoltardata.com/api/uploadfilejob/9689/</span>
+<span class="co">#&gt; polling for status change. upload_file_job: https://www.zoltardata.com/api/uploadfilejob/9693/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></code></pre></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -161,13 +161,13 @@ the_forecast_info &lt;-<span class="st"> </span><span class="kw"><a href="../ref
 the_forecasts &lt;-<span class="st"> </span><span class="kw"><a href="../reference/forecasts.html">forecasts</a></span>(zoltar_connection, the_forecast_info<span class="op">$</span>forecast_model)
 <span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/str">str</a></span>(the_forecasts)
 <span class="co">#&gt; 'data.frame':    1 obs. of  7 variables:</span>
-<span class="co">#&gt;  $ id                : int 9729</span>
-<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/9729/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/113/"</span>
-<span class="co">#&gt;  $ source            : chr "forecast839c2fb3f2b8.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/425/"</span>
+<span class="co">#&gt;  $ id                : int 9733</span>
+<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/9733/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/117/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast87e155672ddf.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/437/"</span>
 <span class="co">#&gt;  $ created_at        : Date, format: "2020-04-07"</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/9729/data/"</span></code></pre></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/9733/data/"</span></code></pre></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">
