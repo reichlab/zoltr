@@ -34,18 +34,19 @@ for details.**
 ## Connect to the host and authenticate
 
 The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection`
-function. Most zoltr functions take a `ZoltarConnection` along with the _URL_ of the thing of interest, e.g., a
-project, model, or forecast. For example, the URL of the _Docs Example Project_ project is
-[https://www.zoltardata.com/project/3/](https://www.zoltardata.com/project/3/), and the URL of its _docs forecast model_
-model is [https://www.zoltardata.com/model/5/](https://www.zoltardata.com/model/5/). An important note regarding URLs:
+function. Most zoltr functions take a `ZoltarConnection` along with the API _URL_ of the thing of interest, e.g., a
+project, model, or forecast. API URLs look like `https://www.zoltardata.com/api/project/3/`, which is that of the
+[Docs Example Project](https://www.zoltardata.com/project/3). An important note regarding URLs:
 
     zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
-    optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/project/3` is invalid,
-    but `https://www.zoltardata.com/project/3/` is correct.
+    optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid,
+    but `https://www.zoltardata.com/api/project/3` is not.
 
-You can obtain a URL using one of the `*_info` functions, and you can always use the web interface to navigate to the
-item of interest (called a "resource" in APIs) and look at its URL in the browser address field. Note that if you
-copy/paste then you will have to add the trailing slash character yourself.
+You can obtain a URL using some of the `*_info` functions, and you can always use the web interface to navigate to the
+item of interest and look at its URL in the browser address field. Keep in mind that you'll need to add `api` to the
+browsable address, along with the trailing slash character. For example, you'd browse the _Docs Example Project_ project
+at `https://www.zoltardata.com/project/3`, but it's API for use in zoltr would be
+`https://www.zoltardata.com/api/project/3/`.
 
 As noted above, all API calls require an account. To access your project, you'll first need to authenticate via the
 `zoltar_authenticate()` function. Pass it the username and password for your account. Notes:
