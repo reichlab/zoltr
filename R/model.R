@@ -119,8 +119,9 @@ forecasts <- function(zoltar_connection, model_url) {
 #' @param forecast_data Forecast data as a `list` in the Zoltar standard format
 #' @export
 #' @examples \dontrun{
-#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
-#'                            "2017-01-17", "tests/testthat/EW1-KoTsarima-2017-01-17-small.json")
+#'   forecast_data <- jsonlite::read_json("docs-predictions.json")
+#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/", "2017-01-17",
+#'                                          forecast_data)
 #' }
 upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data) {
   if (!(inherits(forecast_data, "list"))) {

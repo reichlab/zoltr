@@ -14,6 +14,8 @@ test_that("forecast_info() returns a list", {
   m <- mock(forecast_info_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
+    exp_forecast_info$forecast_model_url <- exp_forecast_info$forecast_model
+    exp_forecast_info$forecast_model <- NULL
     exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
     exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
     exp_forecast_info$time_zero$data_version_date <- NA
@@ -30,6 +32,8 @@ test_that("forecast_info() returns a list", {
   m <- mock(forecast_info_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
+    exp_forecast_info$forecast_model_url <- exp_forecast_info$forecast_model
+    exp_forecast_info$forecast_model <- NULL
     exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
     exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
     exp_forecast_info$time_zero$data_version_date <- as.Date("2011-10-03")

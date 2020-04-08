@@ -140,7 +140,7 @@ Get the new forecast's URL from the `UploadFileJob` object and then call the `fo
 the_upload_info <- upload_info(zoltar_connection, upload_file_job_url)
 forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
 the_forecast_info <- forecast_info(zoltar_connection, forecast_url)
-the_forecasts <- forecasts(zoltar_connection, the_forecast_info$forecast_model)
+the_forecasts <- forecasts(zoltar_connection, the_forecast_info$forecast_model_url)
 str(the_forecasts)
 ```
 

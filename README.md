@@ -34,21 +34,18 @@ library(zoltr)
 zoltar_connection <- new_connection()
 zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 zoltar_connection
-#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-04-07 15:53:51 UTC)
+#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-04-08 16:09:09 UTC)
 
 the_projects <- projects(zoltar_connection)
 project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
 the_project_info <- project_info(zoltar_connection, project_url)
 names(the_project_info)
-#>  [1] "id"                    "url"                  
-#>  [3] "owner"                 "is_public"            
-#>  [5] "name"                  "description"          
-#>  [7] "home_url"              "logo_url"             
-#>  [9] "core_data"             "time_interval_type"   
-#> [11] "visualization_y_label" "truth"                
-#> [13] "model_owners"          "score_data"           
-#> [15] "models"                "units"                
-#> [17] "targets"               "timezeros"
+#>  [1] "id"                    "url"                   "owner"                
+#>  [4] "is_public"             "name"                  "description"          
+#>  [7] "home_url"              "logo_url"              "core_data"            
+#> [10] "time_interval_type"    "visualization_y_label" "truth"                
+#> [13] "model_owners"          "score_data"            "models"               
+#> [16] "units"                 "targets"               "timezeros"
 the_project_info$name
 #> [1] "Docs Example Project"
 ```
