@@ -120,8 +120,8 @@ forecasts <- function(zoltar_connection, model_url) {
 #' @export
 #' @examples \dontrun{
 #'   forecast_data <- jsonlite::read_json("docs-predictions.json")
-#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/", "2017-01-17",
-#'                                          forecast_data)
+#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
+#'                                          "2017-01-17", forecast_data)
 #' }
 upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data) {
   if (!(inherits(forecast_data, "list"))) {

@@ -1,16 +1,23 @@
 ## Test environments
 - local OS X install, R 3.6.0
 - rhub::check_for_cran()
-  - _windows-x86_64-devel_ (r-devel)
-  - _ubuntu-gcc-release_ (r-release)
-  - _fedora-clang-devel_ (r-devel)
 - rhub::check_on_fedora()
-  - _fedora-gcc-devel_ (r-devel)  
-- devtools::build_win()
+- devtools::check_win_release()
+- devtools::check_win_devel()
+- devtools::check_win_oldrelease()
 
 
 ## R CMD check results
 0 ERRORs | 0 WARNINGs | 0 NOTES
+
+- "CRAN Package Check Results for Package zoltr" had one WARN, but it looks to us like an OS configuration issue and not a zoltr package issue:
+
+    
+    Error(s) in re-building vignettes:
+    --- re-building ‘getting-started.Rmd’ using rmarkdown
+    dyld: lazy symbol binding failed: Symbol not found: ____chkstk_darwin
+    Referenced from: /usr/local/bin/pandoc (which was built for Mac OS X 10.15)
+    Expected in: /usr/lib/libSystem.B.dylib
 
 
 ## Vignette build requirements
