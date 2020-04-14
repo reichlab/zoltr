@@ -152,7 +152,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 <span class="no">upload_file_job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="no">forecast_data</span>)
 <span class="fu">busy_poll_upload_file_job</span>(<span class="no">zoltar_connection</span>, <span class="no">upload_file_job_url</span>)
-<span class="co">#&gt; polling for status change. upload_file_job: http://127.0.0.1:8000/api/uploadfilejob/170/</span>
+<span class="co">#&gt; polling for status change. upload_file_job: http://127.0.0.1:8000/api/uploadfilejob/214/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></pre></body></html></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -162,14 +162,15 @@
 <span class="no">the_forecast_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecast_info.html">forecast_info</a></span>(<span class="no">zoltar_connection</span>, <span class="no">forecast_url</span>)
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
-<span class="co">#&gt; 'data.frame':    1 obs. of  7 variables:</span>
-<span class="co">#&gt;  $ id                : int 200</span>
-<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/200/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/181/"</span>
-<span class="co">#&gt;  $ source            : chr "forecastec3e4c89dcde.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/574/"</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-04-09"</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/200/data/"</span></pre></body></html></div>
+<span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
+<span class="co">#&gt;  $ id                : int 190</span>
+<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/190/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/236/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast4c99e956d42.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/723/"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-04-14"</span>
+<span class="co">#&gt;  $ notes             : chr ""</span>
+<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/190/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">

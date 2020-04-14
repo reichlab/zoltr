@@ -13,6 +13,7 @@
       "season_name": "2011-2012"
     },
     "created_at": "2020-03-05T15:47:47.369231-05:00",
+    "notes": "a small prediction file",
     "forecast_data": "http://example.com/api/forecast/3/data/"
   },
   {
@@ -28,6 +29,7 @@
       "is_season_start": false
     },
     "created_at": "2020-03-06T01:21:39.933832+00:00",
+    "notes": "another prediction file",
     "forecast_data": "http://example.com/api/forecast/4/data/"
   }
 ]

@@ -1,3 +1,7 @@
+# zoltr 0.5.1
+- Updated package to be compatible with Zoltar 3.1.0.
+
+
 # zoltr 0.5.0
 - Updated entire package to be compatible with Zoltar 3.
 

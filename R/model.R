@@ -90,7 +90,8 @@ forecasts <- function(zoltar_connection, model_url) {
   source_column <- c()              # ""
   timezero_url_column <- c()        # ""
   created_at_column <- c()          # Date
-  forecast_data_url_column <- c()   # character
+  notes_column <- c()               # character
+  forecast_data_url_column <- c()   # ""
   for (forecast_json in forecasts_json) {
     id_column <- append(id_column, forecast_json$id)
     url_column <- append(url_column, forecast_json$url)
@@ -98,10 +99,11 @@ forecasts <- function(zoltar_connection, model_url) {
     source_column <- append(source_column, forecast_json$source)
     timezero_url_column <- append(timezero_url_column, forecast_json$time_zero$url)  # "unnest" timezeros to URL
     created_at_column <- append(created_at_column, as.Date(forecast_json$created_at))  # "2020-03-05T15:47:47.369231-05:00"
+    notes_column <- append(notes_column, forecast_json$notes)
     forecast_data_url_column <- append(forecast_data_url_column, forecast_json$forecast_data)
   }
   data.frame(id = id_column, url = url_column, forecast_model_url = forecast_model_url_column, source = source_column,
-             timezero_url = timezero_url_column, created_at = created_at_column,
+             timezero_url = timezero_url_column, created_at = created_at_column, notes = notes_column,
              forecast_data_url = forecast_data_url_column, stringsAsFactors = FALSE)
 }
 
@@ -117,13 +119,14 @@ forecasts <- function(zoltar_connection, model_url) {
 #' @param model_url URL of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
 #' @param forecast_data Forecast data as a `list` in the Zoltar standard format
+#' @param notes Optional user notes for the new forecast
 #' @export
 #' @examples \dontrun{
 #'   forecast_data <- jsonlite::read_json("docs-predictions.json")
 #'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
-#'                                          "2017-01-17", forecast_data)
+#'                                          "2017-01-17", forecast_data, "a mid-January forecast")
 #' }
-upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data) {
+upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data, notes = "") {
   if (!(inherits(forecast_data, "list"))) {
     stop("forecast_data was not a `list`", call. = FALSE)
   }
@@ -141,7 +144,7 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
     url = forecasts_url,
     httr::accept_json(),
     add_auth_headers(zoltar_connection),
-    body = list(data_file = httr::upload_file(temp_json_file), timezero_date = timezero_date))
+    body = list(data_file = httr::upload_file(temp_json_file), timezero_date = timezero_date, notes = notes))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")

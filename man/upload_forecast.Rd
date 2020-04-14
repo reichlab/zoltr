@@ -4,7 +4,13 @@
 \alias{upload_forecast}
 \title{Upload a forecast}
 \usage{
-upload_forecast(zoltar_connection, model_url, timezero_date, forecast_data)
+upload_forecast(
+  zoltar_connection,
+  model_url,
+  timezero_date,
+  forecast_data,
+  notes = ""
+)
 }
 \arguments{
 \item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
@@ -14,6 +20,8 @@ upload_forecast(zoltar_connection, model_url, timezero_date, forecast_data)
 \item{timezero_date}{The date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
 \item{forecast_data}{Forecast data as a `list` in the Zoltar standard format}
+
+\item{notes}{Optional user notes for the new forecast}
 }
 \value{
 An UploadFileJob URL for the upload
@@ -26,6 +34,6 @@ up, which depends on the number of current uploads in the queue. Zoltar tracks t
 \dontrun{
   forecast_data <- jsonlite::read_json("docs-predictions.json")
   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
-                                         "2017-01-17", forecast_data)
+                                         "2017-01-17", forecast_data, "a mid-January forecast")
 }
 }

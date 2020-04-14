@@ -83,15 +83,16 @@ test_that("forecasts() returns a data.frame", {
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/5/forecasts/")
     expect_is(the_forecasts, "data.frame")
     expect_equal(names(the_forecasts), c("id", "url", "forecast_model_url", "source", "timezero_url", "created_at",
-                                         "forecast_data_url"))
+                                         "notes", "forecast_data_url"))
     expect_equal(nrow(the_forecasts), 2)  # 2 forecasts
-    expect_equal(ncol(the_forecasts), 7)
+    expect_equal(ncol(the_forecasts), 8)
 
     exp_row <- data.frame(id = 3, url = "http://example.com/api/forecast/3/",
                           forecast_model_url = "http://example.com/api/model/5/",
                           source = "docs-predictions.json",
                           timezero_url = "http://example.com/api/timezero/5/",
                           created_at = as.Date("2020-03-05T15:47:47.369231-05:00"),
+                          notes = "a small prediction file",
                           forecast_data_url = "http://example.com/api/forecast/3/data/",
                           stringsAsFactors = FALSE)
     forecast_row <- the_forecasts[1,]
@@ -138,7 +139,7 @@ test_that("upload_forecast() returns an UploadFileJob URL, and upload_info() is 
   exp_upload_file_job_json$status <- "SUCCESS"
   exp_upload_file_job_json$created_at <- as.Date("2019-03-26T14:55:31.028436-04:00")
   exp_upload_file_job_json$updated_at <- as.Date("2019-03-26T14:55:37.812924-04:00")
-  exp_upload_file_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2)
+  exp_upload_file_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2, notes = "a few predictions")
   exp_upload_file_job_json$output_json <- list("forecast_pk" = 3)
 
   # test upload_info()
