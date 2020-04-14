@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -105,11 +105,11 @@
 <div id="connect-to-the-host-and-authenticate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connect-to-the-host-and-authenticate" class="anchor"></a>Connect to the host and authenticate</h2>
-<p>The starting point for working with Zoltar’s API is a <code>ZoltarConnection</code> object, obtained via the <code>new_connection</code> function. Most zoltr functions take a <code>ZoltarConnection</code> along with the API <em>URL</em> of the thing of interest, e.g., a project, model, or forecast. API URLs look like <code>https://www.zoltardata.com/api/project/3/</code>, which is that of the <a href="https://www.zoltardata.com/project/3">Docs Example Project</a>. An important note regarding URLs:</p>
+<p>The starting point for working with Zoltar’s API is a <code>ZoltarConnection</code> object, obtained via the <code>new_connection</code> function. Most zoltr functions take a <code>ZoltarConnection</code> along with the API <em>URL</em> of the thing of interest, e.g., a project, model, or forecast. API URLs look like <code>https://www.zoltardata.com/api/project/3/</code>, which is that of the “Docs Example Project”. An important note regarding URLs:</p>
 <pre><code>zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
 optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid,
 but `https://www.zoltardata.com/api/project/3` is not.</code></pre>
-<p>You can obtain a URL using some of the <code>*_info</code> functions, and you can always use the web interface to navigate to the item of interest and look at its URL in the browser address field. Keep in mind that you’ll need to add <code>api</code> to the browsable address, along with the trailing slash character. For example, you’d browse the <em>Docs Example Project</em> project at <code>https://www.zoltardata.com/project/3</code>, but it’s API for use in zoltr would be <code>https://www.zoltardata.com/api/project/3/</code>.</p>
+<p>You can obtain a URL using some of the <code>*_info</code> functions, and you can always use the web interface to navigate to the item of interest and look at its URL in the browser address field. Keep in mind that you’ll need to add <code>api</code> to the browsable address, along with the trailing slash character. For example, if you browsed the <em>Docs Example Project</em> project at (say) <code>https://www.zoltardata.com/project/3</code> then its API for use in zoltr would be <code>https://www.zoltardata.com/api/project/3/</code>.</p>
 <p>As noted above, all API calls require an account. To access your project, you’ll first need to authenticate via the <code><a href="../reference/zoltar_authenticate.html">zoltar_authenticate()</a></code> function. Pass it the username and password for your account. Notes:</p>
 <ul>
 <li>Be careful to store and use your username and password so that they’re not accessible to others. A good practice is to put them them in your <code>.Renviron</code> file and then use <code><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv()</a></code> to retrieve them, as outlined in <a href="https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables">Use Environment variables</a> and as done below.</li>

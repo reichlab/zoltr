@@ -36,7 +36,7 @@ for details.**
 The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection`
 function. Most zoltr functions take a `ZoltarConnection` along with the API _URL_ of the thing of interest, e.g., a
 project, model, or forecast. API URLs look like `https://www.zoltardata.com/api/project/3/`, which is that of the
-[Docs Example Project](https://www.zoltardata.com/project/3). An important note regarding URLs:
+"Docs Example Project". An important note regarding URLs:
 
     zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
     optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid,
@@ -44,8 +44,8 @@ project, model, or forecast. API URLs look like `https://www.zoltardata.com/api/
 
 You can obtain a URL using some of the `*_info` functions, and you can always use the web interface to navigate to the
 item of interest and look at its URL in the browser address field. Keep in mind that you'll need to add `api` to the
-browsable address, along with the trailing slash character. For example, you'd browse the _Docs Example Project_ project
-at `https://www.zoltardata.com/project/3`, but it's API for use in zoltr would be
+browsable address, along with the trailing slash character. For example, if you browsed the _Docs Example Project_
+project at (say) `https://www.zoltardata.com/project/3` then its API for use in zoltr would be
 `https://www.zoltardata.com/api/project/3/`.
 
 As noted above, all API calls require an account. To access your project, you'll first need to authenticate via the

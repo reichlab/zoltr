@@ -8,16 +8,14 @@
 
 
 ## R CMD check results
-0 ERRORs | 0 WARNINGs | 0 NOTES
+0 ERRORs | 0 WARNINGs | 1 NOTES
 
-- "CRAN Package Check Results for Package zoltr" had one WARN, but it looks to us like an OS configuration issue and not a zoltr package issue:
+- `rhub::check_for_cran()` had one note under "checking CRAN incoming feasibility" about "Days since last update". We are submitting again to bring compatibility up to our server's new 3.1.0 release. We apologize for the short time between submissions.
 
-    
-    Error(s) in re-building vignettes:
-    --- re-building ‘getting-started.Rmd’ using rmarkdown
-    dyld: lazy symbol binding failed: Symbol not found: ____chkstk_darwin
-    Referenced from: /usr/local/bin/pandoc (which was built for Mac OS X 10.15)
-    Expected in: /usr/lib/libSystem.B.dylib
+
+    N  checking CRAN incoming feasibility
+       Maintainer: 'Matthew Cornell <cornell@umass.edu>'
+       Days since last update: 4
 
 
 ## Vignette build requirements
