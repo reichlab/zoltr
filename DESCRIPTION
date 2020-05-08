@@ -1,6 +1,6 @@
 Package: zoltr
 Title: Interface to the 'Zoltar' Forecast Repository API
-Version: 0.5.1
+Version: 0.5.2
 Authors@R: c(
     person("Matthew", "Cornell", role = c("aut", "cre"), email = "cornell@umass.edu"),
     person("Nicholas", "Reich", role = c("aut", "cph"), email = "nick@schoolph.umass.edu"))
@@ -17,7 +17,8 @@ LazyData: true
 Suggests:
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    data.table
 Imports:
     httr,
     jsonlite,

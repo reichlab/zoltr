@@ -1,7 +1,7 @@
 ---
 title: "Getting Started"
 author: "Matthew Cornell"
-date: "2020-04-01"
+date: "2020-05-01"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -22,10 +22,7 @@ knitr::opts_chunk$set(
 
 # Getting Started with zoltr
 
-zoltr is an R package that simplifies access to the [zoltardata.com](https://www.zoltardata.com/) API. This vignette 
-takes you through the package's main features. So that you can experiment without needing a Zoltar account, we use the
-example project from [docs.zoltardata.com](https://docs.zoltardata.com/), which should always be available for public
-read-only access.
+zoltr is an R package that simplifies access to the [zoltardata.com](https://www.zoltardata.com/) API. This vignette takes you through the package's main features. So that you can experiment without needing a Zoltar account, we use the example project from [docs.zoltardata.com](https://docs.zoltardata.com/), which should always be available for public read-only access.
 
 **NOTE: You will need an account to access the zoltar API - please see [docs.zoltardata.com](https://docs.zoltardata.com/)
 for details.**
@@ -145,14 +142,27 @@ str(the_forecasts)
 ```
 
 
-## Finally, download the forecast's data
+## Finally, download the forecast's data in three formats
 
-You can get forecast data using the `download_forecast()` function, which is in a nested `list` format. Please see
-[docs.zoltardata.com](https://docs.zoltardata.com/) for forecast format details.
+You can get forecast data using the `download_forecast()` function, which returns a nested `list` format that corresponds to Zoltar's native JSON one. That format can be converted to a CSV-friendly `data.frame` via `data_frame_from_forecast_data()`, which can represent all prediction types, or `quantile_data_frame_from_forecast_data()` for users who are mainly interested in `point` and `quantile` data. Please see [docs.zoltardata.com](https://docs.zoltardata.com/) for forecast format details.
 
 ```{r}
 forecast_url <- the_forecasts[1, "url"]
 forecast_info <- forecast_info(zoltar_connection, forecast_url)
 forecast_data <- download_forecast(zoltar_connection, forecast_url)
 length(forecast_data$predictions)
+```
+
+As a `data.frame`:
+
+```{r}
+forecast_data_frame <- data_frame_from_forecast_data(forecast_data)
+str(forecast_data_frame)
+```
+
+And just quantile data:
+
+```{r}
+forecast_data_frame <- quantile_data_frame_from_forecast_data(forecast_data)
+str(forecast_data_frame)
 ```

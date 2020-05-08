@@ -1,0 +1,35 @@
+[
+  {
+    "id": 3,
+    "url": "http://example.com/api/forecast/3/",
+    "forecast_model": "http://example.com/api/model/5/",
+    "source": "docs-predictions.json",
+    "time_zero": {
+      "id": 5,
+      "url": "http://example.com/api/timezero/5/",
+      "timezero_date": "2011-10-02",
+      "data_version_date": null,
+      "is_season_start": true,
+      "season_name": "2011-2012"
+    },
+    "created_at": "2020-03-05T15:47:47.369231-05:00",
+    "notes": null,
+    "forecast_data": "http://example.com/api/forecast/3/data/"
+  },
+  {
+    "id": 4,
+    "url": "http://example.com/api/forecast/4/",
+    "forecast_model": "http://example.com/api/model/5/",
+    "source": "docs-predictions2.json",
+    "time_zero": {
+      "id": 6,
+      "url": "http://example.com/api/timezero/6/",
+      "timezero_date": "2011-10-03",
+      "data_version_date": null,
+      "is_season_start": false
+    },
+    "created_at": "2020-03-06T01:21:39.933832+00:00",
+    "notes": null,
+    "forecast_data": "http://example.com/api/forecast/4/data/"
+  }
+]

@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
       </span>
     </div>
 
@@ -113,7 +113,7 @@
 <span class="no">zoltar_connection</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/new_connection.html">new_connection</a></span>()
 <span class="fu"><a href="reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(<span class="no">zoltar_connection</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_USERNAME"</span>), <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_PASSWORD"</span>))
 <span class="no">zoltar_connection</span>
-<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-04-14 18:20:35 UTC)</span>
+<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-05-08 17:11:49 UTC)</span>
 
 <span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="no">project_url</span> <span class="kw">&lt;-</span> <span class="no">the_projects</span>[<span class="no">the_projects</span>$<span class="no">name</span> <span class="kw">==</span> <span class="st">"Docs Example Project"</span>, <span class="st">"url"</span>]

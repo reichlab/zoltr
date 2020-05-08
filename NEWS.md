@@ -1,3 +1,7 @@
+# zoltr 0.5.2
+- Added functions to convert forecast data to `data.frames`s.
+
+
 # zoltr 0.5.1
 - Updated package to be compatible with Zoltar 3.1.0.
 

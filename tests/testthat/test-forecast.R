@@ -67,7 +67,7 @@ test_that("download_forecast() returns JSON data as a list", {
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/forecast/1/data/")
 
-    expect_equal(length(act_data$predictions), 26)
+    expect_equal(length(act_data$predictions), 29)
 
     # spot-check a few "Season peak week" predictions (a date target)
     prediction_element <- act_data$predictions[[1]]
@@ -82,7 +82,13 @@ test_that("download_forecast() returns JSON data as a list", {
     expect_equal(prediction_element$class, "bin")
     expect_equal(prediction_element$prediction$cat[[1]], as.Date("2019-12-15", YYYY_MM_DD_DATE_FORMAT))
 
-    prediction_element <- act_data$predictions[[21]]
+    prediction_element <- act_data$predictions[[12]]
+    expect_equal(prediction_element$unit, "location2")
+    expect_equal(prediction_element$target, "Season peak week")
+    expect_equal(prediction_element$class, "quantile")
+    expect_equal(prediction_element$prediction$value[[1]], as.Date("2019-12-22", YYYY_MM_DD_DATE_FORMAT))
+
+    prediction_element <- act_data$predictions[[23]]
     expect_equal(prediction_element$unit, "location3")
     expect_equal(prediction_element$target, "Season peak week")
     expect_equal(prediction_element$class, "sample")

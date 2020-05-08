@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get a model's forecasts — forecasts • zoltr</title>
+<title>Converts forecast data from Zoltar's native `list` format to a `data.frame` — data_frame_from_forecast_data • zoltr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Get a model's forecasts — forecasts" />
-<meta property="og:description" content="Get a model's forecasts" />
+<meta property="og:title" content="Converts forecast data from Zoltar's native `list` format to a `data.frame` — data_frame_from_forecast_data" />
+<meta property="og:description" content="Converts forecast data from Zoltar's native `list` format to a `data.frame`" />
 
 
 
@@ -126,37 +126,40 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get a model's forecasts</h1>
-    <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/model.R'><code>R/model.R</code></a></small>
-    <div class="hidden name"><code>forecasts.Rd</code></div>
+    <h1>Converts forecast data from Zoltar's native `list` format to a `data.frame`</h1>
+    <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/csv.R'><code>R/csv.R</code></a></small>
+    <div class="hidden name"><code>data_frame_from_forecast_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get a model's forecasts</p>
+    <p>Converts forecast data from Zoltar's native `list` format to a `data.frame`</p>
     </div>
 
-    <pre class="usage"><span class='fu'>forecasts</span>(<span class='no'>zoltar_connection</span>, <span class='no'>model_url</span>)</pre>
+    <pre class="usage"><span class='fu'>data_frame_from_forecast_data</span>(<span class='no'>forecast_data</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>zoltar_connection</th>
-      <td><p>A `ZoltarConnection` object as returned by <code><a href='new_connection.html'>new_connection</a></code></p></td>
-    </tr>
-    <tr>
-      <th>model_url</th>
-      <td><p>URL of a model in zoltar_connection's models</p></td>
+      <th>forecast_data</th>
+      <td><p>Forecast data as a `list` in the Zoltar standard format</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A `data.frame` of forecast information for the passed model</p>
+    <p>A `data.frame` from forecast_data in zoltar-specific format. The 'class' of each row is
+  as described in https://docs.zoltardata.com/datamodel/ and is one of: 'bin', 'named', 'point',
+  'sample', 'quantile'. The columns are: 'unit', 'target', 'class', 'value', 'cat', 'prob',
+  'sample', 'quantile', 'family', 'param1', 'param2', 'param3'. Note that the frame is 'sparse':
+  not every row uses all columns, and unused ones are empty (''). However, the first four
+  columns are always non-empty, i.e., every prediction has them. NB: columns are all text (i.e.,
+  data type information from forecast_data is lost)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='no'>the_forecasts</span> <span class='kw'>&lt;-</span> <span class='fu'>forecasts</span>(<span class='no'>conn</span>, <span class='st'>"http://www.zoltardata.com/api/model/1/"</span>)
+  <span class='no'>forecast_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>jsonlite</span><span class='kw ns'>::</span><span class='fu'><a href='https://jeroen.cran.dev/jsonlite/reference/read_json.html'>read_json</a></span>(<span class='st'>"docs-predictions.json"</span>)
+  <span class='no'>data_frame</span> <span class='kw'>&lt;-</span> <span class='fu'>data_frame_from_forecast_data</span>(<span class='no'>forecast_data</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

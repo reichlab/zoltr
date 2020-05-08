@@ -101,6 +101,34 @@ test_that("forecasts() returns a data.frame", {
 })
 
 
+test_that("forecasts() can handle null notes", {
+  zoltar_connection <- new_connection("http://example.com")
+  forecasts_list_json <- jsonlite::read_json("data/forecasts-list-null-notes.json")
+  m <- mock(forecasts_list_json)  # return values in calling order
+  testthat::with_mock("zoltr::get_resource" = m, {
+    the_forecasts <- forecasts(zoltar_connection, "http://example.com/api/model/5/")
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/5/forecasts/")
+    expect_is(the_forecasts, "data.frame")
+    expect_equal(names(the_forecasts), c("id", "url", "forecast_model_url", "source", "timezero_url", "created_at",
+                                         "notes", "forecast_data_url"))
+    expect_equal(nrow(the_forecasts), 2)  # 2 forecasts
+    expect_equal(ncol(the_forecasts), 8)
+
+    exp_row <- data.frame(id = 3, url = "http://example.com/api/forecast/3/",
+                          forecast_model_url = "http://example.com/api/model/5/",
+                          source = "docs-predictions.json",
+                          timezero_url = "http://example.com/api/timezero/5/",
+                          created_at = as.Date("2020-03-05T15:47:47.369231-05:00"),
+                          notes = as.character(NA),
+                          forecast_data_url = "http://example.com/api/forecast/3/data/",
+                          stringsAsFactors = FALSE)
+    forecast_row <- the_forecasts[1,]
+    expect_equal(forecast_row, exp_row)
+  })
+})
+
+
 test_that("upload_forecast() creates an UploadFileJob", {
   zoltar_connection <- new_connection("http://example.com")
   upload_file_job_json <- jsonlite::read_json("data/upload-file-job-2.json")
