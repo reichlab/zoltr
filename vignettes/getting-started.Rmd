@@ -60,9 +60,7 @@ As noted above, all API calls require an account. To access your project, you'll
 - Below you will see the host shown as _example.com_ - this is a temporary one that was used to generate this 
   documentation.
 
-For this and other vignettes, you will need to create an [`.Renviron`](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron)
-file that contains `Z_USERNAME` and `Z_PASSWORD` variables that match your account settings (note the `Z_` prefix).
-Then you'll be able to create an authenticated connection:
+For this and other vignettes, you will need to create an [`.Renviron`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html) file that contains `Z_USERNAME` and `Z_PASSWORD` variables that match your account settings (note the `Z_` prefix). Then you'll be able to create an authenticated connection:
 
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r setup, include=FALSE}
