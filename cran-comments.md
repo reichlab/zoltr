@@ -10,12 +10,18 @@
 ## R CMD check results
 0 ERRORs | 0 WARNINGs | 0 NOTES
 
-- `rhub::check_for_cran()` had one note about "Days since last update". We are submitting again to bring compatibility up to our server's new 3.1.0 release. We apologize for the short time between submissions.
+- `rhub::check_for_cran()` had one error about "Package suggested but not available", but it looks to us like a configuration issue on their end and not a zoltr package issue:
 
 
-    N  checking CRAN incoming feasibility
-       Maintainer: 'Matthew Cornell <cornell@umass.edu>'
-       Days since last update: 4
+    E  checking package dependencies
+       Package suggested but not available: 'data.table'
+       
+       The suggested packages are required for a complete check.
+       Checking can be attempted without them by setting the environment
+       variable _R_CHECK_FORCE_SUGGESTS_ to a false value.
+       
+       See section 'The DESCRIPTION file' in the 'Writing R Extensions'
+       manual.
 
 
 - `devtools::submit_cran()` had one warning about "CRAN Package Check Results for Package zoltr" , but it looks to us like an OS configuration issue in `r-patched-osx-x86_64` and not a zoltr package issue:

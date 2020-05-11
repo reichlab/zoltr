@@ -27,9 +27,7 @@ and managing your own [zoltardata.com](https://www.zoltardata.com/) projects usi
 Zoltar API. Building on the _Getting Started_ vignette, this one covers creating projects and models, and uploading
 forecasts.
 
-Before starting you should have an account on [zoltardata.com](https://www.zoltardata.com/), and an
-[`.Renviron`](https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron) file set up as described in
-_Getting Started_.
+Before starting you should have an account on [zoltardata.com](https://www.zoltardata.com/), and an [`.Renviron`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html) file set up as described in _Getting Started_.
 
 
 ## Connect to the host and authenticate
