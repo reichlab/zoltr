@@ -22,10 +22,7 @@ knitr::opts_chunk$set(
 
 # zoltr for Project Owners
 
-Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating
-and managing your own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the 
-Zoltar API. Building on the _Getting Started_ vignette, this one covers creating projects and models, and uploading
-forecasts.
+Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating and managing your own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the Zoltar API. Building on the _Getting Started_ vignette, this one covers creating projects and models, and uploading forecasts.
 
 Before starting you should have an account on [zoltardata.com](https://www.zoltardata.com/), and an [`.Renviron`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html) file set up as described in _Getting Started_.
 
@@ -54,13 +51,7 @@ zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_P
 
 ## Create a sandbox project to play with
 
-Let's use the `create_project()` function to make a temporary project to work with. (Note that if you're repeating this
-step and need to delete a previously-created project, you can either use the web UI's delete button on the project
-detail page or call the zoltr `delete_project()` function to do it programmatically.) `create_project()` takes a
-`project_config` parameter that is a `list` specifying everything Zoltar needs to create a project, including meta
-information like name, whether it's public, etc. In addition it lists the units, targets, and timezeros to create. The
-new project's URL is returned, which you can pass to other functions. Here we use `docs-project.json`, which is the one
-that creates the example documentation project.
+Let's use the `create_project()` function to make a temporary project to work with. (Note that if you're repeating this step and need to delete a previously-created project, you can either use the web UI's delete button on the project detail page or call the zoltr `delete_project()` function to do it programmatically.) `create_project()` takes a `project_config` parameter that is a `list` specifying everything Zoltar needs to create a project, including meta information like name, whether it's public, etc. In addition it lists the units, targets, and timezeros to create. The new project's URL is returned, which you can pass to other functions. Here we use `docs-project.json`, which is the one that creates the example documentation project.
 
 ```{r}
 project_config <- jsonlite::read_json("docs-project.json")  # "name": "My project"
@@ -71,9 +62,7 @@ the_project_info <- project_info(zoltar_connection, project_url)
 
 ## Add a model to the project and then upload a forecast into it
 
-We can use the `create_model()` function to create a model in a particular project. Like `create_project()`, it takes
-a `list` that is the configuration to use when creating the model. There is an example at `example-model-config.json`,
-but here we will construct the `list` ourselves.
+We can use the `create_model()` function to create a model in a particular project. Like `create_project()`, it takes a `list` that is the configuration to use when creating the model. There is an example at `example-model-config.json`, but here we will construct the `list` ourselves.
 
 ```{r}
 model_config <- list("name" = "a model_name",
@@ -85,12 +74,7 @@ model_config <- list("name" = "a model_name",
 model_url <- create_model(zoltar_connection, project_url, model_config)
 ```
 
-Now let's upload a forecast to the model using `upload_forecast()` and then see how to list all of a model's forecasts
-(in this case just the one). Keep in mind that Zoltar enqueues long operations like forecast uploading, which keeps the
-site responsive but makes the Zoltar API a little more complicated. Rather than having the `upload_forecast()` function
-_block_ until the upload is done, you instead get a quick response in the form of an `UploadFileJob` URL that you can
-pass to the `upload_info()` function to check its status and find out when the upload is pending, done, or failed).
-(This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
+Now let's upload a forecast to the model using `upload_forecast()` and then see how to list all of a model's forecasts (in this case just the one). Keep in mind that Zoltar enqueues long operations like forecast uploading, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `upload_forecast()` function _block_ until the upload is done, you instead get a quick response in the form of an `UploadFileJob` URL that you can pass to the `upload_info()` function to check its status and find out when the upload is pending, done, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
 
 ```{r}
 busy_poll_upload_file_job <- function(zoltar_connection, upload_file_job_url) {
@@ -110,17 +94,9 @@ busy_poll_upload_file_job <- function(zoltar_connection, upload_file_job_url) {
 }
 ```
 
-`upload_forecast()` takes the `model_url` to upload to, the `timezero_date` in the project to associate the forecast
-with, and the `forecast_data` itself. The latter is a nested `list` of _predictions_ as documented in
-[docs.zoltardata.com](https://docs.zoltardata.com/), but you can learn about it by looking at the example
-`docs-predictions.json`. Briefly, you can see that there is a `predictions` list of `prediction elements` (the `meta`
-section is ignored), each of which encodes data for a particular unit and target combination. Each `prediction element`
-has a class that's one of four possibilities: `bin`, `named`, `point`, and `sample`. The structure of the
-`prediction element's` contents (the `prediction` section) is determined by the particular class. For example, a `point`
-just has a `value`, but a `bin` has a table of `cat` and `prob` values.
+`upload_forecast()` takes the `model_url` to upload to, the `timezero_date` in the project to associate the forecast with, and the `forecast_data` itself. The latter is a nested `list` of _predictions_ as documented in [docs.zoltardata.com](https://docs.zoltardata.com/), but you can learn about it by looking at the example `docs-predictions.json`. Briefly, you can see that there is a `predictions` list of `prediction elements` (the `meta` section is ignored), each of which encodes data for a particular unit and target combination. Each `prediction element` has a class that's one of four possibilities: `bin`, `named`, `point`, and `sample`. The structure of the `prediction element's` contents (the `prediction` section) is determined by the particular class. For example, a `point` just has a `value`, but a `bin` has a table of `cat` and `prob` values.
 
-Here we will upload the `docs-predictions.json` file. Note that the passed `timezero_date` matches one of the timezeros
-in `docs-project.json`, the file that was used to create the project. It is an error otherwise.
+Here we will upload the `docs-predictions.json` file. Note that the passed `timezero_date` matches one of the timezeros in `docs-project.json`, the file that was used to create the project. It is an error otherwise.
 
 ```{r}
 forecast_data <- jsonlite::read_json("docs-predictions.json")
@@ -128,11 +104,9 @@ upload_file_job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02
 busy_poll_upload_file_job(zoltar_connection, upload_file_job_url)
 ```
 
-Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. (How long it takes will depend on how
-much other work Zoltar is handling.)
+Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. (How long it takes will depend on how much other work Zoltar is handling.)
 
-Get the new forecast's URL from the `UploadFileJob` object and then call the `forecasts()` function to get a
-`data.frame` of that model's forecasts (just the one in our case).
+Get the new forecast's URL from the `UploadFileJob` object and then call the `forecasts()` function to get a `data.frame` of that model's forecasts (just the one in our case).
 
 ```{r}
 the_upload_info <- upload_info(zoltar_connection, upload_file_job_url)

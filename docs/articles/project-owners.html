@@ -101,7 +101,7 @@
 <h1 class="hasAnchor">
 <a href="#zoltr-for-project-owners" class="anchor"></a>zoltr for Project Owners</h1>
 <p>Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating and managing your own <a href="https://www.zoltardata.com/">zoltardata.com</a> projects using this package to access them via the Zoltar API. Building on the <em>Getting Started</em> vignette, this one covers creating projects and models, and uploading forecasts.</p>
-<p>Before starting you should have an account on <a href="https://www.zoltardata.com/">zoltardata.com</a>, and an <a href="https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron"><code>.Renviron</code></a> file set up as described in <em>Getting Started</em>.</p>
+<p>Before starting you should have an account on <a href="https://www.zoltardata.com/">zoltardata.com</a>, and an <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html"><code>.Renviron</code></a> file set up as described in <em>Getting Started</em>.</p>
 <div id="connect-to-the-host-and-authenticate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connect-to-the-host-and-authenticate" class="anchor"></a>Connect to the host and authenticate</h2>
@@ -152,7 +152,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 <span class="no">upload_file_job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="no">forecast_data</span>)
 <span class="fu">busy_poll_upload_file_job</span>(<span class="no">zoltar_connection</span>, <span class="no">upload_file_job_url</span>)
-<span class="co">#&gt; polling for status change. upload_file_job: https://www.zoltardata.com/api/uploadfilejob/9990/</span>
+<span class="co">#&gt; polling for status change. upload_file_job: https://www.zoltardata.com/api/uploadfilejob/10043/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></pre></body></html></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -163,14 +163,14 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id                : int 10028</span>
-<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/10028/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/210/"</span>
-<span class="co">#&gt;  $ source            : chr "forecast79f87153f29a.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/655/"</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-08"</span>
+<span class="co">#&gt;  $ id                : int 10079</span>
+<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/10079/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/244/"</span>
+<span class="co">#&gt;  $ source            : chr "forecasta47e56378807.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/722/"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-11"</span>
 <span class="co">#&gt;  $ notes             : chr ""</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/10028/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/10079/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">

@@ -24,43 +24,27 @@ knitr::opts_chunk$set(
 
 zoltr is an R package that simplifies access to the [zoltardata.com](https://www.zoltardata.com/) API. This vignette takes you through the package's main features. So that you can experiment without needing a Zoltar account, we use the example project from [docs.zoltardata.com](https://docs.zoltardata.com/), which should always be available for public read-only access.
 
-**NOTE: You will need an account to access the zoltar API - please see [docs.zoltardata.com](https://docs.zoltardata.com/)
-for details.**
+
+# Setting up your account
+
+You need to have an account on Zoltar and be authenticated to the server in order to access data from the API. Once you have an account, we recommend storing your Zoltar username and password in your .Renviron file. In practice this means having a file named `.Renviron` in your home directory. (You can read more about R and environment variables [here](https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables).) The lines of code in this vignette will work if you have the following two lines somewhere in your `.Renviron` file (where you replace your username and password in the appropriate locations). Note there is no space around the `=` sign:
+
+```bash
+Z_USERNAME=insert-your-username-here
+Z_PASSWORD=insert-your-password-here
+```
+
+Note that the Zoltar service uses a "token"-based scheme for authentication. These tokens have a five minute expiration for security, which requires re-authentication after that period of time. The zoltr library takes care of re-authenticating as needed by passing your username and password back to the server to get another token. Note that the connection object returned by the `new_connection` function stores a token internally, so be careful if saving that object into a file.
 
 
 ## Connect to the host and authenticate
 
-The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection`
-function. Most zoltr functions take a `ZoltarConnection` along with the API _URL_ of the thing of interest, e.g., a
-project, model, or forecast. API URLs look like `https://www.zoltardata.com/api/project/3/`, which is that of the
-"Docs Example Project". An important note regarding URLs:
+The starting point for working with Zoltar's API is a `ZoltarConnection` object, obtained via the `new_connection` function. Most zoltr functions take a `ZoltarConnection` along with the API _URL_ of the thing of interest, e.g., a project, model, or forecast. API URLs look like `https://www.zoltardata.com/api/project/3/`, which is that of the "Docs Example Project". An important note regarding URLs:
 
-    zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
-    optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid,
-    but `https://www.zoltardata.com/api/project/3` is not.
+    zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid, but `https://www.zoltardata.com/api/project/3` is not.
 
-You can obtain a URL using some of the `*_info` functions, and you can always use the web interface to navigate to the
-item of interest and look at its URL in the browser address field. Keep in mind that you'll need to add `api` to the
-browsable address, along with the trailing slash character. For example, if you browsed the _Docs Example Project_
-project at (say) `https://www.zoltardata.com/project/3` then its API for use in zoltr would be
-`https://www.zoltardata.com/api/project/3/`.
+You can obtain a URL using some of the `*_info` functions, and you can always use the web interface to navigate to the item of interest and look at its URL in the browser address field. Keep in mind that you'll need to add `api` to the browsable address, along with the trailing slash character. For example, if you browsed the _Docs Example Project_ project at (say) `https://www.zoltardata.com/project/3` then its API for use in zoltr would be `https://www.zoltardata.com/api/project/3/`.
 
-As noted above, all API calls require an account. To access your project, you'll first need to authenticate via the
-`zoltar_authenticate()` function. Pass it the username and password for your account. Notes:
-
-- Be careful to store and use your username and password so that they're not accessible to others. A good practice is to
-  put them them in your `.Renviron` file and then use `Sys.getenv()` to retrieve them, as outlined in
-  [Use Environment variables](https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables) and
-  as done below.
-- The Zoltar service uses a "token"-based scheme for authentication. These tokens have a five minute expiration for
-  security, which requires re-authentication after that period of time. The zoltr library takes care of 
-  re-authenticating as needed by passing your username and password back to the server to get another token. Note that
-  the connection object returned by the `new_connection` function stores a token internally, so be careful if saving
-  that object into a file.
-- Below you will see the host shown as _example.com_ - this is a temporary one that was used to generate this 
-  documentation.
-
-For this and other vignettes, you will need to create an [`.Renviron`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html) file that contains `Z_USERNAME` and `Z_PASSWORD` variables that match your account settings (note the `Z_` prefix). Then you'll be able to create an authenticated connection:
 
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 ```{r setup, include=FALSE}
@@ -86,9 +70,7 @@ zoltar_connection
 
 ## Get a list of all projects on the host
 
-Now that you have a connection, you can use the `projects()` function to get all projects as a `data.frame`. Note that
-it will only list those that you are authorized to access, i.e., all public projects plus any private ones that you
-own or are a model owner.
+Now that you have a connection, you can use the `projects()` function to get all projects as a `data.frame`. Note that it will only list those that you are authorized to access, i.e., all public projects plus any private ones that you own or are a model owner.
 
 ```{r}
 the_projects <- projects(zoltar_connection)
@@ -98,9 +80,7 @@ str(the_projects)
 
 ## Get a project to work with and list its info, models, and scores
 
-Let's start by getting a public project to work with. We will search the projects list for it by name. Then we will pass
-its URL to the `project_info()` function to get a `list` of details, and then pass it to the `models()` function to get
-a `data.frame` of its models.
+Let's start by getting a public project to work with. We will search the projects list for it by name. Then we will pass its URL to the `project_info()` function to get a `list` of details, and then pass it to the `models()` function to get a `data.frame` of its models.
 
 ```{r}
 project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
@@ -112,10 +92,7 @@ the_models <- models(zoltar_connection, project_url)
 str(the_models)
 ```
 
-There is other project-related information that you can access, such as its configuration (`zoltar_units()`, 
-`targets()`, and `timezeros()` - concepts that are explained at [docs.zoltardata.com](https://docs.zoltardata.com/) ),
-`scores()` and `truth()`. As an example, let's get its score data. (Note that available scores are limited due to the
-nature of the example project.)
+There is other project-related information that you can access, such as its configuration (`zoltar_units()`, `targets()`, and `timezeros()` - concepts that are explained at [docs.zoltardata.com](https://docs.zoltardata.com/) ), `scores()` and `truth()`. As an example, let's get its score data. (Note that available scores are limited due to the nature of the example project.)
 
 ```{r}
 score_data <- scores(zoltar_connection, project_url)
@@ -125,9 +102,7 @@ score_data
 
 ## Get a model to work with and list its info and forecasts
 
-Now let's work with a particular model, getting its URL by name and then passing it to the `model_info()` function to
-get details. Then use the `forecasts()` function to get a `data.frame` of that model's forecasts (there is only one).
-Note that obtaining the model's URL is straightforward because it is provided in the `url` column of `the_models`.
+Now let's work with a particular model, getting its URL by name and then passing it to the `model_info()` function to get details. Then use the `forecasts()` function to get a `data.frame` of that model's forecasts (there is only one). Note that obtaining the model's URL is straightforward because it is provided in the `url` column of `the_models`.
 
 ```{r}
 model_url <- the_models[the_models$name == "docs forecast model", "url"]

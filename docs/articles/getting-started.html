@@ -101,22 +101,20 @@
 <h1 class="hasAnchor">
 <a href="#getting-started-with-zoltr" class="anchor"></a>Getting Started with zoltr</h1>
 <p>zoltr is an R package that simplifies access to the <a href="https://www.zoltardata.com/">zoltardata.com</a> API. This vignette takes you through the package’s main features. So that you can experiment without needing a Zoltar account, we use the example project from <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a>, which should always be available for public read-only access.</p>
-<p><strong>NOTE: You will need an account to access the zoltar API - please see <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a> for details.</strong></p>
+</div>
+<div id="setting-up-your-account" class="section level1">
+<h1 class="hasAnchor">
+<a href="#setting-up-your-account" class="anchor"></a>Setting up your account</h1>
+<p>You need to have an account on Zoltar and be authenticated to the server in order to access data from the API. Once you have an account, we recommend storing your Zoltar username and password in your .Renviron file. In practice this means having a file named <code>.Renviron</code> in your home directory. (You can read more about R and environment variables <a href="https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables">here</a>.) The lines of code in this vignette will work if you have the following two lines somewhere in your <code>.Renviron</code> file (where you replace your username and password in the appropriate locations). Note there is no space around the <code>=</code> sign:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash"><span class="va">Z_USERNAME=</span>insert-your-username-here
+<span class="va">Z_PASSWORD=</span>insert-your-password-here</code></pre></div>
+<p>Note that the Zoltar service uses a “token”-based scheme for authentication. These tokens have a five minute expiration for security, which requires re-authentication after that period of time. The zoltr library takes care of re-authenticating as needed by passing your username and password back to the server to get another token. Note that the connection object returned by the <code>new_connection</code> function stores a token internally, so be careful if saving that object into a file.</p>
 <div id="connect-to-the-host-and-authenticate" class="section level2">
 <h2 class="hasAnchor">
 <a href="#connect-to-the-host-and-authenticate" class="anchor"></a>Connect to the host and authenticate</h2>
 <p>The starting point for working with Zoltar’s API is a <code>ZoltarConnection</code> object, obtained via the <code>new_connection</code> function. Most zoltr functions take a <code>ZoltarConnection</code> along with the API <em>URL</em> of the thing of interest, e.g., a project, model, or forecast. API URLs look like <code>https://www.zoltardata.com/api/project/3/</code>, which is that of the “Docs Example Project”. An important note regarding URLs:</p>
-<pre><code>zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the
-optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid,
-but `https://www.zoltardata.com/api/project/3` is not.</code></pre>
+<pre><code>zoltr's convention for URLs is to require a trailing slash character ('/') on all URLs. The only exception is the optional `host` parameter passed to `new_connection()`. Thus, `https://www.zoltardata.com/api/project/3/` is valid, but `https://www.zoltardata.com/api/project/3` is not.</code></pre>
 <p>You can obtain a URL using some of the <code>*_info</code> functions, and you can always use the web interface to navigate to the item of interest and look at its URL in the browser address field. Keep in mind that you’ll need to add <code>api</code> to the browsable address, along with the trailing slash character. For example, if you browsed the <em>Docs Example Project</em> project at (say) <code>https://www.zoltardata.com/project/3</code> then its API for use in zoltr would be <code>https://www.zoltardata.com/api/project/3/</code>.</p>
-<p>As noted above, all API calls require an account. To access your project, you’ll first need to authenticate via the <code><a href="../reference/zoltar_authenticate.html">zoltar_authenticate()</a></code> function. Pass it the username and password for your account. Notes:</p>
-<ul>
-<li>Be careful to store and use your username and password so that they’re not accessible to others. A good practice is to put them them in your <code>.Renviron</code> file and then use <code><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv()</a></code> to retrieve them, as outlined in <a href="https://db.rstudio.com/best-practices/managing-credentials/#use-environment-variables">Use Environment variables</a> and as done below.</li>
-<li>The Zoltar service uses a “token”-based scheme for authentication. These tokens have a five minute expiration for security, which requires re-authentication after that period of time. The zoltr library takes care of re-authenticating as needed by passing your username and password back to the server to get another token. Note that the connection object returned by the <code>new_connection</code> function stores a token internally, so be careful if saving that object into a file.</li>
-<li>Below you will see the host shown as <em>example.com</em> - this is a temporary one that was used to generate this documentation.</li>
-</ul>
-<p>For this and other vignettes, you will need to create an <a href="https://csgillespie.github.io/efficientR/3-3-r-startup.html#renviron"><code>.Renviron</code></a> file that contains <code>Z_USERNAME</code> and <code>Z_PASSWORD</code> variables that match your account settings (note the <code>Z_</code> prefix). Then you’ll be able to create an authenticated connection:</p>
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 <!-- run but don't show. NB: will run only if above eval=TRUE -->
 <!-- show but don't run-->
@@ -173,11 +171,11 @@ but `https://www.zoltardata.com/api/project/3` is not.</code></pre>
 <p>There is other project-related information that you can access, such as its configuration (<code><a href="../reference/zoltar_units.html">zoltar_units()</a></code>, <code><a href="../reference/targets.html">targets()</a></code>, and <code><a href="../reference/timezeros.html">timezeros()</a></code> - concepts that are explained at <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a> ), <code><a href="../reference/scores.html">scores()</a></code> and <code><a href="../reference/truth.html">truth()</a></code>. As an example, let’s get its score data. (Note that available scores are limited due to the nature of the example project.)</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">score_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/scores.html">scores</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
 <span class="no">score_data</span>
-<span class="co">#&gt; # A tibble: 1 x 10</span>
-<span class="co">#&gt;   model timezero   season unit  target error abs_error log_single_bin</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;         </span>
-<span class="co">#&gt; 1 docs… 2011-10-02 2011-… loca… pct n…  2.44      2.44 NA            </span>
-<span class="co">#&gt; # … with 2 more variables: log_multi_bin &lt;lgl&gt;, pit &lt;lgl&gt;</span></pre></body></html></div>
+<span class="co">#&gt; # A tibble: 1 x 12</span>
+<span class="co">#&gt;   model timezero   season unit  target truth error abs_error log_single_bin</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt; &lt;lgl&gt;         </span>
+<span class="co">#&gt; 1 docs… 2011-10-02 2011-… loca… pct n…  4.54  2.44      2.44 NA            </span>
+<span class="co">#&gt; # … with 3 more variables: log_multi_bin &lt;lgl&gt;, pit &lt;lgl&gt;, interval_02 &lt;lgl&gt;</span></pre></body></html></div>
 </div>
 <div id="get-a-model-to-work-with-and-list-its-info-and-forecasts" class="section level2">
 <h2 class="hasAnchor">
