@@ -34,7 +34,7 @@ model_info <- function(zoltar_connection, model_url) {
 #'   Full documentation at \url{https://docs.zoltardata.com/}.
 #' @export
 #' @examples \dontrun{
-#'   new_model_url <- create_model(conn, "https://www.zoltardata.com/project/9/",
+#'   new_model_url <- create_model(conn, "https://www.zoltardata.com/api/project/9/",
 #'                      jsonlite::read_json("example-model-config.json"))
 #' }
 create_model <- function(zoltar_connection, project_url, model_config) {

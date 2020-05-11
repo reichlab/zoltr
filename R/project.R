@@ -43,7 +43,7 @@ create_project <- function(zoltar_connection, project_config) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   delete_project(conn, "https://www.zoltardata.com/project/9/")
+#'   delete_project(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 delete_project <- function(zoltar_connection, project_url) {
   delete_resource(zoltar_connection, project_url)
@@ -57,7 +57,7 @@ delete_project <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_scores <- scores(conn, "https://www.zoltardata.com/project/9/")
+#'   the_scores <- scores(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 scores <- function(zoltar_connection, project_url) {
   scores_url <- paste0(project_url, 'score_data/')
@@ -72,7 +72,7 @@ scores <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_truth <- truth(conn, "https://www.zoltardata.com/project/9/")
+#'   the_truth <- truth(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 truth <- function(zoltar_connection, project_url) {
   truth_url <- paste0(project_url, 'truth_data/')
@@ -87,7 +87,7 @@ truth <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_models <- models(conn, "https://www.zoltardata.com/project/9/")
+#'   the_models <- models(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 models <- function(zoltar_connection, project_url) {
   models_url <- paste0(project_url, 'models/')
@@ -130,7 +130,7 @@ models <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_units <- zoltar_units(conn, "https://www.zoltardata.com/project/9/")
+#'   the_units <- zoltar_units(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 zoltar_units <- function(zoltar_connection, project_url) {
   units_url <- paste0(project_url, 'units/')
@@ -154,7 +154,7 @@ zoltar_units <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_targets <- targets(conn, "https://www.zoltardata.com/project/9/")
+#'   the_targets <- targets(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 targets <- function(zoltar_connection, project_url) {
   targets_url <- paste0(project_url, 'targets/')
@@ -200,7 +200,7 @@ data_frame_from_targets_json <- function(targets_json) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_timezeros <- timezeros(conn, "https://www.zoltardata.com/project/9/")
+#'   the_timezeros <- timezeros(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 timezeros <- function(zoltar_connection, project_url) {
   timezeros_url <- paste0(project_url, 'timezeros/')
@@ -242,7 +242,7 @@ timezeros <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
-#'   the_project_info <- project_info(conn, "https://www.zoltardata.com/project/9/")
+#'   the_project_info <- project_info(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 project_info <- function(zoltar_connection, project_url) {
   get_resource(zoltar_connection, project_url)
@@ -256,7 +256,7 @@ project_info <- function(zoltar_connection, project_url) {
 #' @param target_url URL of a target in zoltar_connection's targets
 #' @export
 #' @examples \dontrun{
-#'   the_target_info <- target_info(conn, "https://www.zoltardata.com/target/3/")
+#'   the_target_info <- target_info(conn, "https://www.zoltardata.com/api/target/3/")
 #' }
 target_info <- function(zoltar_connection, target_url) {
   get_resource(zoltar_connection, target_url)
@@ -270,7 +270,7 @@ target_info <- function(zoltar_connection, target_url) {
 #' @param timezero_url URL of a timezero in zoltar_connection's timezeros
 #' @export
 #' @examples \dontrun{
-#'   the_timezero_info <- timezero_info(conn, "https://www.zoltardata.com/timezero/3/")
+#'   the_timezero_info <- timezero_info(conn, "https://www.zoltardata.com/api/timezero/3/")
 #' }
 timezero_info <- function(zoltar_connection, timezero_url) {
   get_resource(zoltar_connection, timezero_url)
@@ -284,7 +284,7 @@ timezero_info <- function(zoltar_connection, timezero_url) {
 #' @param unit_url URL of a unit in zoltar_connection's zoltar_units
 #' @export
 #' @examples \dontrun{
-#'   the_unit_info <- unit_info(conn, "https://www.zoltardata.com/unit/3/")
+#'   the_unit_info <- unit_info(conn, "https://www.zoltardata.com/api/unit/3/")
 #' }
 unit_info <- function(zoltar_connection, unit_url) {
   get_resource(zoltar_connection, unit_url)
