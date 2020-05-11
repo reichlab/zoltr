@@ -19,6 +19,6 @@ Deletes the project with the passed URL. This is permanent and cannot be undone.
 }
 \examples{
 \dontrun{
-  delete_project(conn, "https://www.zoltardata.com/project/9/")
+  delete_project(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

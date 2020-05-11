@@ -19,6 +19,6 @@ Get a project's zoltar_units
 }
 \examples{
 \dontrun{
-  the_units <- zoltar_units(conn, "https://www.zoltardata.com/project/9/")
+  the_units <- zoltar_units(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

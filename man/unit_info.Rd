@@ -19,6 +19,6 @@ Get information about a unit
 }
 \examples{
 \dontrun{
-  the_unit_info <- unit_info(conn, "https://www.zoltardata.com/unit/3/")
+  the_unit_info <- unit_info(conn, "https://www.zoltardata.com/api/unit/3/")
 }
 }

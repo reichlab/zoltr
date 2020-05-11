@@ -19,6 +19,6 @@ Get information about a timezero
 }
 \examples{
 \dontrun{
-  the_timezero_info <- timezero_info(conn, "https://www.zoltardata.com/timezero/3/")
+  the_timezero_info <- timezero_info(conn, "https://www.zoltardata.com/api/timezero/3/")
 }
 }

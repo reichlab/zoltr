@@ -19,6 +19,6 @@ Get information about a project
 }
 \examples{
 \dontrun{
-  the_project_info <- project_info(conn, "https://www.zoltardata.com/project/9/")
+  the_project_info <- project_info(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

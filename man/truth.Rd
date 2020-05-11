@@ -19,6 +19,6 @@ Get a project's truth
 }
 \examples{
 \dontrun{
-  the_truth <- truth(conn, "https://www.zoltardata.com/project/9/")
+  the_truth <- truth(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

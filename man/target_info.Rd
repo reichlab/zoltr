@@ -19,6 +19,6 @@ Get information about a target
 }
 \examples{
 \dontrun{
-  the_target_info <- target_info(conn, "https://www.zoltardata.com/target/3/")
+  the_target_info <- target_info(conn, "https://www.zoltardata.com/api/target/3/")
 }
 }

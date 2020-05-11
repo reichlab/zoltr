@@ -19,6 +19,6 @@ Get a project's timezeros
 }
 \examples{
 \dontrun{
-  the_timezeros <- timezeros(conn, "https://www.zoltardata.com/project/9/")
+  the_timezeros <- timezeros(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

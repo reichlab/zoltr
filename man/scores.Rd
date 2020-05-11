@@ -19,6 +19,6 @@ Get a project's scores
 }
 \examples{
 \dontrun{
-  the_scores <- scores(conn, "https://www.zoltardata.com/project/9/")
+  the_scores <- scores(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

@@ -23,7 +23,7 @@ Creates the model in the passed project using the passed list. Fails if a model 
 }
 \examples{
 \dontrun{
-  new_model_url <- create_model(conn, "https://www.zoltardata.com/project/9/",
+  new_model_url <- create_model(conn, "https://www.zoltardata.com/api/project/9/",
                      jsonlite::read_json("example-model-config.json"))
 }
 }

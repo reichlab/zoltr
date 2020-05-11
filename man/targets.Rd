@@ -19,6 +19,6 @@ Get a project's targets
 }
 \examples{
 \dontrun{
-  the_targets <- targets(conn, "https://www.zoltardata.com/project/9/")
+  the_targets <- targets(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }

@@ -19,6 +19,6 @@ Get a project's models
 }
 \examples{
 \dontrun{
-  the_models <- models(conn, "https://www.zoltardata.com/project/9/")
+  the_models <- models(conn, "https://www.zoltardata.com/api/project/9/")
 }
 }
