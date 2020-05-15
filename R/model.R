@@ -110,11 +110,11 @@ forecasts <- function(zoltar_connection, model_url) {
 
 #' Upload a forecast
 #'
-#' This function submits forecast data to the server for uploading. Returns an UploadFileJob object that can be used to
+#' This function submits forecast data to the server for uploading. Returns a Job object that can be used to
 # 'track the upload's progress. (Uploads are processed in a queue, which means they are delayed until their turn comes
-#' up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob` objects.)
+#' up, which depends on the number of current uploads in the queue. Zoltar tracks these via `Job` objects.)
 #'
-#' @return An UploadFileJob URL for the upload
+#' @return A Job URL for the upload
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param model_url URL of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
@@ -123,8 +123,8 @@ forecasts <- function(zoltar_connection, model_url) {
 #' @export
 #' @examples \dontrun{
 #'   forecast_data <- jsonlite::read_json("docs-predictions.json")
-#'   upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
-#'                                          "2017-01-17", forecast_data, "a mid-January forecast")
+#'   job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
+#'                              "2017-01-17", forecast_data, "a mid-January forecast")
 #' }
 upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data, notes = "") {
   if (!(inherits(forecast_data, "list"))) {
@@ -152,5 +152,5 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
     stop(json_response$error, call. = FALSE)
   }
 
-  json_response$url  # throw away rest of json and let upload_file_job_info() reload/refresh it
+  json_response$url  # throw away rest of json and let upload_info() reload/refresh it
 }

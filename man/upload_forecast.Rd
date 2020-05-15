@@ -24,16 +24,16 @@ upload_forecast(
 \item{notes}{Optional user notes for the new forecast}
 }
 \value{
-An UploadFileJob URL for the upload
+A Job URL for the upload
 }
 \description{
-This function submits forecast data to the server for uploading. Returns an UploadFileJob object that can be used to
-up, which depends on the number of current uploads in the queue. Zoltar tracks these via `UploadFileJob` objects.)
+This function submits forecast data to the server for uploading. Returns a Job object that can be used to
+up, which depends on the number of current uploads in the queue. Zoltar tracks these via `Job` objects.)
 }
 \examples{
 \dontrun{
   forecast_data <- jsonlite::read_json("docs-predictions.json")
-  upload_file_job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
-                                         "2017-01-17", forecast_data, "a mid-January forecast")
+  job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
+                             "2017-01-17", forecast_data, "a mid-January forecast")
 }
 }

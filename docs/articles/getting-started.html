@@ -130,8 +130,8 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_projects</span>)
 <span class="co">#&gt; 'data.frame':    2 obs. of  10 variables:</span>
-<span class="co">#&gt;  $ id                   : int  1 5</span>
-<span class="co">#&gt;  $ url                  : chr  "http://127.0.0.1:8000/api/project/1/" "http://127.0.0.1:8000/api/project/5/"</span>
+<span class="co">#&gt;  $ id                   : int  1 4</span>
+<span class="co">#&gt;  $ url                  : chr  "http://127.0.0.1:8000/api/project/1/" "http://127.0.0.1:8000/api/project/4/"</span>
 <span class="co">#&gt;  $ owner_url            : chr  "http://127.0.0.1:8000/api/user/1/" "http://127.0.0.1:8000/api/user/2/"</span>
 <span class="co">#&gt;  $ public               : logi  TRUE TRUE</span>
 <span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Docs Example Project"</span>
@@ -160,9 +160,9 @@
 <span class="no">the_models</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/models.html">models</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_models</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id          : int 38</span>
-<span class="co">#&gt;  $ url         : chr "http://127.0.0.1:8000/api/model/38/"</span>
-<span class="co">#&gt;  $ project_url : chr "http://127.0.0.1:8000/api/project/5/"</span>
+<span class="co">#&gt;  $ id          : int 42</span>
+<span class="co">#&gt;  $ url         : chr "http://127.0.0.1:8000/api/model/42/"</span>
+<span class="co">#&gt;  $ project_url : chr "http://127.0.0.1:8000/api/project/4/"</span>
 <span class="co">#&gt;  $ owner_url   : logi NA</span>
 <span class="co">#&gt;  $ name        : chr "docs forecast model"</span>
 <span class="co">#&gt;  $ description : chr ""</span>
@@ -171,14 +171,13 @@
 <p>There is other project-related information that you can access, such as its configuration (<code><a href="../reference/zoltar_units.html">zoltar_units()</a></code>, <code><a href="../reference/targets.html">targets()</a></code>, and <code><a href="../reference/timezeros.html">timezeros()</a></code> - concepts that are explained at <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a> ), <code><a href="../reference/scores.html">scores()</a></code> and <code><a href="../reference/truth.html">truth()</a></code>. As an example, let’s get its score data. (Note that available scores are limited due to the nature of the example project.)</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">score_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/scores.html">scores</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
 <span class="no">score_data</span>
-<span class="co">#&gt; # A tibble: 4 x 10</span>
-<span class="co">#&gt;   model timezero season location target error abs_error log_single_bin</span>
-<span class="co">#&gt;   &lt;chr&gt;    &lt;dbl&gt; &lt;lgl&gt;  &lt;chr&gt;    &lt;chr&gt;  &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Test… 20170117 NA     US Nati… 1 wk … -2.47      2.47           -999</span>
-<span class="co">#&gt; 2 Test… 20170117 NA     US Nati… 2 wk … -2.61      2.61           -999</span>
-<span class="co">#&gt; 3 Test… 20170117 NA     US Nati… 3 wk … -2.57      2.57           -999</span>
-<span class="co">#&gt; 4 Test… 20170117 NA     US Nati… 4 wk … -2.29      2.29           -999</span>
-<span class="co">#&gt; # … with 2 more variables: log_multi_bin &lt;dbl&gt;, pit &lt;dbl&gt;</span></pre></body></html></div>
+<span class="co">#&gt; # A tibble: 0 x 22</span>
+<span class="co">#&gt; # … with 22 variables: model &lt;chr&gt;, timezero &lt;chr&gt;, season &lt;chr&gt;, unit &lt;chr&gt;,</span>
+<span class="co">#&gt; #   target &lt;chr&gt;, truth &lt;chr&gt;, error &lt;chr&gt;, abs_error &lt;chr&gt;,</span>
+<span class="co">#&gt; #   log_single_bin &lt;chr&gt;, log_multi_bin &lt;chr&gt;, pit &lt;chr&gt;, interval_2 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   interval_5 &lt;chr&gt;, interval_10 &lt;chr&gt;, interval_20 &lt;chr&gt;, interval_30 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   interval_40 &lt;chr&gt;, interval_50 &lt;chr&gt;, interval_60 &lt;chr&gt;, interval_70 &lt;chr&gt;,</span>
+<span class="co">#&gt; #   interval_80 &lt;chr&gt;, interval_90 &lt;chr&gt;</span></pre></body></html></div>
 </div>
 <div id="get-a-model-to-work-with-and-list-its-info-and-forecasts" class="section level2">
 <h2 class="hasAnchor">
@@ -195,14 +194,14 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id                : int 127</span>
-<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/127/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/38/"</span>
+<span class="co">#&gt;  $ id                : int 162</span>
+<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/162/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/42/"</span>
 <span class="co">#&gt;  $ source            : chr "docs-predictions.json"</span>
 <span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/92/"</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-11"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-15"</span>
 <span class="co">#&gt;  $ notes             : chr "a small prediction file"</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/127/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/162/data/"</span></pre></body></html></div>
 </div>
 <div id="finally-download-the-forecasts-data-in-three-formats" class="section level2">
 <h2 class="hasAnchor">

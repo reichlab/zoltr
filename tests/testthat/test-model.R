@@ -129,13 +129,13 @@ test_that("forecasts() can handle null notes", {
 })
 
 
-test_that("upload_forecast() creates an UploadFileJob", {
+test_that("upload_forecast() creates a Job", {
   zoltar_connection <- new_connection("http://example.com")
-  upload_file_job_json <- jsonlite::read_json("data/upload-file-job-2.json")
+  job_json <- jsonlite::read_json("data/job-2.json")
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
   webmockr::stub_request("post", uri = "http://example.com/api/model/1/forecasts/") %>%
     to_return(
-      body = upload_file_job_json,
+      body = job_json,
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
 
@@ -151,33 +151,33 @@ test_that("upload_forecast() creates an UploadFileJob", {
 })
 
 
-test_that("upload_forecast() returns an UploadFileJob URL, and upload_info() is correct", {
+test_that("upload_forecast() returns a Job URL, and upload_info() is correct", {
   zoltar_connection <- new_connection("http://example.com")
-  upload_file_job_json <- jsonlite::read_json("data/upload-file-job-2.json")
+  job_json <- jsonlite::read_json("data/job-2.json")
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
   webmockr::stub_request("post", uri = "http://example.com/api/model/1/forecasts/") %>%
     to_return(
-      body = upload_file_job_json,
+      body = job_json,
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
-  upload_file_job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
-  expect_equal(upload_file_job_url, "http://example.com/api/uploadfilejob/2/")
+  job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
+  expect_equal(job_url, "http://example.com/api/job/2/")
 
-  exp_upload_file_job_json <- upload_file_job_json
-  exp_upload_file_job_json$status <- "SUCCESS"
-  exp_upload_file_job_json$created_at <- as.Date("2019-03-26T14:55:31.028436-04:00")
-  exp_upload_file_job_json$updated_at <- as.Date("2019-03-26T14:55:37.812924-04:00")
-  exp_upload_file_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2, notes = "a few predictions")
-  exp_upload_file_job_json$output_json <- list("forecast_pk" = 3)
+  exp_job_json <- job_json
+  exp_job_json$status <- "SUCCESS"
+  exp_job_json$created_at <- as.Date("2019-03-26T14:55:31.028436-04:00")
+  exp_job_json$updated_at <- as.Date("2019-03-26T14:55:37.812924-04:00")
+  exp_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2, notes = "a few predictions")
+  exp_job_json$output_json <- list("forecast_pk" = 3)
 
   # test upload_info()
-  m <- mock(upload_file_job_json)
+  m <- mock(job_json)
   testthat::with_mock("zoltr::get_resource" = m, {
-    the_upload_info <- upload_info(zoltar_connection, "http://example.com/api/uploadfilejob/2/")
+    the_upload_info <- upload_info(zoltar_connection, "http://example.com/api/job/2/")
     expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/uploadfilejob/2/")
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/job/2/")
     expect_is(the_upload_info, "list")
-    expect_equal(the_upload_info, exp_upload_file_job_json)
+    expect_equal(the_upload_info, exp_job_json)
   })
 })
 
@@ -201,7 +201,7 @@ test_that("upload_info_forecast_url() is correct", {
 test_that("upload_forecast() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
-  upload_file_job_json <- jsonlite::read_json("data/upload-file-job-2.json")
+  job_json <- jsonlite::read_json("data/job-2.json")
   testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
     upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
     expect_equal(length(mock_calls(m)), 1)
@@ -222,7 +222,7 @@ test_that("upload_forecast() passes correct url to POST()", {
       load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_forecast() call
       response
     },
-    upload_file_job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", timezero_date,
+    job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", timezero_date,
                                            forecast_data))
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
   expect_equal(called_args$body$timezero_date, timezero_date)

@@ -74,13 +74,13 @@ model_config <- list("name" = "a model_name",
 model_url <- create_model(zoltar_connection, project_url, model_config)
 ```
 
-Now let's upload a forecast to the model using `upload_forecast()` and then see how to list all of a model's forecasts (in this case just the one). Keep in mind that Zoltar enqueues long operations like forecast uploading, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `upload_forecast()` function _block_ until the upload is done, you instead get a quick response in the form of an `UploadFileJob` URL that you can pass to the `upload_info()` function to check its status and find out when the upload is pending, done, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
+Now let's upload a forecast to the model using `upload_forecast()` and then see how to list all of a model's forecasts (in this case just the one). Keep in mind that Zoltar enqueues long operations like forecast uploading, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `upload_forecast()` function _block_ until the upload is done, you instead get a quick response in the form of a `Job` URL that you can pass to the `upload_info()` function to check its status and find out when the upload is pending, done, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
 
 ```{r}
-busy_poll_upload_file_job <- function(zoltar_connection, upload_file_job_url) {
-  cat(paste0("polling for status change. upload_file_job: ", upload_file_job_url, "\n"))
+busy_poll_job <- function(zoltar_connection, job_url) {
+  cat(paste0("polling for status change. job: ", job_url, "\n"))
   while (TRUE) {
-    status <- upload_info(zoltar_connection, upload_file_job_url)$status
+    status <- upload_info(zoltar_connection, job_url)$status
     cat(paste0(status, "\n"))
     if (status == "FAILED") {
       cat(paste0("x failed\n"))
@@ -100,16 +100,16 @@ Here we will upload the `docs-predictions.json` file. Note that the passed `time
 
 ```{r}
 forecast_data <- jsonlite::read_json("docs-predictions.json")
-upload_file_job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02", forecast_data)
-busy_poll_upload_file_job(zoltar_connection, upload_file_job_url)
+job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02", forecast_data)
+busy_poll_job(zoltar_connection, job_url)
 ```
 
 Hopefully you'll see some number of "QUEUED" entries followed by a "SUCCESS" one. (How long it takes will depend on how much other work Zoltar is handling.)
 
-Get the new forecast's URL from the `UploadFileJob` object and then call the `forecasts()` function to get a `data.frame` of that model's forecasts (just the one in our case).
+Get the new forecast's URL from the `Job` object and then call the `forecasts()` function to get a `data.frame` of that model's forecasts (just the one in our case).
 
 ```{r}
-the_upload_info <- upload_info(zoltar_connection, upload_file_job_url)
+the_upload_info <- upload_info(zoltar_connection, job_url)
 forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
 the_forecast_info <- forecast_info(zoltar_connection, forecast_url)
 the_forecasts <- forecasts(zoltar_connection, the_forecast_info$forecast_model_url)
