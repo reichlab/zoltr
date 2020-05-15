@@ -12,7 +12,7 @@ delete_forecast(zoltar_connection, forecast_url)
 \item{forecast_url}{URL of a forecast in zoltar_connection's forecasts}
 }
 \value{
-None
+A Job URL for the deletion
 }
 \description{
 Deletes the forecast with the passed URL. This is permanent and cannot be undone.

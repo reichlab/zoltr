@@ -18,7 +18,7 @@ forecast_info <- function(zoltar_connection, forecast_url) {
   the_forecast_info$created_at <- as.Date(the_forecast_info$created_at)  # "2020-03-05T15:47:47.369231-05:00"
   the_forecast_info$time_zero$timezero_date <- as.Date(the_forecast_info$time_zero$timezero_date)
   the_forecast_info$time_zero$data_version_date <- if (is.null(the_forecast_info$time_zero$data_version_date)) NA
-    else as.Date(the_forecast_info$time_zero$data_version_date)
+  else as.Date(the_forecast_info$time_zero$data_version_date)
   the_forecast_info
 }
 
@@ -27,7 +27,7 @@ forecast_info <- function(zoltar_connection, forecast_url) {
 #'
 #' Deletes the forecast with the passed URL. This is permanent and cannot be undone.
 #'
-#' @return None
+#' @return A Job URL for the deletion
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param forecast_url URL of a forecast in zoltar_connection's forecasts
 #' @export
@@ -35,7 +35,9 @@ forecast_info <- function(zoltar_connection, forecast_url) {
 #'   delete_forecast(conn, "http://example.com/api/forecast/1/")
 #' }
 delete_forecast <- function(zoltar_connection, forecast_url) {
-  delete_resource(zoltar_connection, forecast_url)
+  response <- delete_resource(zoltar_connection, forecast_url)
+  json_response <- httr::content(response, "parsed")
+  json_response$url  # throw away rest of json and let upload_info() reload/refresh it
 }
 
 

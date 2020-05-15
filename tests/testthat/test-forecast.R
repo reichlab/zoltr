@@ -43,14 +43,24 @@ test_that("forecast_info() returns a list", {
 })
 
 
-test_that("delete_forecast() passes correct URL", {
+test_that("delete_forecast() passes correct URL and returns a Job URL", {
   zoltar_connection <- new_connection("http://example.com")
-  load("data/delete_response.rda")  # 'response' contains 204 response from sample 'DELETE' call
+  load("data/delete_response.rda")  # 'response' contains 200 JSON response from sample 'DELETE' call
   m <- mock(response)
   testthat::with_mock("httr::DELETE" = m, {
-    delete_forecast(zoltar_connection, "http://example.com/api/forecast/1/")
+    job_url <- delete_forecast(zoltar_connection, "http://example.com/api/forecast/1/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/forecast/1/")
+    expect_equal(job_url, "http://127.0.0.1:8000/api/job/36/")
+
+    # test upload_info()
+    job_json <- jsonlite::read_json("data/job-2.json")
+    m <- mock(job_json)
+    testthat::with_mock("zoltr::get_resource" = m, {
+      the_upload_info <- upload_info(zoltar_connection, "http://example.com/api/job/2/")
+      expect_equal(length(mock_calls(m)), 1)
+      expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/job/2/")
+    })
   })
 })
 

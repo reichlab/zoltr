@@ -43,6 +43,7 @@ delete_resource <- function(zoltar_connection, url) {
   message(paste0("delete_resource(): DELETE: ", url))
   response <- httr::DELETE(url = url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
+  response
 }
 
 
