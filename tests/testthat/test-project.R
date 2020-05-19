@@ -94,10 +94,10 @@ test_that("models() returns a data.frame", {
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/models/")
     expect_is(the_models, "data.frame")
-    expect_equal(names(the_models), c("id", "url", "project_url", "owner_url", "name", "description", "home_url",
-                                      "aux_data_url"))
+    expect_equal(names(the_models), c("id", "url", "project_url", "owner_url", "name", "model_abbr", "description",
+                                      "home_url", "aux_data_url"))
     expect_equal(nrow(the_models), 1)  # 1 model
-    expect_equal(ncol(the_models), 8)
+    expect_equal(ncol(the_models), 9)
   })
 })
 
