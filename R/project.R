@@ -118,8 +118,8 @@ models <- function(zoltar_connection, project_url) {
     aux_data_url_column <- append(aux_data_url_column, aux_data_value)
   }
   data.frame(id = id_column, url = url_column, project_url = project_url_column, owner_url = owner_url_column,
-             name = name_column, description = description_column, home_url = home_url_column,
-             aux_data_url = aux_data_url_column, stringsAsFactors = FALSE)
+             name = name_column, model_abbr = abbreviation_column, description = description_column,
+             home_url = home_url_column, aux_data_url = aux_data_url_column, stringsAsFactors = FALSE)
 }
 
 
