@@ -17,20 +17,20 @@ status_as_str <- function(status_int) {
 }
 
 
-#' Get an upload's information
+#' Get a job's information
 #'
-#' Gets an upload's information that can be used to track the upload's progress. (Uploads are processed in a queue,
-#  which means they are delayed until their turn comes up, which depends on the number of current uploads in the queue.)
+#' Gets a job's information that can be used to track the job's progress. Jobs represent long-running
+#' asynchronous activities like uploading a file (e.g., a forecast or truth) or running a query.
 #'
-#' @return A `list` of upload information for the passed job_url. it has these names:
-#'   id, url, status, user, created_at, updated_at, failure_message, filename, input_json, output_json
+#' @return A `list` of job information for the passed job_url. it has these names:
+#'   id, url, status, user, created_at, updated_at, failure_message, input_json, output_json
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param job_url URL of a job in zoltar_connection that was uploaded via \code{\link{upload_forecast}}
+#' @param job_url URL of a valid job in zoltar_connection
 #' @export
 #' @examples \dontrun{
-#'   the_upload_info <- upload_info(conn, "http://example.com/api/job/2/")
+#'   the_job_info <- job_info(conn, "http://example.com/api/job/2/")
 #' }
-upload_info <- function(zoltar_connection, job_url) {
+job_info <- function(zoltar_connection, job_url) {
   job_json <- get_resource(zoltar_connection, job_url)
   job_json$status <- status_as_str(job_json$status)
   job_json$created_at <- as.Date(job_json$created_at)
@@ -41,19 +41,37 @@ upload_info <- function(zoltar_connection, job_url) {
 
 #' Get a new forecast upload's url
 #'
-#' A helper function that returns the URL of a newly-uploaded forecast from upload_info.
+#' A helper function for jobs representing file uploads. Returns the URL of a newly-uploaded forecast
+#' from job_info.
 #'
 #' @return A URL of the new forecast
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param the_upload_info a `list` object as returned by \code{\link{upload_info}}
+#' @param the_job_info a `list` object as returned by \code{\link{job_info}}
 #' @export
 #' @examples \dontrun{
-#'   new_forecast_url <- upload_info_forecast_url(conn, "http://example.com/api/job/2/")
+#'   new_forecast_url <- job_info_forecast_url(conn, "http://example.com/api/job/2/")
 #' }
-upload_info_forecast_url <- function(zoltar_connection, the_upload_info) {
-  if (is.null(the_upload_info$output_json$forecast_pk)) {
+job_info_forecast_url <- function(zoltar_connection, the_job_info) {
+  if (is.null(the_job_info$output_json$forecast_pk)) {
     NULL
   } else {
-    paste0(zoltar_connection$host, "/api/forecast/", the_upload_info$output_json$forecast_pk, "/")
+    paste0(zoltar_connection$host, "/api/forecast/", the_job_info$output_json$forecast_pk, "/")
   }
+}
+
+
+#' Gets a job's file's data
+#'
+#' Downloads the data associated with a job that has an associated file, such as a query's results.
+#'
+#' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param job_url URL of a valid job in zoltar_connection that has a data file associated with it
+#' @export
+#' @examples \dontrun{
+#'   the_job_data <- job_data(conn, "http://example.com/api/job/2/")
+#' }
+job_data <- function(zoltar_connection, job_url) {
+  data_url <- paste0(job_url, 'data/')
+  get_resource(zoltar_connection, data_url)
 }

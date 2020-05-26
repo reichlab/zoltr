@@ -170,6 +170,45 @@ test_that("timezeros() returns a data.frame", {
 })
 
 
+test_that("submit_query() creates a Job", {
+  zoltar_connection <- new_connection("http://example.com")
+
+  # test correct url and args passed
+  job_json <- jsonlite::read_json("data/job-2.json")
+  webmockr::stub_request("post", uri = "http://example.com/api/project/1/forecast_queries/") %>%
+    to_return(
+      body = job_json,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+
+  query <- list()
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_forecast() call
+    response  # actual response doesn't matter, just its class
+  },
+                      submit_query(zoltar_connection, "http://example.com/api/project/1/", query))
+  expect_equal(called_args$url, "http://example.com/api/project/1/forecast_queries/")
+  expect_equal(as.character(called_args$body), "{\"query\":{}}")  # due to httr/jsonlite fighting
+
+  # test a job url is returned
+  job_url <- submit_query(zoltar_connection, "http://example.com/api/project/1/", query)
+  expect_equal(job_url, "http://example.com/api/job/2/")
+})
+
+
+test_that("json_for_query() is correct", {
+  expect_equal(as.character(json_for_query(list())),
+               "{\"query\":{}}")
+  expect_equal(as.character(json_for_query(list("models" = list()))),
+               "{\"query\":{\"models\":[]}}")  # models should not be empty, but ensure an object is passed
+  expect_equal(as.character(json_for_query(list("models" = list(1), "units" = list(2, 3)))),
+               "{\"query\":{\"models\":[1],\"units\":[2,3]}}")
+  expect_equal(as.character(json_for_query(list("types" = list("point", "quantile")))),
+               "{\"query\":{\"types\":[\"point\",\"quantile\"]}}")
+})
+
+
 #
 # ---- test the info functions ----
 #

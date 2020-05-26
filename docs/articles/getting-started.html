@@ -129,17 +129,17 @@
 <p>Now that you have a connection, you can use the <code><a href="../reference/projects.html">projects()</a></code> function to get all projects as a <code>data.frame</code>. Note that it will only list those that you are authorized to access, i.e., all public projects plus any private ones that you own or are a model owner.</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_projects</span>)
-<span class="co">#&gt; 'data.frame':    5 obs. of  10 variables:</span>
-<span class="co">#&gt;  $ id                   : int  44 41 4 6 9</span>
-<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/41/" "https://www.zoltardata.com/api/project/4/" "https://www.zoltardata.com/api/project/6/" ...</span>
-<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/7/" "https://www.zoltardata.com/api/user/5/" "https://www.zoltardata.com/api/user/4/" "https://www.zoltardata.com/api/user/6/" ...</span>
-<span class="co">#&gt;  $ public               : logi  TRUE TRUE FALSE TRUE TRUE</span>
-<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Docs Example Project" "Impetus Province Forecasts" "CDC Retrospective Forecasts" ...</span>
-<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "A full description of my project is here. You could include narrative details about what seasons are included, "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ "Guidelines and forecasts for a collaborative U.S. influenza forecasting project." ...</span>
-<span class="co">#&gt;  $ home_url             : chr  "https://github.com/reichlab/covid19-forecast-hub/tree/master/data-processed" "https://reichlab.io" "http://www.iddynamics.jhsph.edu/projects/impetus" "https://github.com/FluSightNetwork/cdc-flusight-ensemble" ...</span>
-<span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Biweek" "Week" ...</span>
-<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "the scale for your variable of interest" "DHF cases" "Weighted ILI (%)" ...</span>
-<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "" "https://github.com/reichlab/dengue-data" "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models" ...</span></pre></body></html></div>
+<span class="co">#&gt; 'data.frame':    3 obs. of  10 variables:</span>
+<span class="co">#&gt;  $ id                   : int  10 11 12</span>
+<span class="co">#&gt;  $ url                  : chr  "https://rl-zoltar-staging.herokuapp.com/api/project/10/" "https://rl-zoltar-staging.herokuapp.com/api/project/11/" "https://rl-zoltar-staging.herokuapp.com/api/project/12/"</span>
+<span class="co">#&gt;  $ owner_url            : chr  "https://rl-zoltar-staging.herokuapp.com/api/user/6/" "https://rl-zoltar-staging.herokuapp.com/api/user/6/" "https://rl-zoltar-staging.herokuapp.com/api/user/6/"</span>
+<span class="co">#&gt;  $ public               : logi  TRUE FALSE TRUE</span>
+<span class="co">#&gt;  $ name                 : chr  "public project" "private project" "Docs Example Project"</span>
+<span class="co">#&gt;  $ description          : chr  "description" "description" "A full description of my project is here. You could include narrative details about what seasons are included, "| __truncated__</span>
+<span class="co">#&gt;  $ home_url             : chr  "http://example.com/" "http://example.com/" "https://reichlab.io"</span>
+<span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Week"</span>
+<span class="co">#&gt;  $ visualization_y_label: chr  "" "" "the scale for your variable of interest"</span>
+<span class="co">#&gt;  $ core_data            : chr  "http://example.com/" "http://example.com/" ""</span></pre></body></html></div>
 </div>
 <div id="get-a-project-to-work-with-and-list-its-info-models-and-scores" class="section level2">
 <h2 class="hasAnchor">
@@ -160,9 +160,9 @@
 <span class="no">the_models</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/models.html">models</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_models</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  9 variables:</span>
-<span class="co">#&gt;  $ id          : int 139</span>
-<span class="co">#&gt;  $ url         : chr "https://www.zoltardata.com/api/model/139/"</span>
-<span class="co">#&gt;  $ project_url : chr "https://www.zoltardata.com/api/project/41/"</span>
+<span class="co">#&gt;  $ id          : int 17</span>
+<span class="co">#&gt;  $ url         : chr "https://rl-zoltar-staging.herokuapp.com/api/model/17/"</span>
+<span class="co">#&gt;  $ project_url : chr "https://rl-zoltar-staging.herokuapp.com/api/project/12/"</span>
 <span class="co">#&gt;  $ owner_url   : logi NA</span>
 <span class="co">#&gt;  $ name        : chr "docs forecast model"</span>
 <span class="co">#&gt;  $ model_abbr  : chr ""</span>
@@ -196,14 +196,14 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id                : int 9753</span>
-<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/9753/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/139/"</span>
+<span class="co">#&gt;  $ id                : int 11</span>
+<span class="co">#&gt;  $ url               : chr "https://rl-zoltar-staging.herokuapp.com/api/forecast/11/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://rl-zoltar-staging.herokuapp.com/api/model/17/"</span>
 <span class="co">#&gt;  $ source            : chr "docs-predictions.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/495/"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://rl-zoltar-staging.herokuapp.com/api/timezero/25/"</span>
 <span class="co">#&gt;  $ created_at        : Date, format: "2020-04-13"</span>
 <span class="co">#&gt;  $ notes             : chr NA</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/9753/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://rl-zoltar-staging.herokuapp.com/api/forecast/11/data/"</span></pre></body></html></div>
 </div>
 <div id="finally-download-the-forecasts-data-in-three-formats" class="section level2">
 <h2 class="hasAnchor">

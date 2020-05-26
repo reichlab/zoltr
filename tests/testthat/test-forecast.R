@@ -53,11 +53,11 @@ test_that("delete_forecast() passes correct URL and returns a Job URL", {
     expect_equal(mock_args(m)[[1]][[1]], "http://example.com/api/forecast/1/")
     expect_equal(job_url, "http://127.0.0.1:8000/api/job/36/")
 
-    # test upload_info()
+    # test job_info()
     job_json <- jsonlite::read_json("data/job-2.json")
     m <- mock(job_json)
     testthat::with_mock("zoltr::get_resource" = m, {
-      the_upload_info <- upload_info(zoltar_connection, "http://example.com/api/job/2/")
+      the_job_info <- job_info(zoltar_connection, "http://example.com/api/job/2/")
       expect_equal(length(mock_calls(m)), 1)
       expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/job/2/")
     })
@@ -103,6 +103,5 @@ test_that("download_forecast() returns JSON data as a list", {
     expect_equal(prediction_element$target, "Season peak week")
     expect_equal(prediction_element$class, "sample")
     expect_equal(prediction_element$prediction$sample[[1]], as.Date("2020-01-06", YYYY_MM_DD_DATE_FORMAT))
-
   })
 })

@@ -37,7 +37,7 @@ forecast_info <- function(zoltar_connection, forecast_url) {
 delete_forecast <- function(zoltar_connection, forecast_url) {
   response <- delete_resource(zoltar_connection, forecast_url)
   json_response <- httr::content(response, "parsed")
-  json_response$url  # throw away rest of json and let upload_info() reload/refresh it
+  json_response$url  # throw away rest of the job json and let job_info() reload/refresh it
 }
 
 

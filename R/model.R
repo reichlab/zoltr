@@ -52,7 +52,7 @@ create_model <- function(zoltar_connection, project_url, model_config) {
     stop(json_response$error, call. = FALSE)
   }
 
-  json_response$url  # throw away rest of json and let model_info() reload/refresh it
+  json_response$url  # throw away rest of the model json and let model_info() reload/refresh it
 }
 
 
@@ -152,5 +152,5 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
     stop(json_response$error, call. = FALSE)
   }
 
-  json_response$url  # throw away rest of json and let upload_info() reload/refresh it
+  json_response$url  # throw away rest of job json and let job_info() reload/refresh it
 }

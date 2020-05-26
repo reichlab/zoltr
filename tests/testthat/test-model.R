@@ -151,7 +151,7 @@ test_that("upload_forecast() creates a Job", {
 })
 
 
-test_that("upload_forecast() returns a Job URL, and upload_info() is correct", {
+test_that("upload_forecast() returns a Job URL, and job_info() is correct", {
   zoltar_connection <- new_connection("http://example.com")
   job_json <- jsonlite::read_json("data/job-2.json")
   mockery::stub(upload_forecast, 'httr::upload_file', NULL)
@@ -170,30 +170,30 @@ test_that("upload_forecast() returns a Job URL, and upload_info() is correct", {
   exp_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2, notes = "a few predictions")
   exp_job_json$output_json <- list("forecast_pk" = 3)
 
-  # test upload_info()
+  # test job_info()
   m <- mock(job_json)
   testthat::with_mock("zoltr::get_resource" = m, {
-    the_upload_info <- upload_info(zoltar_connection, "http://example.com/api/job/2/")
+    the_job_info <- job_info(zoltar_connection, "http://example.com/api/job/2/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/job/2/")
-    expect_is(the_upload_info, "list")
-    expect_equal(the_upload_info, exp_job_json)
+    expect_is(the_job_info, "list")
+    expect_equal(the_job_info, exp_job_json)
   })
 })
 
 
-# upload_info_forecast_url
-test_that("upload_info_forecast_url() is correct", {
+# job_info_forecast_url
+test_that("job_info_forecast_url() is correct", {
   zoltar_connection <- new_connection("http://example.com")
 
   # case 1/2: the_upload_info$output_json DOES have a $forecast_pk
-  the_upload_info <- list("output_json" = list("forecast_pk" = 3))
-  forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
+  the_job_info <- list("output_json" = list("forecast_pk" = 3))
+  forecast_url <- job_info_forecast_url(zoltar_connection, the_job_info)
   expect_equal(forecast_url, "http://example.com/api/forecast/3/")
 
   # case 2/2: the_upload_info$output_json does NOT have a $forecast_pk
-  the_upload_info <- list("output_json" = list("NOT forecast_pk" = 3))
-  forecast_url <- upload_info_forecast_url(zoltar_connection, the_upload_info)
+  the_job_info <- list("output_json" = list("NOT forecast_pk" = 3))
+  forecast_url <- job_info_forecast_url(zoltar_connection, the_job_info)
   expect_null(forecast_url)
 })
 

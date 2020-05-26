@@ -42,13 +42,13 @@ mock_authenticate <- function(zoltar_connection, token = MOCK_TOKEN) {
 # ---- utility tests ----
 #
 
-test_that("url_for_projects(zoltar_connection) returns a URL", {
+test_that("url_for_projects() returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
   expect_equal(url_for_projects(zoltar_connection), "http://example.com/api/projects/")
 })
 
 
-test_that("url_for_token_auth(zoltar_connection) returns a URL", {
+test_that("url_for_token_auth() returns a URL", {
   zoltar_connection <- new_connection("http://example.com")
   expect_equal(url_for_token_auth(zoltar_connection), "http://example.com/api-token-auth/")
 })

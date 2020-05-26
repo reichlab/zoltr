@@ -5,7 +5,7 @@ library(testthat)
 library(zoltr)
 
 
-test_that("forecast_data_from_cdc_csv_file(cdc_csv_file) is correct", {
+test_that("forecast_data_from_cdc_csv_file() is correct", {
   # test internal forecast_data_from_cdc_data_frame()
   expect_error(forecast_data_from_cdc_data_frame(2016, list()), "cdc_data_frame was not a `data.frame`", fixed=TRUE)
 

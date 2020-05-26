@@ -6,7 +6,7 @@ library(testthat)
 library(zoltr)
 
 
-test_that("data_frame_from_forecast_data(forecast_data) is correct", {
+test_that("data_frame_from_forecast_data() is correct", {
   # test the underlying function that `quantile_data_frame_from_forecast_data()` filters from
   cdc_csv_file <- "data/docs-predictions-exp.csv"
   exp_data_frame <- utils::read.csv(cdc_csv_file, stringsAsFactors = FALSE, colClasses='character')  # "NA" -> NA

@@ -22,7 +22,7 @@ create_project <- function(zoltar_connection, project_config) {
     url = projects_url,
     add_auth_headers(zoltar_connection),
     body = list(project_config = project_config),
-    encode="json")
+    encode = "json")
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")
@@ -30,7 +30,7 @@ create_project <- function(zoltar_connection, project_config) {
     stop(json_response$error, call. = FALSE)
   }
 
-  json_response$url  # throw away rest of json and let project_info() reload/refresh it
+  json_response$url  # throw away rest of the project json and let project_info() reload/refresh it
 }
 
 
@@ -228,6 +228,50 @@ timezeros <- function(zoltar_connection, project_url) {
   data.frame(id = id_column, url = url_column, timezero_date = timezero_date_column,
              data_version_date = data_version_date_column, is_season_start = is_season_start_column,
              season_name = season_name_column, stringsAsFactors = FALSE)
+}
+
+
+#' Submit a query
+#'
+#' Submits a request for the execution of a query of forecasts in this Project.
+#'
+#' @return a Job URL for tracking the query and getting its results when it successfully completes
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @param query A `list` that constrains the queried data. It is the analog of the JSON object documented
+#'   at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it contains IDs and not
+#'   strings for objects. You can use utility methods to convert from strings to IDs.
+#' @export
+#' @examples \dontrun{
+#'   job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/",
+#'                           list("models"=c(150, 237), "units"=c(335), "targets"=c(1894, 1897),
+#'                                "timezeros"=c(739, 738), "types"=c("point", "quantile")))
+#' }
+submit_query <- function(zoltar_connection, project_url, query) {
+  re_authenticate_if_necessary(zoltar_connection)
+  queries_url <- paste0(project_url, 'forecast_queries/')
+  json_body <- json_for_query(query)
+  response <- httr::POST(
+    url = queries_url,
+    add_auth_headers(zoltar_connection),
+    body = json_body,
+    httr::content_type_json())
+  json_response <- httr::content(response, "parsed")
+  if (response$status_code != 200) {
+    stop(json_response$error, call. = FALSE)
+  }
+
+  json_response$url  # throw away rest of the job json and let job_info() reload/refresh it
+}
+
+
+json_for_query <- function(query) {
+  # helper that returns proper JSON for a query. a separate function to ease testing
+  if (length(query) == 0) {  # hack to get jsonlite to convert empty lists to empty objects (instead of empty lists!)
+    query <- NULL  # think c()
+  }
+  # toJSON so that empty lists are not removed (httr/jsonlite fighting) - per https://github.com/r-lib/httr/issues/561
+  jsonlite::toJSON(list(query = query), auto_unbox = TRUE)
 }
 
 
