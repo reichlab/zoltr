@@ -231,6 +231,10 @@ timezeros <- function(zoltar_connection, project_url) {
 }
 
 
+#
+# ---- query functions ----
+#
+
 #' Submit a query
 #'
 #' Submits a request for the execution of a query of forecasts in this Project.
@@ -240,7 +244,11 @@ timezeros <- function(zoltar_connection, project_url) {
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @param query A `list` that constrains the queried data. It is the analog of the JSON object documented
 #'   at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it contains IDs and not
-#'   strings for objects. You can use utility methods to convert from strings to IDs.
+#'   strings for objects. You can use utility methods to convert from strings to IDs. Briefly, query
+#'   is a list that contains up to five keys. The first four are vectors of object IDs (ints) corresponding
+#'   to each one's class, and the last is a vector of strings: 'models': optional list of ForecastModel IDs;
+#    'units': "" Unit IDs. 'targets': "" Target IDs. 'timezeros': "" TimeZero IDs. 'types': optional list of
+#    one or more of: `bin`, `named`, `point`, `sample`, and `quantile`.
 #' @export
 #' @examples \dontrun{
 #'   job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/",
@@ -272,6 +280,55 @@ json_for_query <- function(query) {
   }
   # toJSON so that empty lists are not removed (httr/jsonlite fighting) - per https://github.com/r-lib/httr/issues/561
   jsonlite::toJSON(list(query = query), auto_unbox = TRUE)
+}
+
+
+#' Prepare a query
+#'
+#' A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
+#' with database IDs. Replaces these strings: "models": model_name -> ID. "units": unit_name -> ID.
+#' "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID.
+#'
+#' @return a copy of query that has IDs substituted for strings
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @param query A `list` as documented in \code{\link{submit_query}}, but contains strings as
+#'   described above, not IDs
+#' @export
+#' @examples \dontrun{
+#'   prepared_query <- query_with_ids(conn, "https://www.zoltardata.com/api/project/9/",
+#'                                    list("models"=c(150, 237), "units"=c(335),
+#'                                         "targets"=c(1894, 1897), "timezeros"=c(739, 738),
+#'                                         "types"=c("point", "quantile")))
+#' }
+query_with_ids <- function(zoltar_connection, project_url, query) {
+  new_query <- list()  # return value. set next
+  if (!is.null(query$models)) {
+    the_models <- models(zoltar_connection, project_url)
+    model_ids <- the_models[the_models$name %in% query$models, "id"]
+    new_query$models <- model_ids
+  }
+  if (!is.null(query$units)) {
+    the_units <- zoltar_units(zoltar_connection, project_url)
+    unit_ids <- the_units[the_units$name %in% query$units, "id"]
+    new_query$units <- unit_ids
+  }
+  if (!is.null(query$targets)) {
+    the_targets <- targets(zoltar_connection, project_url)
+    target_ids <- the_targets[the_targets$name %in% query$targets, "id"]
+    new_query$targets <- target_ids
+  }
+  if (!is.null(query$timezeros)) {
+    the_timezeros <- timezeros(zoltar_connection, project_url)
+    #timezero_ids <- the_timezeros[as.Date(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"]
+    timezero_ids <- the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"]
+
+    new_query$timezeros <- timezero_ids
+  }
+  if (!is.null(query$types)) {
+    new_query$types <- query$types
+  }
+  new_query
 }
 
 

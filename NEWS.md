@@ -1,3 +1,7 @@
+# zoltr 0.5.3
+- Added support for querying project forecasts.
+
+
 # zoltr 0.5.2
 - Added functions to convert forecast data to `data.frames`s.
 

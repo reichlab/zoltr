@@ -170,6 +170,10 @@ test_that("timezeros() returns a data.frame", {
 })
 
 
+#
+# ---- test query functions ----
+#
+
 test_that("submit_query() creates a Job", {
   zoltar_connection <- new_connection("http://example.com")
 
@@ -198,19 +202,62 @@ test_that("submit_query() creates a Job", {
 
 
 test_that("json_for_query() is correct", {
-  expect_equal(as.character(json_for_query(list())),
-               "{\"query\":{}}")
-  expect_equal(as.character(json_for_query(list("models" = list()))),
-               "{\"query\":{\"models\":[]}}")  # models should not be empty, but ensure an object is passed
-  expect_equal(as.character(json_for_query(list("models" = list(1), "units" = list(2, 3)))),
-               "{\"query\":{\"models\":[1],\"units\":[2,3]}}")
-  expect_equal(as.character(json_for_query(list("types" = list("point", "quantile")))),
-               "{\"query\":{\"types\":[\"point\",\"quantile\"]}}")
+  query_exp_chrs <- list(list(query = list(),
+                              exp_chr = "{\"query\":{}}"),
+                         list(query = list("models" = list()),
+                              exp_chr = "{\"query\":{\"models\":[]}}"),
+                         list(query = list("models" = list(1), "units" = list(2, 3)),
+                              exp_chr = "{\"query\":{\"models\":[1],\"units\":[2,3]}}"),
+                         list(query = list("types" = list("point", "quantile")),
+                              exp_chr = "{\"query\":{\"types\":[\"point\",\"quantile\"]}}"))
+  for (row in query_exp_chrs) {
+    expect_equal(as.character(json_for_query(row$query)), row$exp_chr)
+  }
+})
+
+
+test_that("query_with_ids() is correct", {
+  # set up get_resource() calls, ordered to match query_with_ids() sequence:
+  # - models()       -> models-list.json:      "docs forecast model": 5
+  # - zoltar_units() -> units-list.json:       "location1": 23,          "location2": 24
+  # - targets()      -> targets-list.json:     "pct next week": 15,      "season severity": 17
+  # - timezeros()    -> timezeros-list.json:   "2011-10-02": 5,          "2011-10-16": 7
+  models_list_json <- jsonlite::read_json("data/models-list.json")
+  units_list_json <- jsonlite::read_json("data/units-list.json")
+  targets_list_json <- jsonlite::read_json("data/targets-list.json")
+  timezeros_list_json <- jsonlite::read_json("data/timezeros-list.json")
+
+  # set expected input and output queries
+  query_in_out <- list(
+    list(q_in = list(),
+         q_out = list()),
+    list(q_in = list("models" = c("docs forecast model"), "units" = c("location1", "location2"),
+                     "targets" = c("pct next week", "season severity"), "timezeros" = c("2011-10-02", "2011-10-16"),
+                     "types" = c("point", "quantile")),
+         q_out = list("models" = c(5), "units" = c(23, 24),
+                      "targets" = c(15, 17), "timezeros" = c(5, 7),
+                      "types" = c("point", "quantile"))),
+    # invalid, but check anyway:
+    list(q_in = list("models" = c(), "units" = c(), "targets" = c(), "timezeros" = c(), "types" = c()),
+         q_out = list())
+  )
+
+  # mock the functions and then test
+  m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
+  testthat::with_mock("zoltr::get_resource" = m, {
+    zoltar_connection <- new_connection("http://example.com")
+    project_url <- "http://example.com/api/project/1/"
+    for (row in query_in_out) {
+      act_query_out <- query_with_ids(zoltar_connection, project_url, row$q_in)
+      exp_query_out <- row$q_out
+      expect_equal(act_query_out, exp_query_out)
+    }
+  })
 })
 
 
 #
-# ---- test the info functions ----
+# ---- test info functions ----
 #
 
 test_that("project_info() returns a list", {

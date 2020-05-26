@@ -13,7 +13,9 @@ submit_query(zoltar_connection, project_url, query)
 
 \item{query}{A `list` that constrains the queried data. It is the analog of the JSON object documented
 at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it contains IDs and not
-strings for objects. You can use utility methods to convert from strings to IDs.}
+strings for objects. You can use utility methods to convert from strings to IDs. Briefly, query
+is a list that contains up to five keys. The first four are vectors of object IDs (ints) corresponding
+to each one's class, and the last is a vector of strings: 'models': optional list of ForecastModel IDs;}
 }
 \value{
 a Job URL for tracking the query and getting its results when it successfully completes
