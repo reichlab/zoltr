@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Project Owners</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2020-04-01</h4>
+            <h4 class="date">2020-05-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/project-owners.Rmd"><code>vignettes/project-owners.Rmd</code></a></small>
       <div class="hidden name"><code>project-owners.Rmd</code></div>
@@ -131,17 +131,19 @@
                      <span class="st">"home_url"</span> <span class="kw">=</span> <span class="st">"http://example.com/"</span>,
                      <span class="st">"aux_data_url"</span> <span class="kw">=</span> <span class="st">"http://example.com/"</span>)
 <span class="no">model_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/create_model.html">create_model</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">model_config</span>)</pre></body></html></div>
-<p>Now let’s upload a forecast to the model using <code><a href="../reference/upload_forecast.html">upload_forecast()</a></code> and then see how to list all of a model’s forecasts (in this case just the one). Keep in mind that Zoltar enqueues long operations like forecast uploading, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the <code><a href="../reference/upload_forecast.html">upload_forecast()</a></code> function <em>block</em> until the upload is done, you instead get a quick response in the form of a <code>Job</code> URL that you can pass to the <code><a href="../reference/job_info.html">job_info()</a></code> function to check its status and find out when the upload is pending, done, or failed). (This is called <em>polling</em> the host to ask the status.) Here we poll every second using a helper function:</p>
+<p>Now let’s upload a forecast to the model using <code><a href="../reference/upload_forecast.html">upload_forecast()</a></code> and then see how to list all of a model’s forecasts (in this case just the one).</p>
+<blockquote>
+<p>As we noted in <em>Getting Started with zoltr</em>, long operations like querying or uploading forecasts are queued, and require polling to determine when they are done.</p>
+</blockquote>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">busy_poll_job</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>) {
   <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"polling for status change. job: "</span>, <span class="no">job_url</span>, <span class="st">"\n"</span>))
   <span class="kw">while</span> (<span class="fl">TRUE</span>) {
-    <span class="no">status</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_info.html">job_info</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)$<span class="no">status</span>
-    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">status</span>, <span class="st">"\n"</span>))
-    <span class="kw">if</span> (<span class="no">status</span> <span class="kw">==</span> <span class="st">"FAILED"</span>) {
-      <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"x failed\n"</span>))
-      <span class="kw">break</span>
+    <span class="no">the_job_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_info.html">job_info</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
+    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">the_job_info</span>$<span class="no">status</span>, <span class="st">"\n"</span>))
+    <span class="kw">if</span> (<span class="no">the_job_info</span>$<span class="no">status</span> <span class="kw">==</span> <span class="st">"FAILED"</span>) {
+      <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"job failed: job_url="</span>, <span class="no">job_url</span>, <span class="st">", failure_message="</span>, <span class="no">the_job_info</span>$<span class="no">failure_message</span>), <span class="kw">call.</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
     }
-    <span class="kw">if</span> (<span class="no">status</span> <span class="kw">==</span> <span class="st">"SUCCESS"</span>) {
+    <span class="kw">if</span> (<span class="no">the_job_info</span>$<span class="no">status</span> <span class="kw">==</span> <span class="st">"SUCCESS"</span>) {
       <span class="kw">break</span>
     }
     <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="fl">1</span>)
@@ -152,7 +154,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="no">forecast_data</span>)
 <span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/71/</span>
+<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/103/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></pre></body></html></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -163,50 +165,22 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id                : int 188</span>
-<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/188/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/61/"</span>
-<span class="co">#&gt;  $ source            : chr "forecast1819b25abe114.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/143/"</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-26"</span>
+<span class="co">#&gt;  $ id                : int 198</span>
+<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/198/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/71/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast2aaf69e024bc.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/173/"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-27"</span>
 <span class="co">#&gt;  $ notes             : chr ""</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/188/data/"</span></pre></body></html></div>
-</div>
-<div id="query-a-projects-forecast-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#query-a-projects-forecast-data" class="anchor"></a>Query a project’s forecast data</h2>
-<p>Now that the project has some forecast data, let’s query it using the <code><a href="../reference/submit_query.html">submit_query()</a></code> and <code><a href="../reference/job_data.html">job_data()</a></code> functions. Because, like uploading a forecast, querying involves multiple steps: 1) submit the query to receive a job url, 2) poll the job until it finishes, and 3) download the query results as a <code>data.frame</code>. Note that we use <code><a href="https://rdrr.io/r/base/list.html">list()</a></code> here, which will query every forecast in the project. This is will fail for even moderately-sized projects because they could have many thousands or millions of rows. More typically one would constrain the query (TBD).</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>())
-<span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/72/</span>
-<span class="co">#&gt; QUEUED</span>
-<span class="co">#&gt; SUCCESS</span></pre></body></html></div>
-<p>Like above, hopefully you’ll “SUCCESS” eventually printed. Let’s download the results:</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">the_job_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="no">the_job_data</span>
-<span class="co">#&gt; # A tibble: 62 x 15</span>
-<span class="co">#&gt;    model timezero   season unit  target class value cat    prob sample quantile</span>
-<span class="co">#&gt;    &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.01 &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  2 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.1  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  3 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.89 &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  4 an a… 2011-10-02 2011-… loca… seaso… bin   &lt;NA&gt;  mode…  0.1  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  5 an a… 2011-10-02 2011-… loca… seaso… bin   &lt;NA&gt;  seve…  0.9  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  6 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.01 &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  7 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.05 &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  8 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.05 &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  9 an a… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2020…  0.89 &lt;NA&gt;         NA</span>
-<span class="co">#&gt; 10 an a… 2011-10-02 2011-… loca… above… bin   &lt;NA&gt;  True   0.9  &lt;NA&gt;         NA</span>
-<span class="co">#&gt; # … with 52 more rows, and 4 more variables: family &lt;chr&gt;, param1 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   param2 &lt;dbl&gt;, param3 &lt;lgl&gt;</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/198/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up-by-deleting-the-sandbox-project" class="anchor"></a>Clean up by deleting the sandbox project</h2>
 <p><strong>NB: This will delete all of the data associated with the project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
-<span class="co">#&gt; Response [http://127.0.0.1:8000/api/project/21/]</span>
-<span class="co">#&gt;   Date: 2020-05-26 23:41</span>
+<span class="co">#&gt; Response [http://127.0.0.1:8000/api/project/31/]</span>
+<span class="co">#&gt;   Date: 2020-05-27 17:06</span>
 <span class="co">#&gt;   Status: 204</span>
 <span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span>
 <span class="co">#&gt; &lt;EMPTY BODY&gt;</span></pre></body></html></div>

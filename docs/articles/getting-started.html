@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.3</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Getting Started</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2020-05-01</h4>
+            <h4 class="date">2020-05-26</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/getting-started.Rmd"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="hidden name"><code>getting-started.Rmd</code></div>
@@ -179,6 +179,49 @@
 <span class="co">#&gt; #   interval_5 &lt;chr&gt;, interval_10 &lt;chr&gt;, interval_20 &lt;chr&gt;, interval_30 &lt;chr&gt;,</span>
 <span class="co">#&gt; #   interval_40 &lt;chr&gt;, interval_50 &lt;chr&gt;, interval_60 &lt;chr&gt;, interval_70 &lt;chr&gt;,</span>
 <span class="co">#&gt; #   interval_80 &lt;chr&gt;, interval_90 &lt;chr&gt;</span></pre></body></html></div>
+</div>
+<div id="query-a-projects-forecast-data" class="section level2">
+<h2 class="hasAnchor">
+<a href="#query-a-projects-forecast-data" class="anchor"></a>Query a project’s forecast data</h2>
+<p>You can query a project’s forecast data using the <code><a href="../reference/submit_query.html">submit_query()</a></code> function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the <code><a href="../reference/submit_query.html">submit_query()</a></code> function <em>block</em> until the query is done, you instead get a quick response in the form of a <code>Job</code> URL that you can pass to the <code><a href="../reference/job_info.html">job_info()</a></code> function to check its status and find out if the upload is pending, successfully finished, or failed). (This is called <em>polling</em> the host to ask the status.) Here we poll every second using a helper function:</p>
+<div class="sourceCode"><html><body><pre class="r"><span class="no">busy_poll_job</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>) {
+  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"polling for status change. job: "</span>, <span class="no">job_url</span>, <span class="st">"\n"</span>))
+  <span class="kw">while</span> (<span class="fl">TRUE</span>) {
+    <span class="no">the_job_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_info.html">job_info</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
+    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">the_job_info</span>$<span class="no">status</span>, <span class="st">"\n"</span>))
+    <span class="kw">if</span> (<span class="no">the_job_info</span>$<span class="no">status</span> <span class="kw">==</span> <span class="st">"FAILED"</span>) {
+      <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"job failed: job_url="</span>, <span class="no">job_url</span>, <span class="st">", failure_message="</span>, <span class="no">the_job_info</span>$<span class="no">failure_message</span>), <span class="kw">call.</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
+    }
+    <span class="kw">if</span> (<span class="no">the_job_info</span>$<span class="no">status</span> <span class="kw">==</span> <span class="st">"SUCCESS"</span>) {
+      <span class="kw">break</span>
+    }
+    <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="fl">1</span>)
+  }
+}</pre></body></html></div>
+<p>We use the <code><a href="../reference/job_data.html">job_data()</a></code> function when the query is successfully completed to get the results as a <code>data.frame</code>. Putting it together:</p>
+<div class="sourceCode"><html><body><pre class="r"><span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>())
+<span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
+<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/102/</span>
+<span class="co">#&gt; QUEUED</span>
+<span class="co">#&gt; SUCCESS</span>
+<span class="no">the_job_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
+<span class="no">the_job_data</span>
+<span class="co">#&gt; # A tibble: 62 x 15</span>
+<span class="co">#&gt;    model timezero   season unit  target class value cat    prob sample quantile</span>
+<span class="co">#&gt;    &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt;  1 docs… 2011-10-02 2011-… loca… pct n… bin   &lt;NA&gt;  1.1    0.3  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  2 docs… 2011-10-02 2011-… loca… pct n… bin   &lt;NA&gt;  2.2    0.2  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  3 docs… 2011-10-02 2011-… loca… pct n… bin   &lt;NA&gt;  3.3    0.5  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  4 docs… 2011-10-02 2011-… loca… cases… bin   &lt;NA&gt;  2      0.1  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  5 docs… 2011-10-02 2011-… loca… cases… bin   &lt;NA&gt;  50     0.9  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  6 docs… 2011-10-02 2011-… loca… seaso… bin   &lt;NA&gt;  mode…  0.1  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  7 docs… 2011-10-02 2011-… loca… seaso… bin   &lt;NA&gt;  seve…  0.9  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  8 docs… 2011-10-02 2011-… loca… above… bin   &lt;NA&gt;  True   0.9  &lt;NA&gt;         NA</span>
+<span class="co">#&gt;  9 docs… 2011-10-02 2011-… loca… above… bin   &lt;NA&gt;  False  0.1  &lt;NA&gt;         NA</span>
+<span class="co">#&gt; 10 docs… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.01 &lt;NA&gt;         NA</span>
+<span class="co">#&gt; # … with 52 more rows, and 4 more variables: family &lt;chr&gt;, param1 &lt;dbl&gt;,</span>
+<span class="co">#&gt; #   param2 &lt;dbl&gt;, param3 &lt;lgl&gt;</span></pre></body></html></div>
+<p>Hopefully you’ll “SUCCESS” eventually printed and then the resulting data itself.</p>
 </div>
 <div id="get-a-model-to-work-with-and-list-its-info-and-forecasts" class="section level2">
 <h2 class="hasAnchor">

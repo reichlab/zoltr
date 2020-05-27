@@ -1,7 +1,7 @@
 ---
 title: "Getting Started"
 author: "Matthew Cornell"
-date: "2020-05-26"
+date: "2020-05-27"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -98,6 +98,39 @@ There is other project-related information that you can access, such as its conf
 score_data <- scores(zoltar_connection, project_url)
 score_data
 ```
+
+
+## Query a project's forecast data
+
+You can query a project's forecast data using the `submit_query()` function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `submit_query()` function _block_ until the query is done, you instead get a quick response in the form of a `Job` URL that you can pass to the `job_info()` function to check its status and find out if the upload is pending, successfully finished, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
+
+```{r}
+busy_poll_job <- function(zoltar_connection, job_url) {
+  cat(paste0("polling for status change. job: ", job_url, "\n"))
+  while (TRUE) {
+    the_job_info <- job_info(zoltar_connection, job_url)
+    cat(paste0(the_job_info$status, "\n"))
+    if (the_job_info$status == "FAILED") {
+      stop(paste0("job failed: job_url=", job_url, ", failure_message=", the_job_info$failure_message), call. = FALSE)
+    }
+    if (the_job_info$status == "SUCCESS") {
+      break
+    }
+    Sys.sleep(1)
+  }
+}
+```
+
+We use the `job_data()` function when the query is successfully completed to get the results as a `data.frame`. Putting it together:
+
+```{r}
+job_url <- submit_query(zoltar_connection, project_url, list())
+busy_poll_job(zoltar_connection, job_url)
+the_job_data <- job_data(zoltar_connection, job_url)
+the_job_data
+```
+
+Hopefully you'll "SUCCESS" eventually printed and then the resulting data itself.
 
 
 ## Get a model to work with and list its info and forecasts

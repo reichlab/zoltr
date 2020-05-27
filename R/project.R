@@ -305,24 +305,43 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
   new_query <- list()  # return value. set next
   if (!is.null(query$models)) {
     the_models <- models(zoltar_connection, project_url)
+    if (!all(query$models %in% the_models$name)) {
+      stop(paste0("one or more model names were not found in project. query model names=", query$models,
+                  ", project model names=", the_models$name), call. = FALSE)
+    }
+
     model_ids <- the_models[the_models$name %in% query$models, "id"]
     new_query$models <- model_ids
   }
   if (!is.null(query$units)) {
     the_units <- zoltar_units(zoltar_connection, project_url)
+    if (!all(query$units %in% the_units$name)) {
+      stop(paste0("one or more unit names were not found in project. query unit names=", query$units,
+                  ", project unit names=", the_units$name), call. = FALSE)
+    }
+
     unit_ids <- the_units[the_units$name %in% query$units, "id"]
     new_query$units <- unit_ids
   }
   if (!is.null(query$targets)) {
     the_targets <- targets(zoltar_connection, project_url)
+    if (!all(query$targets %in% the_targets$name)) {
+      stop(paste0("one or more target names were not found in project. query target names=", query$targets,
+                  ", project target names=", the_targets$name), call. = FALSE)
+    }
+
     target_ids <- the_targets[the_targets$name %in% query$targets, "id"]
     new_query$targets <- target_ids
   }
   if (!is.null(query$timezeros)) {
     the_timezeros <- timezeros(zoltar_connection, project_url)
-    #timezero_ids <- the_timezeros[as.Date(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"]
-    timezero_ids <- the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"]
+    the_timezeros_strs <- lapply(the_timezeros$timezero_date, FUN = function(x) format(x, YYYY_MM_DD_DATE_FORMAT))
+    if (!all(query$timezeros %in% the_timezeros_strs)) {
+      stop(paste0("one or more timezero names were not found in project. query timezero names=", query$timezeros,
+                  ", project timezero names=", the_timezeros$name), call. = FALSE)
+    }
 
+    timezero_ids <- the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"]
     new_query$timezeros <- timezero_ids
   }
   if (!is.null(query$types)) {

@@ -218,10 +218,6 @@ test_that("json_for_query() is correct", {
 
 test_that("query_with_ids() is correct", {
   # set up get_resource() calls, ordered to match query_with_ids() sequence:
-  # - models()       -> models-list.json:      "docs forecast model": 5
-  # - zoltar_units() -> units-list.json:       "location1": 23,          "location2": 24
-  # - targets()      -> targets-list.json:     "pct next week": 15,      "season severity": 17
-  # - timezeros()    -> timezeros-list.json:   "2011-10-02": 5,          "2011-10-16": 7
   models_list_json <- jsonlite::read_json("data/models-list.json")
   units_list_json <- jsonlite::read_json("data/units-list.json")
   targets_list_json <- jsonlite::read_json("data/targets-list.json")
@@ -231,18 +227,19 @@ test_that("query_with_ids() is correct", {
   query_in_out <- list(
     list(q_in = list(),
          q_out = list()),
-    list(q_in = list("models" = c("docs forecast model"), "units" = c("location1", "location2"),
-                     "targets" = c("pct next week", "season severity"), "timezeros" = c("2011-10-02", "2011-10-16"),
+    list(q_in = list("models" = c("docs forecast model"),
+                     "units" = c("location1", "location2"),
+                     "targets" = c("pct next week", "season severity"),
+                     "timezeros" = c("2011-10-02", "2011-10-16"),
                      "types" = c("point", "quantile")),
-         q_out = list("models" = c(5), "units" = c(23, 24),
-                      "targets" = c(15, 17), "timezeros" = c(5, 7),
-                      "types" = c("point", "quantile"))),
-    # invalid, but check anyway:
-    list(q_in = list("models" = c(), "units" = c(), "targets" = c(), "timezeros" = c(), "types" = c()),
-         q_out = list())
+         q_out = list("models" = c(5),
+                      "units" = c(23, 24),
+                      "targets" = c(15, 17),
+                      "timezeros" = c(5, 7),
+                      "types" = c("point", "quantile")))
   )
 
-  # mock the functions and then test
+  # case: blue sky
   m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
   testthat::with_mock("zoltr::get_resource" = m, {
     zoltar_connection <- new_connection("http://example.com")
@@ -253,6 +250,32 @@ test_that("query_with_ids() is correct", {
       expect_equal(act_query_out, exp_query_out)
     }
   })
+
+  # case: name not found
+  bad_queries <- list(
+    list("models" = c("bad model name"),
+         "units" = c("location1", "location2"),
+         "targets" = c("pct next week", "season severity", "bad target"),
+         "timezeros" = c("2011-10-02", "2011-10-16")),
+    list("models" = c("docs forecast model"),
+         "units" = c("bad unit name"),
+         "targets" = c("pct next week", "season severity"),
+         "timezeros" = c("2011-10-02", "2011-10-16")),
+    list("models" = c("docs forecast model"),
+         "units" = c("location1", "location2"),
+         "targets" = c("bad target name"),
+         "timezeros" = c("2011-10-02", "2011-10-16")),
+    list("models" = c("docs forecast model"),
+         "units" = c("location1", "location2"),
+         "targets" = c("pct next week", "season severity"),
+         "timezeros" = c("1999-10-02")) # bad timezero
+  )
+  for (bad_query in bad_queries) {
+    m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
+    testthat::with_mock("zoltr::get_resource" = m, {
+      expect_error(query_with_ids(zoltar_connection, project_url, bad_query), "one or more", fixed = TRUE)
+    })
+  }
 })
 
 
