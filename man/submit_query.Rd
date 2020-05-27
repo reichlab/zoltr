@@ -11,11 +11,14 @@ submit_query(zoltar_connection, project_url, query)
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
-\item{query}{A `list` that constrains the queried data. It is the analog of the JSON object documented
-at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it contains IDs and not
-strings for objects. You can use utility methods to convert from strings to IDs. Briefly, query
-is a list that contains up to five keys. The first four are vectors of object IDs (ints) corresponding
-to each one's class, and the last is a vector of strings: 'models': optional list of ForecastModel IDs;}
+\item{query}{A `list` of `list`s that constrains the queried data. It is the analog of the JSON
+object documented at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it
+contains IDs and not strings for objects. You can use utility methods to convert from strings
+to IDs. Briefly, query is a list that contains up to five keys. The first four are vectors of
+object IDs (ints) corresponding to each one's class, and the last is a vector of strings:
+'models': optional list of ForecastModel IDs; 'units': "" Unit IDs. 'targets': "" Target IDs.
+'timezeros': "". TimeZero IDs. 'types': optional list of one or more of: `bin`, `named`, `point`,
+`sample`, and `quantile`.}
 }
 \value{
 a Job URL for tracking the query and getting its results when it successfully completes
@@ -26,7 +29,7 @@ Submits a request for the execution of a query of forecasts in this Project.
 \examples{
 \dontrun{
   job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/",
-                          list("models"=c(150, 237), "units"=c(335), "targets"=c(1894, 1897),
-                               "timezeros"=c(739, 738), "types"=c("point", "quantile")))
+                          list("models"=list(150, 237), "units"=list(335), "targets"=list(1894, 1897),
+                               "timezeros"=list(739, 738), "types"=list("point", "quantile")))
 }
 }

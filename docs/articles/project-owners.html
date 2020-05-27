@@ -154,7 +154,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="no">forecast_data</span>)
 <span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/117/</span>
+<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/10/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></pre></body></html></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -165,22 +165,22 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id                : int 205</span>
-<span class="co">#&gt;  $ url               : chr "http://127.0.0.1:8000/api/forecast/205/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "http://127.0.0.1:8000/api/model/78/"</span>
-<span class="co">#&gt;  $ source            : chr "forecast3219f2f4cd3.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "http://127.0.0.1:8000/api/timezero/194/"</span>
+<span class="co">#&gt;  $ id                : int 10824</span>
+<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/10824/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/272/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast42b769fd2950.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/775/"</span>
 <span class="co">#&gt;  $ created_at        : Date, format: "2020-05-27"</span>
 <span class="co">#&gt;  $ notes             : chr ""</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "http://127.0.0.1:8000/api/forecast/205/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/10824/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up-by-deleting-the-sandbox-project" class="anchor"></a>Clean up by deleting the sandbox project</h2>
 <p><strong>NB: This will delete all of the data associated with the project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
-<span class="co">#&gt; Response [http://127.0.0.1:8000/api/project/38/]</span>
-<span class="co">#&gt;   Date: 2020-05-27 17:34</span>
+<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/112/]</span>
+<span class="co">#&gt;   Date: 2020-05-27 20:28</span>
 <span class="co">#&gt;   Status: 204</span>
 <span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span>
 <span class="co">#&gt; &lt;EMPTY BODY&gt;</span></pre></body></html></div>
