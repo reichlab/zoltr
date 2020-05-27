@@ -209,7 +209,10 @@ test_that("json_for_query() is correct", {
                          list(query = list("models" = list(1), "units" = list(2, 3)),
                               exp_chr = "{\"query\":{\"models\":[1],\"units\":[2,3]}}"),
                          list(query = list("types" = list("point", "quantile")),
-                              exp_chr = "{\"query\":{\"types\":[\"point\",\"quantile\"]}}"))
+                              exp_chr = "{\"query\":{\"types\":[\"point\",\"quantile\"]}}"),
+                         list(query = list("types" = list("point")),
+                              exp_chr = "{\"query\":{\"types\":[\"point\"]}}")
+  )
   for (row in query_exp_chrs) {
     expect_equal(as.character(json_for_query(row$query)), row$exp_chr)
   }
@@ -236,20 +239,30 @@ test_that("query_with_ids() is correct", {
                       "units" = c(23, 24),
                       "targets" = c(15, 17),
                       "timezeros" = c(5, 7),
-                      "types" = c("point", "quantile")))
+                      "types" = c("point", "quantile"))),
+    list(q_in = list("models" = c("docs forecast model"),
+                     "units" = c("location1", "location2"),
+                     "targets" = c("pct next week", "season severity"),
+                     "timezeros" = c("2011-10-02", "2011-10-16"),
+                     "types" = c("point")),
+         q_out = list("models" = c(5),
+                      "units" = c(23, 24),
+                      "targets" = c(15, 17),
+                      "timezeros" = c(5, 7),
+                      "types" = c("point")))
   )
 
   # case: blue sky
-  m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
-  testthat::with_mock("zoltr::get_resource" = m, {
-    zoltar_connection <- new_connection("http://example.com")
-    project_url <- "http://example.com/api/project/1/"
-    for (row in query_in_out) {
+  zoltar_connection <- new_connection("http://example.com")
+  project_url <- "http://example.com/api/project/1/"
+  for (row in query_in_out) {
+    m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
+    testthat::with_mock("zoltr::get_resource" = m, {
       act_query_out <- query_with_ids(zoltar_connection, project_url, row$q_in)
       exp_query_out <- row$q_out
       expect_equal(act_query_out, exp_query_out)
-    }
-  })
+    })
+  }
 
   # case: name not found
   bad_queries <- list(

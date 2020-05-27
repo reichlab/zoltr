@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Getting Started</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2020-05-26</h4>
+            <h4 class="date">2020-05-27</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/getting-started.Rmd"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="hidden name"><code>getting-started.Rmd</code></div>
@@ -199,28 +199,25 @@
   }
 }</pre></body></html></div>
 <p>We use the <code><a href="../reference/job_data.html">job_data()</a></code> function when the query is successfully completed to get the results as a <code>data.frame</code>. Putting it together:</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>())
+<div class="sourceCode"><html><body><pre class="r"><span class="no">query</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"targets"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">'pct next week'</span>, <span class="st">'cases next week'</span>), <span class="st">"types"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"point"</span>))
+<span class="no">query</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query_with_ids.html">query_with_ids</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
+<span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
 <span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/102/</span>
+<span class="co">#&gt; polling for status change. job: http://127.0.0.1:8000/api/job/116/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">the_job_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
 <span class="no">the_job_data</span>
-<span class="co">#&gt; # A tibble: 62 x 15</span>
-<span class="co">#&gt;    model timezero   season unit  target class value cat    prob sample quantile</span>
-<span class="co">#&gt;    &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;dbl&gt; &lt;chr&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 docs… 2011-10-02 2011-… loca… pct n… bin   &lt;NA&gt;  1.1    0.3  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  2 docs… 2011-10-02 2011-… loca… pct n… bin   &lt;NA&gt;  2.2    0.2  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  3 docs… 2011-10-02 2011-… loca… pct n… bin   &lt;NA&gt;  3.3    0.5  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  4 docs… 2011-10-02 2011-… loca… cases… bin   &lt;NA&gt;  2      0.1  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  5 docs… 2011-10-02 2011-… loca… cases… bin   &lt;NA&gt;  50     0.9  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  6 docs… 2011-10-02 2011-… loca… seaso… bin   &lt;NA&gt;  mode…  0.1  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  7 docs… 2011-10-02 2011-… loca… seaso… bin   &lt;NA&gt;  seve…  0.9  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  8 docs… 2011-10-02 2011-… loca… above… bin   &lt;NA&gt;  True   0.9  &lt;NA&gt;         NA</span>
-<span class="co">#&gt;  9 docs… 2011-10-02 2011-… loca… above… bin   &lt;NA&gt;  False  0.1  &lt;NA&gt;         NA</span>
-<span class="co">#&gt; 10 docs… 2011-10-02 2011-… loca… Seaso… bin   &lt;NA&gt;  2019…  0.01 &lt;NA&gt;         NA</span>
-<span class="co">#&gt; # … with 52 more rows, and 4 more variables: family &lt;chr&gt;, param1 &lt;dbl&gt;,</span>
-<span class="co">#&gt; #   param2 &lt;dbl&gt;, param3 &lt;lgl&gt;</span></pre></body></html></div>
+<span class="co">#&gt; # A tibble: 5 x 15</span>
+<span class="co">#&gt;   model timezero   season unit  target class value cat   prob  sample quantile</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt;  &lt;lgl&gt;   </span>
+<span class="co">#&gt; 1 docs… 2011-10-02 2011-… loca… pct n… point  2.1  NA    NA    NA     NA      </span>
+<span class="co">#&gt; 2 docs… 2011-10-02 2011-… loca… pct n… point  2    NA    NA    NA     NA      </span>
+<span class="co">#&gt; 3 docs… 2011-10-02 2011-… loca… pct n… point  3.57 NA    NA    NA     NA      </span>
+<span class="co">#&gt; 4 docs… 2011-10-02 2011-… loca… cases… point  5    NA    NA    NA     NA      </span>
+<span class="co">#&gt; 5 docs… 2011-10-02 2011-… loca… cases… point 10    NA    NA    NA     NA      </span>
+<span class="co">#&gt; # … with 4 more variables: family &lt;lgl&gt;, param1 &lt;lgl&gt;, param2 &lt;lgl&gt;,</span>
+<span class="co">#&gt; #   param3 &lt;lgl&gt;</span></pre></body></html></div>
 <p>Hopefully you’ll “SUCCESS” eventually printed and then the resulting data itself.</p>
 </div>
 <div id="get-a-model-to-work-with-and-list-its-info-and-forecasts" class="section level2">
