@@ -301,11 +301,11 @@ test_that("project_info() returns a list", {
   exp_project_info <- TWO_PROJECTS_JSON[[1]]
   m <- mock(exp_project_info)
   testthat::with_mock("zoltr::get_resource" = m, {
-    act_project_info <- project_info(zoltar_connection, "http://example.com/api/project/1/")
+    act_truth_info <- project_info(zoltar_connection, "http://example.com/api/project/1/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/")
-    expect_is(act_project_info, "list")
-    expect_equal(act_project_info, exp_project_info)
+    expect_is(act_truth_info, "list")
+    expect_equal(act_truth_info, exp_project_info)
   })
 })
 
@@ -354,3 +354,19 @@ test_that("unit_info() returns a list", {
   })
 })
 
+
+test_that("truth_info() returns a list", {
+  zoltar_connection <- new_connection("http://example.com")
+
+  truth_info_json <- jsonlite::read_json("data/truth-info.json")
+  m <- mock(truth_info_json)
+  testthat::with_mock("zoltr::get_resource" = m, {
+    exp_truth_info <- truth_info_json
+    exp_truth_info$truth_updated_at <- as.Date(exp_truth_info$truth_updated_at)
+    act_truth_info <- truth_info(zoltar_connection, "http://example.com/api/project/1/")
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/truth/")
+    expect_is(act_truth_info, "list")
+    expect_equal(act_truth_info, exp_truth_info)
+  })
+})

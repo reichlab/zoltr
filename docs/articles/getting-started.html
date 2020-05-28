@@ -130,16 +130,16 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_projects</span>)
 <span class="co">#&gt; 'data.frame':    5 obs. of  10 variables:</span>
-<span class="co">#&gt;  $ id                   : int  44 41 4 6 9</span>
-<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/41/" "https://www.zoltardata.com/api/project/4/" "https://www.zoltardata.com/api/project/6/" ...</span>
-<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/7/" "https://www.zoltardata.com/api/user/5/" "https://www.zoltardata.com/api/user/4/" "https://www.zoltardata.com/api/user/6/" ...</span>
-<span class="co">#&gt;  $ public               : logi  TRUE TRUE FALSE TRUE TRUE</span>
-<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Docs Example Project" "Impetus Province Forecasts" "CDC Retrospective Forecasts" ...</span>
-<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "A full description of my project is here. You could include narrative details about what seasons are included, "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ "Guidelines and forecasts for a collaborative U.S. influenza forecasting project." ...</span>
-<span class="co">#&gt;  $ home_url             : chr  "https://github.com/reichlab/covid19-forecast-hub/tree/master/data-processed" "https://reichlab.io" "http://www.iddynamics.jhsph.edu/projects/impetus" "https://github.com/FluSightNetwork/cdc-flusight-ensemble" ...</span>
-<span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Biweek" "Week" ...</span>
-<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "the scale for your variable of interest" "DHF cases" "Weighted ILI (%)" ...</span>
-<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "" "https://github.com/reichlab/dengue-data" "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models" ...</span></pre></body></html></div>
+<span class="co">#&gt;  $ id                   : int  44 4 6 41 9</span>
+<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/4/" "https://www.zoltardata.com/api/project/6/" "https://www.zoltardata.com/api/project/41/" ...</span>
+<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/7/" "https://www.zoltardata.com/api/user/4/" "https://www.zoltardata.com/api/user/6/" "https://www.zoltardata.com/api/user/5/" ...</span>
+<span class="co">#&gt;  $ public               : logi  TRUE FALSE TRUE TRUE TRUE</span>
+<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Impetus Province Forecasts" "CDC Retrospective Forecasts" "Docs Example Project" ...</span>
+<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ "Guidelines and forecasts for a collaborative U.S. influenza forecasting project." "A full description of my project is here. You could include narrative details about what seasons are included, "| __truncated__ ...</span>
+<span class="co">#&gt;  $ home_url             : chr  "https://github.com/reichlab/covid19-forecast-hub/tree/master/data-processed" "http://www.iddynamics.jhsph.edu/projects/impetus" "https://github.com/FluSightNetwork/cdc-flusight-ensemble" "https://reichlab.io" ...</span>
+<span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Biweek" "Week" "Week" ...</span>
+<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "DHF cases" "Weighted ILI (%)" "the scale for your variable of interest" ...</span>
+<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://github.com/reichlab/dengue-data" "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/component-models" "" ...</span></pre></body></html></div>
 </div>
 <div id="get-a-project-to-work-with-and-list-its-info-models-and-scores" class="section level2">
 <h2 class="hasAnchor">
@@ -204,7 +204,7 @@
 <span class="no">query</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query_with_ids.html">query_with_ids</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
 <span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/9/</span>
+<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/25/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">the_job_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)

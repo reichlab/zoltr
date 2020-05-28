@@ -75,8 +75,8 @@ scores <- function(zoltar_connection, project_url) {
 #'   the_truth <- truth(conn, "https://www.zoltardata.com/api/project/9/")
 #' }
 truth <- function(zoltar_connection, project_url) {
-  truth_url <- paste0(project_url, 'truth_data/')
-  get_resource(zoltar_connection, truth_url)
+  truth_data_url <- paste0(project_url, 'truth_data/')
+  get_resource(zoltar_connection, truth_data_url)
 }
 
 
@@ -368,6 +368,23 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
 #' }
 project_info <- function(zoltar_connection, project_url) {
   get_resource(zoltar_connection, project_url)
+}
+
+
+#' Get information about a project's truth
+#'
+#' @return A `list` of project truth information for the passed project_url
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @export
+#' @examples \dontrun{
+#'   the_truth_info <- truth_info(conn, "https://www.zoltardata.com/api/project/9/")
+#' }
+truth_info <- function(zoltar_connection, project_url) {
+  truth_info_url <- paste0(project_url, 'truth/')
+  the_truth_info <- get_resource(zoltar_connection, truth_info_url)
+  the_truth_info$truth_updated_at <- as.Date(the_truth_info$truth_updated_at)
+  the_truth_info
 }
 
 
