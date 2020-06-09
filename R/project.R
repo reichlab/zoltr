@@ -288,7 +288,8 @@ json_for_query <- function(query) {
 #' Prepare a query
 #'
 #' A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
-#' with database IDs. Replaces these strings: "models": model_name -> ID. "units": unit_name -> ID.
+#' with database IDs. Replaces these strings: "models": model_name -> ID.
+#' "model_abbrs": model_abbr -> ID. "units": unit_name -> ID.
 #' "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID.
 #'
 #' @return a copy of query that has IDs substituted for strings
@@ -313,6 +314,16 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
     }
 
     model_ids <- the_models[the_models$name %in% query$models, "id"]
+    new_query$models <- model_ids
+  }
+  if (!is.null(query$model_abbrs)) {
+    the_models <- models(zoltar_connection, project_url)
+    if (!all(query$model_abbrs %in% the_models$model_abbr)) {
+      stop(paste0("one or more model abbreviations were not found in project. query model abbreviations=", query$model_abbrs,
+                  ", project model abbreviations=", the_models$model_abbr), call. = FALSE)
+    }
+
+    model_ids <- the_models[the_models$model_abbr %in% query$model_abbrs, "id"]
     new_query$models <- model_ids
   }
   if (!is.null(query$units)) {
@@ -340,7 +351,7 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
     the_timezeros_strs <- lapply(the_timezeros$timezero_date, FUN = function(x) format(x, YYYY_MM_DD_DATE_FORMAT))
     if (!all(query$timezeros %in% the_timezeros_strs)) {
       stop(paste0("one or more timezero names were not found in project. query timezero names=", query$timezeros,
-                  ", project timezero names=", the_timezeros$name), call. = FALSE)
+                  ", project timezero names=", the_timezeros_strs), call. = FALSE)
     }
 
     timezero_ids <- the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"]
@@ -428,4 +439,3 @@ timezero_info <- function(zoltar_connection, timezero_url) {
 unit_info <- function(zoltar_connection, unit_url) {
   get_resource(zoltar_connection, unit_url)
 }
-
