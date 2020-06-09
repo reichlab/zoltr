@@ -154,8 +154,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="no">forecast_data</span>)
 <span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/26/</span>
-<span class="co">#&gt; QUEUED</span>
+<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/642/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></pre></body></html></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -166,22 +165,22 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  8 variables:</span>
-<span class="co">#&gt;  $ id                : int 10831</span>
-<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/10831/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/276/"</span>
-<span class="co">#&gt;  $ source            : chr "forecast78b518377b4f.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/787/"</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-05-28"</span>
+<span class="co">#&gt;  $ id                : int 11164</span>
+<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/11164/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/283/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast8481149c516b.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/804/"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-06-09"</span>
 <span class="co">#&gt;  $ notes             : chr ""</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/10831/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/11164/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up-by-deleting-the-sandbox-project" class="anchor"></a>Clean up by deleting the sandbox project</h2>
 <p><strong>NB: This will delete all of the data associated with the project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
-<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/116/]</span>
-<span class="co">#&gt;   Date: 2020-05-28 20:14</span>
+<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/117/]</span>
+<span class="co">#&gt;   Date: 2020-06-09 17:05</span>
 <span class="co">#&gt;   Status: 204</span>
 <span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span>
 <span class="co">#&gt; &lt;EMPTY BODY&gt;</span></pre></body></html></div>

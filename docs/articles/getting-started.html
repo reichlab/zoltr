@@ -204,7 +204,8 @@
 <span class="no">query</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query_with_ids.html">query_with_ids</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
 <span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/25/</span>
+<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/641/</span>
+<span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">the_job_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
