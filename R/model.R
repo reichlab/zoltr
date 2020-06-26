@@ -56,6 +56,36 @@ create_model <- function(zoltar_connection, project_url, model_config) {
 }
 
 
+#' Edit a model
+#'
+#' Edits the model in the passed project using the passed list. Fails if a model with the passed name already exists.
+#'
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param model_url url of a project in zoltar_connection's projects. this is the project the new model will be editd
+#'   in
+#' @param model_config A `list` containing a Zoltar model configuration. An example: example-model-config.json .
+#'   Full documentation at \url{https://docs.zoltardata.com/}.
+#' @export
+#' @examples \dontrun{
+#'   edit_model(conn, "https://www.zoltardata.com/api/model/2/",
+#'     jsonlite::read_json("example-model-config.json"))
+#' }
+edit_model <- function(zoltar_connection, model_url, model_config) {
+  re_authenticate_if_necessary(zoltar_connection)
+  response <- httr::PUT(
+    url = model_url,
+    add_auth_headers(zoltar_connection),
+    body = list(model_config = model_config),
+    encode = "json")
+  # the Zoltar API returns 400 if there was an error PUTting. the content is JSON with a $error key that contains the
+  # error message
+  json_response <- httr::content(response, "parsed")
+  if (response$status_code == 400) {
+    stop(json_response$error, call. = FALSE)
+  }
+}
+
+
 #' Delete a model
 #'
 #' Deletes the model with the passed ID. This is permanent and cannot be undone.

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a model — create_model • zoltr</title>
+<title>Edit a model — edit_model • zoltr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a model — create_model" />
-<meta property="og:description" content="Creates the model in the passed project using the passed list. Fails if a model with the passed name already exists." />
+<meta property="og:title" content="Edit a model — edit_model" />
+<meta property="og:description" content="Edits the model in the passed project using the passed list. Fails if a model with the passed name already exists." />
 
 
 
@@ -126,16 +126,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a model</h1>
+    <h1>Edit a model</h1>
     <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/model.R'><code>R/model.R</code></a></small>
-    <div class="hidden name"><code>create_model.Rd</code></div>
+    <div class="hidden name"><code>edit_model.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates the model in the passed project using the passed list. Fails if a model with the passed name already exists.</p>
+    <p>Edits the model in the passed project using the passed list. Fails if a model with the passed name already exists.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_model</span>(<span class='no'>zoltar_connection</span>, <span class='no'>project_url</span>, <span class='no'>model_config</span>)</pre>
+    <pre class="usage"><span class='fu'>edit_model</span>(<span class='no'>zoltar_connection</span>, <span class='no'>model_url</span>, <span class='no'>model_config</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,8 +145,8 @@
       <td><p>A `ZoltarConnection` object as returned by <code><a href='new_connection.html'>new_connection</a></code></p></td>
     </tr>
     <tr>
-      <th>project_url</th>
-      <td><p>url of a project in zoltar_connection's projects. this is the project the new model will be created
+      <th>model_url</th>
+      <td><p>url of a project in zoltar_connection's projects. this is the project the new model will be editd
 in</p></td>
     </tr>
     <tr>
@@ -156,14 +156,11 @@ Full documentation at <a href='https://docs.zoltardata.com/'>https://docs.zoltar
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>model_url of the newly-created model</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='no'>new_model_url</span> <span class='kw'>&lt;-</span> <span class='fu'>create_model</span>(<span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/9/"</span>,
-                     <span class='kw pkg'>jsonlite</span><span class='kw ns'>::</span><span class='fu'><a href='https://jeroen.cran.dev/jsonlite/reference/read_json.html'>read_json</a></span>(<span class='st'>"example-model-config.json"</span>))
+  <span class='fu'>edit_model</span>(<span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/model/2/"</span>,
+    <span class='kw pkg'>jsonlite</span><span class='kw ns'>::</span><span class='fu'><a href='https://jeroen.cran.dev/jsonlite/reference/read_json.html'>read_json</a></span>(<span class='st'>"example-model-config.json"</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

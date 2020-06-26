@@ -1,3 +1,7 @@
+# zoltr 0.5.4
+- Added support for additional model metadata.
+
+
 # zoltr 0.5.3
 - Added support for querying project forecasts.
 

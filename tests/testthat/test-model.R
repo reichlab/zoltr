@@ -62,6 +62,20 @@ test_that("create_model() calls re_authenticate_if_necessary() and returns a Mod
 })
 
 
+test_that("edit_model() edits a Model", {
+  zoltar_connection <- new_connection("http://example.com")
+  model_config <- jsonlite::read_json("data/example-model-config.json")
+  testthat::with_mock("httr::PUT" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
+  },
+                      edit_model(zoltar_connection, "http://example.com/api/model/1/", model_config))
+  expect_equal(called_args$url, "http://example.com/api/model/1/")
+  expect_equal(called_args$body$model_config, model_config)
+})
+
+
 test_that("delete_model() calls delete_resource", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
@@ -223,7 +237,7 @@ test_that("upload_forecast() passes correct url to POST()", {
       response
     },
     job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", timezero_date,
-                                           forecast_data))
+                               forecast_data))
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
   expect_equal(called_args$body$timezero_date, timezero_date)
   expect_s3_class(called_args$body$data_file, "form_file")
