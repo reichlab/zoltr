@@ -62,6 +62,23 @@ test_that("create_model() calls re_authenticate_if_necessary() and returns a Mod
 })
 
 
+test_that("edit_model() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  model_info <- jsonlite::read_json("data/model-1.json")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("put", uri = "http://example.com/api/model/1/") %>%
+      to_return(
+        body = model_info,
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    model_config <- jsonlite::read_json("data/example-model-config.json")
+    edit_model(zoltar_connection, "http://example.com/api/model/1/", model_config)
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
 test_that("edit_model() edits a Model", {
   zoltar_connection <- new_connection("http://example.com")
   model_config <- jsonlite::read_json("data/example-model-config.json")

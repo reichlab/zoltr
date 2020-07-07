@@ -45,6 +45,23 @@ test_that("create_project() calls re_authenticate_if_necessary(), and returns a 
 })
 
 
+test_that("submit_query() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
+  job_json <- jsonlite::read_json("data/job-2.json")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("post", uri = "http://example.com/api/project/1/forecast_queries/") %>%
+      to_return(
+        body = job_json,
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    submit_query(zoltar_connection, "http://example.com/api/project/1/", list())
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
 test_that("delete_project() calls delete_resource", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
