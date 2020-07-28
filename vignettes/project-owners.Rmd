@@ -1,7 +1,7 @@
 ---
 title: "Project Owners"
 author: "Matthew Cornell"
-date: "2020-05-27"
+date: "2020-07-28"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Project Owners}
@@ -82,23 +82,6 @@ model_url <- create_model(zoltar_connection, project_url, model_config)
 Now let's upload a forecast to the model using `upload_forecast()` and then see how to list all of a model's forecasts (in this case just the one).
 
 > As we noted in _Getting Started with zoltr_, long operations like querying or uploading forecasts are queued, and require polling to determine when they are done.
-
-```{r}
-busy_poll_job <- function(zoltar_connection, job_url) {
-  cat(paste0("polling for status change. job: ", job_url, "\n"))
-  while (TRUE) {
-    the_job_info <- job_info(zoltar_connection, job_url)
-    cat(paste0(the_job_info$status, "\n"))
-    if (the_job_info$status == "FAILED") {
-      stop(paste0("job failed: job_url=", job_url, ", failure_message=", the_job_info$failure_message), call. = FALSE)
-    }
-    if (the_job_info$status == "SUCCESS") {
-      break
-    }
-    Sys.sleep(1)
-  }
-}
-```
 
 `upload_forecast()` takes the `model_url` to upload to, the `timezero_date` in the project to associate the forecast with, and the `forecast_data` itself. The latter is a nested `list` of _predictions_ as documented in [docs.zoltardata.com](https://docs.zoltardata.com/), but you can learn about it by looking at the example `docs-predictions.json`. Briefly, you can see that there is a `predictions` list of `prediction elements` (the `meta` section is ignored), each of which encodes data for a particular unit and target combination. Each `prediction element` has a class that's one of four possibilities: `bin`, `named`, `point`, and `sample`. The structure of the `prediction element's` contents (the `prediction` section) is determined by the particular class. For example, a `point` just has a `value`, but a `bin` has a table of `cat` and `prob` values.
 

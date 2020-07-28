@@ -1,3 +1,7 @@
+# zoltr 0.5.5
+- Added convenience functions: `do_zoltar_query()` and `busy_poll_job()`.
+
+
 # zoltr 0.5.4
 - Added support for additional model metadata.
 

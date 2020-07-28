@@ -299,10 +299,10 @@ json_for_query <- function(query) {
 #'   described above, not IDs
 #' @export
 #' @examples \dontrun{
-#'   prepared_query <- query_with_ids(conn, "https://www.zoltardata.com/api/project/9/",
-#'                                    list("models"=c(150, 237), "units"=c(335),
-#'                                         "targets"=c(1894, 1897), "timezeros"=c(739, 738),
-#'                                         "types"=c("point", "quantile")))
+#'   prepared_query <- query_with_ids(
+#'     conn, "https://www.zoltardata.com/api/project/9/",
+#'     list("models"=c(150, 237), "units"=c(335), "targets"=c(1894, 1897),
+#'          "timezeros"=c(739, 738), "types"=c("point", "quantile")))
 #' }
 query_with_ids <- function(zoltar_connection, project_url, query) {
   new_query <- list()  # return value. set next
@@ -351,7 +351,7 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
     the_timezeros_strs <- lapply(the_timezeros$timezero_date, FUN = function(x) format(x, YYYY_MM_DD_DATE_FORMAT))
     if (!all(query$timezeros %in% the_timezeros_strs)) {
       stop(paste0("one or more timezero names were not found in project. query timezero names=", query$timezeros,
-                  ", project timezero names=", paste(the_timezeros_strs, collapse=', ')), call. = FALSE)
+                  ", project timezero names=", paste(the_timezeros_strs, collapse = ', ')), call. = FALSE)
     }
 
     timezero_ids <- as.list(the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"])
@@ -361,6 +361,48 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
     new_query$types <- as.list(query$types)
   }
   new_query
+}
+
+
+#' A convenience function to construct and execute a Zoltar query for all quantile
+#' forecasts submitted to a project within a specified number of days of a
+#' given date.
+#'
+#' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @param model_abbrs Character vector of model abbreviations
+#' @param targets character vector of targets to retrieve, for example
+#'   c('1 wk ahead cum death', '2 wk ahead cum death')
+#' @param timezeros character vector of timezeros to retrieve in yyyy-mm-dd format, e.g., '2017-01-17'
+#' @param types character vector of types as documented at at \url{https://docs.zoltardata.com/}
+#' @param verbose if TRUE, print messages on job status poll
+#' @export
+#' @examples \dontrun{
+#'   forecast_data <- do_zoltar_query(
+#'     conn, "https://www.zoltardata.com/api/project/44/",
+#'     c("CMU-TimeSeries", "UMass-MechBayes"), c("1 wk ahead inc death"),
+#'     c("2020-07-19", "2020-07-20"), c("quantile"))
+#' }
+do_zoltar_query <- function(zoltar_connection, project_url, model_abbrs, targets, timezeros, types, verbose = TRUE) {
+  query <- list(
+    "model_abbrs" = model_abbrs,
+    "targets" = targets,
+    "timezeros" = timezeros,
+    "types" = types
+  )
+  zoltar_query <- zoltr::query_with_ids(zoltar_connection, project_url, query)
+  job_url <- zoltr::submit_query(zoltar_connection, project_url, zoltar_query)
+  zoltr::busy_poll_job(zoltar_connection, job_url, verbose = verbose)
+  all_forecasts <- job_data(zoltar_connection, job_url)
+
+  # remove any duplicate rows
+  dup_inds <- which(duplicated(all_forecasts))
+  if (length(dup_inds) > 0) {
+    all_forecasts <- all_forecasts[-dup_inds, , drop = FALSE]
+  }
+
+  all_forecasts
 }
 
 

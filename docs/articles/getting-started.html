@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.5</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Getting Started</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2020-05-27</h4>
+            <h4 class="date">2020-07-28</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/getting-started.Rmd"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="hidden name"><code>getting-started.Rmd</code></div>
@@ -185,26 +185,12 @@
 <h2 class="hasAnchor">
 <a href="#query-a-projects-forecast-data" class="anchor"></a>Query a project’s forecast data</h2>
 <p>You can query a project’s forecast data using the <code><a href="../reference/submit_query.html">submit_query()</a></code> function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the <code><a href="../reference/submit_query.html">submit_query()</a></code> function <em>block</em> until the query is done, you instead get a quick response in the form of a <code>Job</code> URL that you can pass to the <code><a href="../reference/job_info.html">job_info()</a></code> function to check its status and find out if the upload is pending, successfully finished, or failed). (This is called <em>polling</em> the host to ask the status.) Here we poll every second using a helper function:</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">busy_poll_job</span> <span class="kw">&lt;-</span> <span class="kw">function</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>) {
-  <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"polling for status change. job: "</span>, <span class="no">job_url</span>, <span class="st">"\n"</span>))
-  <span class="kw">while</span> (<span class="fl">TRUE</span>) {
-    <span class="no">the_job_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_info.html">job_info</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-    <span class="fu"><a href="https://rdrr.io/r/base/cat.html">cat</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="no">the_job_info</span>$<span class="no">status</span>, <span class="st">"\n"</span>))
-    <span class="kw">if</span> (<span class="no">the_job_info</span>$<span class="no">status</span> <span class="kw">==</span> <span class="st">"FAILED"</span>) {
-      <span class="fu"><a href="https://rdrr.io/r/base/stop.html">stop</a></span>(<span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span>(<span class="st">"job failed: job_url="</span>, <span class="no">job_url</span>, <span class="st">", failure_message="</span>, <span class="no">the_job_info</span>$<span class="no">failure_message</span>), <span class="kw">call.</span> <span class="kw">=</span> <span class="fl">FALSE</span>)
-    }
-    <span class="kw">if</span> (<span class="no">the_job_info</span>$<span class="no">status</span> <span class="kw">==</span> <span class="st">"SUCCESS"</span>) {
-      <span class="kw">break</span>
-    }
-    <span class="fu"><a href="https://rdrr.io/r/base/Sys.sleep.html">Sys.sleep</a></span>(<span class="fl">1</span>)
-  }
-}</pre></body></html></div>
 <p>We use the <code><a href="../reference/job_data.html">job_data()</a></code> function when the query is successfully completed to get the results as a <code>data.frame</code>. Putting it together:</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">query</span> <span class="kw">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"targets"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">'pct next week'</span>, <span class="st">'cases next week'</span>), <span class="st">"types"</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span>(<span class="st">"point"</span>))
 <span class="no">query</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/query_with_ids.html">query_with_ids</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/submit_query.html">submit_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="no">query</span>)
-<span class="fu">busy_poll_job</span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job: https://www.zoltardata.com/api/job/22493/</span>
+<span class="fu"><a href="../reference/busy_poll_job.html">busy_poll_job</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/22873/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>

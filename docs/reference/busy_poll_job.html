@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Delete a project — delete_project • zoltr</title>
+<title>Poll job's status — busy_poll_job • zoltr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Delete a project — delete_project" />
-<meta property="og:description" content="Deletes the project with the passed URL. This is permanent and cannot be undone." />
+<meta property="og:title" content="Poll job's status — busy_poll_job" />
+<meta property="og:description" content="A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS." />
 
 
 
@@ -126,16 +126,16 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Delete a project</h1>
-    <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/project.R'><code>R/project.R</code></a></small>
-    <div class="hidden name"><code>delete_project.Rd</code></div>
+    <h1>Poll job's status</h1>
+    <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/job.R'><code>R/job.R</code></a></small>
+    <div class="hidden name"><code>busy_poll_job.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Deletes the project with the passed URL. This is permanent and cannot be undone.</p>
+    <p>A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>delete_project</span>(<span class='no'>zoltar_connection</span>, <span class='no'>project_url</span>)</pre>
+    <pre class="usage"><span class='fu'>busy_poll_job</span>(<span class='no'>zoltar_connection</span>, <span class='no'>job_url</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,18 +145,19 @@
       <td><p>A `ZoltarConnection` object as returned by <code><a href='new_connection.html'>new_connection</a></code></p></td>
     </tr>
     <tr>
-      <th>project_url</th>
-      <td><p>URL of a project in zoltar_connection's projects</p></td>
+      <th>job_url</th>
+      <td><p>URL of a valid job in zoltar_connection</p></td>
+    </tr>
+    <tr>
+      <th>verbose</th>
+      <td><p>if TRUE, print messages on job status poll</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>None</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='fu'>delete_project</span>(<span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/9/"</span>)
+  <span class='fu'>busy_poll_job</span>(<span class='no'>conn</span>, <span class='st'>"http://example.com/api/job/2/"</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

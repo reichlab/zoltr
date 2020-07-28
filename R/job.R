@@ -75,3 +75,34 @@ job_data <- function(zoltar_connection, job_url) {
   data_url <- paste0(job_url, 'data/')
   get_resource(zoltar_connection, data_url)
 }
+
+
+#' Poll job's status
+#'
+#' A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS.
+#'
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param job_url URL of a valid job in zoltar_connection
+#' @param verbose if TRUE, print messages on job status poll
+#' @export
+#' @examples \dontrun{
+#'   busy_poll_job(conn, "http://example.com/api/job/2/")
+#' }
+busy_poll_job <- function(zoltar_connection, job_url, verbose = TRUE) {
+  if (verbose) {
+    cat(paste0("polling for status change. job_url=", job_url, "\n"))
+  }
+  while (TRUE) {
+    the_job_info <- job_info(zoltar_connection, job_url)
+    if (verbose) {
+      cat(paste0(the_job_info$status, "\n"))
+    }
+    if (the_job_info$status == "FAILED") {
+      stop(paste0("job failed: job_url=", job_url, ", failure_message=", the_job_info$failure_message), call. = FALSE)
+    }
+    if (the_job_info$status == "SUCCESS") {
+      break
+    }
+    Sys.sleep(1)
+  }
+}

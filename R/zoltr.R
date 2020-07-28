@@ -12,7 +12,7 @@ NULL
 
 release_questions <- function() {
   c(
-    "Did you update NEWS.Rmd?",
+    "Did you update NEWS.md?",
     "Did you update DESCRIPTION Version?",
     "Did you update vignette dates?",
     "Did you re-knit README.Rmd?",
