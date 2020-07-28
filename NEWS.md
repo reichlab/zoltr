@@ -1,3 +1,9 @@
+# zoltr 0.5.6
+- Changed `query_with_ids()`'s `query` arg to accept model abbreviations in "models", instead of passing them in
+  "model_abbrs", which is no longer accepted. This is because Zoltar now uses model abbreviations to uniquely identify
+  them, not names.
+
+
 # zoltr 0.5.5
 - Added convenience functions: `do_zoltar_query()` and `busy_poll_job()`.
 

@@ -19,15 +19,15 @@ a copy of query that has IDs substituted for strings
 }
 \description{
 A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
-with database IDs. Replaces these strings: "models": model_name -> ID.
-"model_abbrs": model_abbr -> ID. "units": unit_name -> ID.
+with database IDs. Replaces these strings: "models": model_abbr -> ID. "units": unit_name -> ID.
 "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID.
 }
 \examples{
 \dontrun{
-  prepared_query <- query_with_ids(conn, "https://www.zoltardata.com/api/project/9/",
-                                   list("models"=c(150, 237), "units"=c(335),
-                                        "targets"=c(1894, 1897), "timezeros"=c(739, 738),
-                                        "types"=c("point", "quantile")))
+  prepared_query <- query_with_ids(
+    conn, "https://www.zoltardata.com/api/project/9/",
+    list("models" = c("CMU-TimeSeries", "UMass-MechBayes"), "units" = c("US", "01"),
+         "targets" = c("0 day ahead cum death", "1 wk ahead inc death"),
+         "timezeros" = c("2020-07-19", "2020-07-20"), "types" = c("point", "quantile")))
 }
 }

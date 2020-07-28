@@ -9,7 +9,7 @@ given date.}
 do_zoltar_query(
   zoltar_connection,
   project_url,
-  model_abbrs,
+  models,
   targets,
   timezeros,
   types,
@@ -21,12 +21,12 @@ do_zoltar_query(
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
-\item{model_abbrs}{Character vector of model abbreviations}
+\item{models}{Character vector of model abbreviations}
 
 \item{targets}{character vector of targets to retrieve, for example
 c('1 wk ahead cum death', '2 wk ahead cum death')}
 
-\item{timezeros}{character vector of timezeros to retrieve in yyyy-mm-dd format, e.g., '2017-01-17'}
+\item{timezeros}{character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'}
 
 \item{types}{character vector of types as documented at at \url{https://docs.zoltardata.com/}}
 
@@ -42,9 +42,9 @@ given date.
 }
 \examples{
 \dontrun{
-  forecast_data <- do_zoltar_query(conn, "https://www.zoltardata.com/api/project/9/",
-                                   c("STH-3PU", "COVIDhub-baseline"),
-                                   c("0 day ahead cum death", "1 wk ahead cum death"),
-                                   c("2020-03-15", "2020-03-22"), c("quantile"))
+  forecast_data <- do_zoltar_query(
+    conn, "https://www.zoltardata.com/api/project/44/",
+    c("CMU-TimeSeries", "UMass-MechBayes"), c("1 wk ahead inc death"),
+    c("2020-07-19", "2020-07-20"), c("quantile"))
 }
 }

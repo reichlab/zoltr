@@ -288,8 +288,7 @@ json_for_query <- function(query) {
 #' Prepare a query
 #'
 #' A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
-#' with database IDs. Replaces these strings: "models": model_name -> ID.
-#' "model_abbrs": model_abbr -> ID. "units": unit_name -> ID.
+#' with database IDs. Replaces these strings: "models": model_abbr -> ID. "units": unit_name -> ID.
 #' "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID.
 #'
 #' @return a copy of query that has IDs substituted for strings
@@ -301,29 +300,20 @@ json_for_query <- function(query) {
 #' @examples \dontrun{
 #'   prepared_query <- query_with_ids(
 #'     conn, "https://www.zoltardata.com/api/project/9/",
-#'     list("models"=c(150, 237), "units"=c(335), "targets"=c(1894, 1897),
-#'          "timezeros"=c(739, 738), "types"=c("point", "quantile")))
+#'     list("models" = c("CMU-TimeSeries", "UMass-MechBayes"), "units" = c("US", "01"),
+#'          "targets" = c("0 day ahead cum death", "1 wk ahead inc death"),
+#'          "timezeros" = c("2020-07-19", "2020-07-20"), "types" = c("point", "quantile")))
 #' }
 query_with_ids <- function(zoltar_connection, project_url, query) {
   new_query <- list()  # return value. set next
   if (!is.null(query$models)) {
     the_models <- models(zoltar_connection, project_url)
-    if (!all(query$models %in% the_models$name)) {
-      stop(paste0("one or more model names were not found in project. query model names=", query$models,
-                  ", project model names=", the_models$name), call. = FALSE)
+    if (!all(query$models %in% the_models$model_abbr)) {
+      stop(paste0("one or more model abbreviations were not found in project. query model abbreviations=",
+                  query$models, ", project model abbreviations=", the_models$model_abbr), call. = FALSE)
     }
 
-    model_ids <- as.list(the_models[the_models$name %in% query$models, "id"])
-    new_query$models <- model_ids
-  }
-  if (!is.null(query$model_abbrs)) {
-    the_models <- models(zoltar_connection, project_url)
-    if (!all(query$model_abbrs %in% the_models$model_abbr)) {
-      stop(paste0("one or more model abbreviations were not found in project. query model abbreviations=", query$model_abbrs,
-                  ", project model abbreviations=", the_models$model_abbr), call. = FALSE)
-    }
-
-    model_ids <- as.list(the_models[the_models$model_abbr %in% query$model_abbrs, "id"])
+    model_ids <- as.list(the_models[the_models$model_abbr %in% query$models, "id"])
     new_query$models <- model_ids
   }
   if (!is.null(query$units)) {
@@ -371,10 +361,10 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
 #' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
-#' @param model_abbrs Character vector of model abbreviations
+#' @param models Character vector of model abbreviations
 #' @param targets character vector of targets to retrieve, for example
 #'   c('1 wk ahead cum death', '2 wk ahead cum death')
-#' @param timezeros character vector of timezeros to retrieve in yyyy-mm-dd format, e.g., '2017-01-17'
+#' @param timezeros character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'
 #' @param types character vector of types as documented at at \url{https://docs.zoltardata.com/}
 #' @param verbose if TRUE, print messages on job status poll
 #' @export
@@ -384,9 +374,9 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
 #'     c("CMU-TimeSeries", "UMass-MechBayes"), c("1 wk ahead inc death"),
 #'     c("2020-07-19", "2020-07-20"), c("quantile"))
 #' }
-do_zoltar_query <- function(zoltar_connection, project_url, model_abbrs, targets, timezeros, types, verbose = TRUE) {
+do_zoltar_query <- function(zoltar_connection, project_url, models, targets, timezeros, types, verbose = TRUE) {
   query <- list(
-    "model_abbrs" = model_abbrs,
+    "models" = models,
     "targets" = targets,
     "timezeros" = timezeros,
     "types" = types

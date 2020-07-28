@@ -247,7 +247,7 @@ test_that("query_with_ids() is correct", {
   query_in_out <- list(
     list(q_in = list(),
          q_out = list()),
-    list(q_in = list("models" = list("docs forecast model"),
+    list(q_in = list("models" = list("docs-dfm"),  # abbreviation
                      "units" = list("location1", "location2"),
                      "targets" = list("pct next week", "season severity"),
                      "timezeros" = list("2011-10-02", "2011-10-16"),
@@ -257,21 +257,11 @@ test_that("query_with_ids() is correct", {
                       "targets" = list(15, 17),
                       "timezeros" = list(5, 7),
                       "types" = list("point", "quantile"))),
-    list(q_in = list("model_abbrs" = list("docs-dfm"),
+    list(q_in = list("models" = list("docs-dfm"),  # abbreviation
                      "units" = list("location1", "location2"),
                      "targets" = list("pct next week", "season severity"),
                      "timezeros" = list("2011-10-02", "2011-10-16"),
-                     "types" = list("point", "quantile")),
-         q_out = list("models" = list(5),
-                      "units" = list(23, 24),
-                      "targets" = list(15, 17),
-                      "timezeros" = list(5, 7),
-                      "types" = list("point", "quantile"))),
-    list(q_in = list("models" = list("docs forecast model"),
-                     "units" = list("location1", "location2"),
-                     "targets" = list("pct next week", "season severity"),
-                     "timezeros" = list("2011-10-02", "2011-10-16"),
-                     "types" = list("point")),
+                     "types" = list("point")),  # just points
          q_out = list("models" = list(5),
                       "units" = list(23, 24),
                       "targets" = list(15, 17),

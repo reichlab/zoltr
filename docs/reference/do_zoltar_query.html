@@ -78,7 +78,7 @@ given date." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.6</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@ given date.</p>
     <pre class="usage"><span class='fu'>do_zoltar_query</span>(
   <span class='no'>zoltar_connection</span>,
   <span class='no'>project_url</span>,
-  <span class='no'>model_abbrs</span>,
+  <span class='no'>models</span>,
   <span class='no'>targets</span>,
   <span class='no'>timezeros</span>,
   <span class='no'>types</span>,
@@ -167,7 +167,7 @@ given date.</p>
       <td><p>URL of a project in zoltar_connection's projects</p></td>
     </tr>
     <tr>
-      <th>model_abbrs</th>
+      <th>models</th>
       <td><p>Character vector of model abbreviations</p></td>
     </tr>
     <tr>
@@ -177,7 +177,7 @@ c('1 wk ahead cum death', '2 wk ahead cum death')</p></td>
     </tr>
     <tr>
       <th>timezeros</th>
-      <td><p>character vector of timezeros to retrieve in yyyy-mm-dd format, e.g., '2017-01-17'</p></td>
+      <td><p>character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'</p></td>
     </tr>
     <tr>
       <th>types</th>
@@ -195,10 +195,10 @@ c('1 wk ahead cum death', '2 wk ahead cum death')</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='no'>forecast_data</span> <span class='kw'>&lt;-</span> <span class='fu'>do_zoltar_query</span>(<span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/9/"</span>,
-                                   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"STH-3PU"</span>, <span class='st'>"COVIDhub-baseline"</span>),
-                                   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0 day ahead cum death"</span>, <span class='st'>"1 wk ahead cum death"</span>),
-                                   <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-03-15"</span>, <span class='st'>"2020-03-22"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quantile"</span>))
+  <span class='no'>forecast_data</span> <span class='kw'>&lt;-</span> <span class='fu'>do_zoltar_query</span>(
+    <span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/44/"</span>,
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CMU-TimeSeries"</span>, <span class='st'>"UMass-MechBayes"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1 wk ahead inc death"</span>),
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-07-19"</span>, <span class='st'>"2020-07-20"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quantile"</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

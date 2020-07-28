@@ -41,8 +41,7 @@
 
 <meta property="og:title" content="Prepare a query — query_with_ids" />
 <meta property="og:description" content="A convenience function that prepares a query for submit_query by replacing strings
-with database IDs. Replaces these strings: &quot;models&quot;: model_name -&amp;gt; ID.
-&quot;model_abbrs&quot;: model_abbr -&amp;gt; ID. &quot;units&quot;: unit_name -&amp;gt; ID.
+with database IDs. Replaces these strings: &quot;models&quot;: model_abbr -&amp;gt; ID. &quot;units&quot;: unit_name -&amp;gt; ID.
 &quot;targets&quot;: target_name -&amp;gt; ID. &quot;timezeros&quot; timezero_date in YYYY_MM_DD_DATE_FORMAT-&amp;gt; ID." />
 
 
@@ -75,7 +74,7 @@ with database IDs. Replaces these strings: &quot;models&quot;: model_name -&amp;
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.6</span>
       </span>
     </div>
 
@@ -136,8 +135,7 @@ with database IDs. Replaces these strings: &quot;models&quot;: model_name -&amp;
 
     <div class="ref-description">
     <p>A convenience function that prepares a query for <code><a href='submit_query.html'>submit_query</a></code> by replacing strings
-with database IDs. Replaces these strings: "models": model_name -&gt; ID.
-"model_abbrs": model_abbr -&gt; ID. "units": unit_name -&gt; ID.
+with database IDs. Replaces these strings: "models": model_abbr -&gt; ID. "units": unit_name -&gt; ID.
 "targets": target_name -&gt; ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-&gt; ID.</p>
     </div>
 
@@ -167,10 +165,11 @@ described above, not IDs</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-  <span class='no'>prepared_query</span> <span class='kw'>&lt;-</span> <span class='fu'>query_with_ids</span>(<span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/9/"</span>,
-                                   <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"models"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>150</span>, <span class='fl'>237</span>), <span class='st'>"units"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>335</span>),
-                                        <span class='st'>"targets"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1894</span>, <span class='fl'>1897</span>), <span class='st'>"timezeros"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>739</span>, <span class='fl'>738</span>),
-                                        <span class='st'>"types"</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"point"</span>, <span class='st'>"quantile"</span>)))
+  <span class='no'>prepared_query</span> <span class='kw'>&lt;-</span> <span class='fu'>query_with_ids</span>(
+    <span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/9/"</span>,
+    <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(<span class='st'>"models"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CMU-TimeSeries"</span>, <span class='st'>"UMass-MechBayes"</span>), <span class='st'>"units"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"US"</span>, <span class='st'>"01"</span>),
+         <span class='st'>"targets"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"0 day ahead cum death"</span>, <span class='st'>"1 wk ahead inc death"</span>),
+         <span class='st'>"timezeros"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-07-19"</span>, <span class='st'>"2020-07-20"</span>), <span class='st'>"types"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"point"</span>, <span class='st'>"quantile"</span>)))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
