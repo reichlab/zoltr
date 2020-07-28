@@ -1,3 +1,7 @@
+# zoltr 0.5.7
+- Changed `query_with_ids()` to warn and ignore invalid query values.
+
+
 # zoltr 0.5.6
 - Changed `query_with_ids()`'s `query` arg to accept model abbreviations in "models", instead of passing them in
   "model_abbrs", which is no longer accepted. This is because Zoltar now uses model abbreviations to uniquely identify

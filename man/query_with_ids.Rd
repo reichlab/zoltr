@@ -20,7 +20,8 @@ a copy of query that has IDs substituted for strings
 \description{
 A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
 with database IDs. Replaces these strings: "models": model_abbr -> ID. "units": unit_name -> ID.
-"targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID.
+"targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID. Warns
+and ignores any that are invalid (i.e., those not in the project).
 }
 \examples{
 \dontrun{

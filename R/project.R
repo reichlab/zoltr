@@ -289,7 +289,8 @@ json_for_query <- function(query) {
 #'
 #' A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
 #' with database IDs. Replaces these strings: "models": model_abbr -> ID. "units": unit_name -> ID.
-#' "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID.
+#' "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID. Warns
+#' and ignores any that are invalid (i.e., those not in the project).
 #'
 #' @return a copy of query that has IDs substituted for strings
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
@@ -308,48 +309,55 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
   new_query <- list()  # return value. set next
   if (!is.null(query$models)) {
     the_models <- models(zoltar_connection, project_url)
-    if (!all(query$models %in% the_models$model_abbr)) {
-      stop(paste0("one or more model abbreviations were not found in project. query model abbreviations=",
-                  query$models, ", project model abbreviations=", the_models$model_abbr), call. = FALSE)
+    invalid_models <- query$models[!(query$models %in% the_models$model_abbr)]
+    if (length(invalid_models) > 0) {
+      warning(paste0(length(invalid_models), " model abbreviation(s) not found in project: ", invalid_models),
+              call. = FALSE)
     }
-
-    model_ids <- as.list(the_models[the_models$model_abbr %in% query$models, "id"])
+    valid_models <- query$models[query$models %in% the_models$model_abbr]
+    model_ids <- as.list(the_models[the_models$model_abbr %in% valid_models, "id"])
     new_query$models <- model_ids
   }
+
   if (!is.null(query$units)) {
     the_units <- zoltar_units(zoltar_connection, project_url)
-    if (!all(query$units %in% the_units$name)) {
-      stop(paste0("one or more unit names were not found in project. query unit names=", query$units,
-                  ", project unit names=", the_units$name), call. = FALSE)
+    invalid_units <- query$units[!(query$units %in% the_units$name)]
+    if (length(invalid_units) > 0) {
+      warning(paste0(length(invalid_units), " unit(s) not found in project: ", invalid_units), call. = FALSE)
     }
-
-    unit_ids <- as.list(the_units[the_units$name %in% query$units, "id"])
+    valid_units <- query$units[query$units %in% the_units$name]
+    unit_ids <- as.list(the_units[the_units$name %in% valid_units, "id"])
     new_query$units <- unit_ids
   }
+
   if (!is.null(query$targets)) {
     the_targets <- targets(zoltar_connection, project_url)
-    if (!all(query$targets %in% the_targets$name)) {
-      stop(paste0("one or more target names were not found in project. query target names=", query$targets,
-                  ", project target names=", the_targets$name), call. = FALSE)
+    invalid_targets <- query$targets[!(query$targets %in% the_targets$name)]
+    if (length(invalid_targets) > 0) {
+      warning(paste0(length(invalid_targets), " target(s) not found in project: ", invalid_targets), call. = FALSE)
     }
-
-    target_ids <- as.list(the_targets[the_targets$name %in% query$targets, "id"])
+    valid_targets <- query$targets[query$targets %in% the_targets$name]
+    target_ids <- as.list(the_targets[the_targets$name %in% valid_targets, "id"])
     new_query$targets <- target_ids
   }
+
   if (!is.null(query$timezeros)) {
     the_timezeros <- timezeros(zoltar_connection, project_url)
     the_timezeros_strs <- lapply(the_timezeros$timezero_date, FUN = function(x) format(x, YYYY_MM_DD_DATE_FORMAT))
-    if (!all(query$timezeros %in% the_timezeros_strs)) {
-      stop(paste0("one or more timezero names were not found in project. query timezero names=", query$timezeros,
-                  ", project timezero names=", paste(the_timezeros_strs, collapse = ', ')), call. = FALSE)
+    invalid_timezeros <- query$timezeros[!(query$timezeros %in% the_timezeros_strs)]
+    if (length(invalid_timezeros) > 0) {
+      warning(paste0(length(invalid_timezeros), " timezero(s) not found in project: ", invalid_timezeros),
+              call. = FALSE)
     }
-
-    timezero_ids <- as.list(the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% query$timezeros, "id"])
+    valid_timezeros <- query$timezeros[query$timezeros %in% the_timezeros_strs]
+    timezero_ids <- as.list(the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% valid_timezeros, "id"])
     new_query$timezeros <- timezero_ids
   }
+
   if (!is.null(query$types)) {
     new_query$types <- as.list(query$types)
   }
+
   new_query
 }
 

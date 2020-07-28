@@ -237,13 +237,15 @@ test_that("json_for_query() is correct", {
 
 
 test_that("query_with_ids() is correct", {
-  # set up get_resource() calls, ordered to match query_with_ids() sequence:
+  zoltar_connection <- new_connection("http://example.com")
+
+  # set up get_resource() calls, ordered to match below query_with_ids() sequence:
   models_list_json <- jsonlite::read_json("data/models-list.json")
   units_list_json <- jsonlite::read_json("data/units-list.json")
   targets_list_json <- jsonlite::read_json("data/targets-list.json")
   timezeros_list_json <- jsonlite::read_json("data/timezeros-list.json")
 
-  # set expected input and output queries
+  # case: blue sky. set expected input and output queries
   query_in_out <- list(
     list(q_in = list(),
          q_out = list()),
@@ -268,8 +270,6 @@ test_that("query_with_ids() is correct", {
                       "timezeros" = list(5, 7),
                       "types" = list("point"))))
 
-  # case: blue sky
-  zoltar_connection <- new_connection("http://example.com")
   project_url <- "http://example.com/api/project/1/"
   for (row in query_in_out) {
     m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
@@ -280,29 +280,34 @@ test_that("query_with_ids() is correct", {
     })
   }
 
-  # case: name not found
-  bad_queries <- list(
-    list("models" = c("bad model name"),
-         "units" = c("location1", "location2"),
-         "targets" = c("pct next week", "season severity", "bad target"),
-         "timezeros" = c("2011-10-02", "2011-10-16")),
-    list("models" = c("docs forecast model"),
-         "units" = c("bad unit name"),
-         "targets" = c("pct next week", "season severity"),
-         "timezeros" = c("2011-10-02", "2011-10-16")),
-    list("models" = c("docs forecast model"),
-         "units" = c("location1", "location2"),
-         "targets" = c("bad target name"),
-         "timezeros" = c("2011-10-02", "2011-10-16")),
-    list("models" = c("docs forecast model"),
-         "units" = c("location1", "location2"),
-         "targets" = c("pct next week", "season severity"),
-         "timezeros" = c("1999-10-02")) # bad timezero
+  # case: names not found
+  bad_query_messages <- list(
+    list(query = list("models" = c("docs-dfm", "bad model name"),  # bad
+                      "units" = c("location1", "location2"),
+                      "targets" = c("pct next week", "season severity", "bad target"),
+                      "timezeros" = c("2011-10-02", "2011-10-16")),
+         exp_message = "model abbreviation(s) not found"),
+    list(query = list("models" = c("docs-dfm"),
+                      "units" = c("bad unit name"),  # bad
+                      "targets" = c("pct next week", "season severity"),
+                      "timezeros" = c("2011-10-02", "2011-10-16")),
+         exp_message = "unit(s) not found in project"),
+    list(query = list("models" = c("docs-dfm"),
+                      "units" = c("location1", "location2"),
+                      "targets" = c("bad target name"),  # bad
+                      "timezeros" = c("2011-10-02", "2011-10-16")),
+         exp_message = "target(s) not found in project"),
+    list(query = list("models" = c("docs-dfm"),
+                      "units" = c("location1", "location2"),
+                      "targets" = c("pct next week", "season severity"),
+                      "timezeros" = c("1999-10-02")), # bad
+         exp_message = "timezero(s) not found in project")
   )
-  for (bad_query in bad_queries) {
+  for (bad_query_message in bad_query_messages) {
     m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
     testthat::with_mock("zoltr::get_resource" = m, {
-      expect_error(query_with_ids(zoltar_connection, project_url, bad_query), "one or more", fixed = TRUE)
+      expect_warning(query_with_ids(zoltar_connection, project_url, bad_query_message$query),
+                     bad_query_message$message, fixed = TRUE)
     })
   }
 })

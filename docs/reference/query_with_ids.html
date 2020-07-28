@@ -42,7 +42,8 @@
 <meta property="og:title" content="Prepare a query — query_with_ids" />
 <meta property="og:description" content="A convenience function that prepares a query for submit_query by replacing strings
 with database IDs. Replaces these strings: &quot;models&quot;: model_abbr -&amp;gt; ID. &quot;units&quot;: unit_name -&amp;gt; ID.
-&quot;targets&quot;: target_name -&amp;gt; ID. &quot;timezeros&quot; timezero_date in YYYY_MM_DD_DATE_FORMAT-&amp;gt; ID." />
+&quot;targets&quot;: target_name -&amp;gt; ID. &quot;timezeros&quot; timezero_date in YYYY_MM_DD_DATE_FORMAT-&amp;gt; ID. Warns
+and ignores any that are invalid (i.e., those not in the project)." />
 
 
 
@@ -74,7 +75,7 @@ with database IDs. Replaces these strings: &quot;models&quot;: model_abbr -&amp;
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
       </span>
     </div>
 
@@ -136,7 +137,8 @@ with database IDs. Replaces these strings: &quot;models&quot;: model_abbr -&amp;
     <div class="ref-description">
     <p>A convenience function that prepares a query for <code><a href='submit_query.html'>submit_query</a></code> by replacing strings
 with database IDs. Replaces these strings: "models": model_abbr -&gt; ID. "units": unit_name -&gt; ID.
-"targets": target_name -&gt; ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-&gt; ID.</p>
+"targets": target_name -&gt; ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-&gt; ID. Warns
+and ignores any that are invalid (i.e., those not in the project).</p>
     </div>
 
     <pre class="usage"><span class='fu'>query_with_ids</span>(<span class='no'>zoltar_connection</span>, <span class='no'>project_url</span>, <span class='no'>query</span>)</pre>
