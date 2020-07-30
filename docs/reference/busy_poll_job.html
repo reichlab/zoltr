@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Poll job's status — busy_poll_job" />
-<meta property="og:description" content="A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS." />
+<meta property="og:description" content="A convenience function that polls the passed Job's status waiting for either FAILED, TIMEOUT, or SUCCESS." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8</span>
       </span>
     </div>
 
@@ -132,7 +132,7 @@
     </div>
 
     <div class="ref-description">
-    <p>A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS.</p>
+    <p>A convenience function that polls the passed Job's status waiting for either FAILED, TIMEOUT, or SUCCESS.</p>
     </div>
 
     <pre class="usage"><span class='fu'>busy_poll_job</span>(<span class='no'>zoltar_connection</span>, <span class='no'>job_url</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>

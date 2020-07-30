@@ -11,7 +11,8 @@ status_as_str <- function(status_int) {
       "QUEUED",
       "CLOUD_FILE_DOWNLOADED",
       "SUCCESS",
-      "FAILED"
+      "FAILED",
+      "TIMEOUT"
     )
   status_names[status_int + 1]
 }
@@ -79,7 +80,7 @@ job_data <- function(zoltar_connection, job_url) {
 
 #' Poll job's status
 #'
-#' A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS.
+#' A convenience function that polls the passed Job's status waiting for either FAILED, TIMEOUT, or SUCCESS.
 #'
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param job_url URL of a valid job in zoltar_connection
@@ -97,8 +98,10 @@ busy_poll_job <- function(zoltar_connection, job_url, verbose = TRUE) {
     if (verbose) {
       cat(paste0(the_job_info$status, "\n"))
     }
-    if (the_job_info$status == "FAILED") {
-      stop(paste0("job failed: job_url=", job_url, ", failure_message=", the_job_info$failure_message), call. = FALSE)
+    if ((the_job_info$status == "FAILED") || (the_job_info$status == "TIMEOUT")) {
+      stop(paste0("job failed or timed out: status=", the_job_info$status, ", job_url=", job_url, ", failure_message='",
+                  the_job_info$failure_message, "'"),
+           call. = FALSE)
     }
     if (the_job_info$status == "SUCCESS") {
       break

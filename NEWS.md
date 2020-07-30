@@ -1,3 +1,7 @@
+# zoltr 0.5.8
+- Changed `busy_poll_job()` to check for the new TIMEOUT status.
+
+
 # zoltr 0.5.7
 - Changed `query_with_ids()` to warn and ignore invalid query values.
 

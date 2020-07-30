@@ -14,7 +14,7 @@ busy_poll_job(zoltar_connection, job_url, verbose = TRUE)
 \item{verbose}{if TRUE, print messages on job status poll}
 }
 \description{
-A convenience function that polls the passed Job's status waiting for either FAILED or SUCCESS.
+A convenience function that polls the passed Job's status waiting for either FAILED, TIMEOUT, or SUCCESS.
 }
 \examples{
 \dontrun{
