@@ -102,7 +102,7 @@ score_data
 
 ## Query a project's forecast data
 
-You can query a project's forecast data using the `submit_query()` function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `submit_query()` function _block_ until the query is done, you instead get a quick response in the form of a `Job` URL that you can pass to the `job_info()` function to check its status and find out if the upload is pending, successfully finished, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using a helper function:
+You can query a project's forecast data using the `submit_query()` function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `submit_query()` function _block_ until the query is done, you instead get a quick response in the form of a `Job` URL that you can pass to the `job_info()` function to check its status and find out if the upload is pending, successfully finished, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using the `busy_poll_job()` helper function:
 
 We use the `job_data()` function when the query is successfully completed to get the results as a `data.frame`. Putting it together:
 
@@ -116,6 +116,8 @@ the_job_data
 ```
 
 Hopefully you'll "SUCCESS" eventually printed and then the resulting data itself.
+
+> Note: Zoltar returns a 404 Not Found error if `job_data()` is called on a Job that has no underlying data file (Zoltar saves query results as temporary files on the server). This can happen for two reasons: 1) 24 hours has passed (the expiration time for temporary files) or 2) the Job is not complete and therefore there is no data file yet. As noted above, you can avoid the latter condition by using `busy_poll_job()` to ensure the job is done.
 
 
 ## Get a model to work with and list its info and forecasts

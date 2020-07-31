@@ -63,7 +63,11 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 
 #' Gets a job's file's data
 #'
-#' Downloads the data associated with a job that has an associated file, such as a query's results.
+#' Downloads the data associated with a job that has an associated file, such as a query's results. Called on Jobs
+#' that are the results of a project forecast query via `submit_query()`. NB: It is a 404 Not Found error
+#' if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has passed
+#' (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For the latter
+#' you may use `busy_poll_job()` to ensure the job is done.
 #'
 #' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
