@@ -104,6 +104,14 @@
 <p>And the development version from <a href="https://github.com/">GitHub</a> with:</p>
 <div class="sourceCode"><pre class="r"><span class="co"># install.packages("devtools")</span>
 <span class="kw pkg">devtools</span><span class="kw ns">::</span><span class="fu"><a href="https://devtools.r-lib.org//reference/remote-reexports.html">install_github</a></span>(<span class="st">"reichlab/zoltr"</span>)</pre></div>
+<blockquote>
+<p>Note: Due to the rapid pace of zoltr development, CRAN version lags behind development. We highly suggest you install the development version to get the latest features.</p>
+</blockquote>
+</div>
+<div id="getting-started" class="section level2">
+<h2 class="hasAnchor">
+<a href="#getting-started" class="anchor"></a>Getting started</h2>
+<p>For those starting out we recommend you begin with the <a href="articles/getting-started.html">Getting Started vignette</a>.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
@@ -113,7 +121,7 @@
 <span class="no">zoltar_connection</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/new_connection.html">new_connection</a></span>()
 <span class="fu"><a href="reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(<span class="no">zoltar_connection</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_USERNAME"</span>), <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_PASSWORD"</span>))
 <span class="no">zoltar_connection</span>
-<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-05-26 23:43:39 UTC)</span>
+<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-07-31 18:36:18 UTC)</span>
 
 <span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="no">project_url</span> <span class="kw">&lt;-</span> <span class="no">the_projects</span>[<span class="no">the_projects</span>$<span class="no">name</span> <span class="kw">==</span> <span class="st">"Docs Example Project"</span>, <span class="st">"url"</span>]

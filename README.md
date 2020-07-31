@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
+<!-- README.md is generated from README.Rmd. Please edit this file -->
 zoltr - An R client for the Zoltar data repository API
 ======================================================
 
@@ -24,6 +24,13 @@ And the development version from [GitHub](https://github.com/) with:
 devtools::install_github("reichlab/zoltr")
 ```
 
+> Note: Due to the rapid pace of zoltr development, CRAN version lags behind development. We highly suggest you install the development version to get the latest features.
+
+Getting started
+---------------
+
+For those starting out we recommend you begin with the [Getting Started vignette](articles/getting-started.html).
+
 Usage
 -----
 
@@ -34,7 +41,7 @@ library(zoltr)
 zoltar_connection <- new_connection()
 zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 zoltar_connection
-#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-05-26 23:43:39 UTC)
+#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-07-31 18:36:18 UTC)
 
 the_projects <- projects(zoltar_connection)
 project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
