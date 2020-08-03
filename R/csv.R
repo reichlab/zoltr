@@ -1,12 +1,10 @@
 #' Converts forecast data from Zoltar's native `list` format to a `data.frame`
 #'
-#' @return A `data.frame` from forecast_data in zoltar-specific format. The 'class' of each row is
-#'   as described in https://docs.zoltardata.com/datamodel/ and is one of: 'bin', 'named', 'point',
-#'   'sample', 'quantile'. The columns are: 'unit', 'target', 'class', 'value', 'cat', 'prob',
-#'   'sample', 'quantile', 'family', 'param1', 'param2', 'param3'. Note that the frame is 'sparse':
-#'   not every row uses all columns, and unused ones are empty (''). However, the first four
-#'   columns are always non-empty, i.e., every prediction has them. NB: columns are all text (i.e.,
-#'   data type information from forecast_data is lost)
+#' @return A `data.frame` from forecast_data in zoltar-specific format. The columns are:
+#'   'unit', 'target', 'class', 'value', 'cat', 'prob', 'sample', 'quantile', 'family',
+#'   'param1', 'param2', 'param3'. They are documented at
+#'   https://docs.zoltardata.com/fileformats/#forecast-data-format-csv .
+#'   NB: columns are all character (i.e., data type information from forecast_data is lost)
 #' @param forecast_data Forecast data as a `list` in the Zoltar standard format
 #' @export
 #' @examples \dontrun{
