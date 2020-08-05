@@ -78,7 +78,7 @@ given date." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9</span>
       </span>
     </div>
 
@@ -149,6 +149,7 @@ given date.</p>
   <span class='no'>zoltar_connection</span>,
   <span class='no'>project_url</span>,
   <span class='no'>models</span>,
+  <span class='no'>units</span>,
   <span class='no'>targets</span>,
   <span class='no'>timezeros</span>,
   <span class='no'>types</span>,
@@ -171,9 +172,13 @@ given date.</p>
       <td><p>Character vector of model abbreviations</p></td>
     </tr>
     <tr>
+      <th>units</th>
+      <td><p>character vector of units to retrieve, e.g., c("01003", "US")</p></td>
+    </tr>
+    <tr>
       <th>targets</th>
       <td><p>character vector of targets to retrieve, for example
-c('1 wk ahead cum death', '2 wk ahead cum death')</p></td>
+c("1 wk ahead cum death", "2 wk ahead cum death")</p></td>
     </tr>
     <tr>
       <th>timezeros</th>
@@ -197,7 +202,7 @@ c('1 wk ahead cum death', '2 wk ahead cum death')</p></td>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
   <span class='no'>forecast_data</span> <span class='kw'>&lt;-</span> <span class='fu'>do_zoltar_query</span>(
     <span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/44/"</span>,
-    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CMU-TimeSeries"</span>, <span class='st'>"UMass-MechBayes"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1 wk ahead inc death"</span>),
+    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CMU-TimeSeries"</span>, <span class='st'>"UMass-MechBayes"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"01003"</span>, <span class='st'>"US"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1 wk ahead inc death"</span>),
     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-07-19"</span>, <span class='st'>"2020-07-20"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quantile"</span>))
 }</div></pre>
   </div>

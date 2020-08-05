@@ -78,7 +78,10 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #' }
 job_data <- function(zoltar_connection, job_url) {
   data_url <- paste0(job_url, 'data/')
-  get_resource(zoltar_connection, data_url)
+  # recall columns and expected types:
+  #   model,timezero,season,unit,target,class,value,cat,prob,sample,quantile,family,param1,param2,param3
+  #   c     D        c      c    c      c     ?     ?   ?    ?      ?        ?      ?      ?      ?
+  get_resource(zoltar_connection, data_url, col_types = "cDcccc?????????")
 }
 
 

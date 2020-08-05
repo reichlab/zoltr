@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9</span>
       </span>
     </div>
 
@@ -148,13 +148,11 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A `data.frame` from forecast_data in zoltar-specific format. The 'class' of each row is
-  as described in https://docs.zoltardata.com/datamodel/ and is one of: 'bin', 'named', 'point',
-  'sample', 'quantile'. The columns are: 'unit', 'target', 'class', 'value', 'cat', 'prob',
-  'sample', 'quantile', 'family', 'param1', 'param2', 'param3'. Note that the frame is 'sparse':
-  not every row uses all columns, and unused ones are empty (''). However, the first four
-  columns are always non-empty, i.e., every prediction has them. NB: columns are all text (i.e.,
-  data type information from forecast_data is lost)</p>
+    <p>A `data.frame` from forecast_data in zoltar-specific format. The columns are:
+  'unit', 'target', 'class', 'value', 'cat', 'prob', 'sample', 'quantile', 'family',
+  'param1', 'param2', 'param3'. They are documented at
+  https://docs.zoltardata.com/fileformats/#forecast-data-format-csv .
+  NB: columns are all character (i.e., data type information from forecast_data is lost)</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {

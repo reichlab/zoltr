@@ -1,7 +1,7 @@
 ---
 title: "Getting Started"
 author: "Matthew Cornell"
-date: "2020-07-31"
+date: "2020-08-05"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -122,8 +122,8 @@ the_job_data
 
 ```{r}
 forecast_data <- do_zoltar_query(zoltar_connection, project_url, c("docs forecast model"), 
-                                 c("pct next week", "cases next week"), c("2011-10-02", "2011-10-09", "2011-10-16"),
-                                 c("point", "quantile"))
+                                 c("location1", "location2"), c("pct next week", "cases next week"),
+                                 c("2011-10-02", "2011-10-09", "2011-10-16"), c("point", "quantile"))
 str(forecast_data)
 ```
 

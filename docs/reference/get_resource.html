@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.9</span>
       </span>
     </div>
 
@@ -135,7 +135,7 @@
     <p>Get JSON for a resource (URL). Authenticates if necessary</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_resource</span>(<span class='no'>zoltar_connection</span>, <span class='no'>url</span>)</pre>
+    <pre class="usage"><span class='fu'>get_resource</span>(<span class='no'>zoltar_connection</span>, <span class='no'>url</span>, <span class='kw'>col_types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,6 +147,10 @@
     <tr>
       <th>url</th>
       <td><p>A string of the resource's URL</p></td>
+    </tr>
+    <tr>
+      <th>col_types</th>
+      <td><p>Same as readr::read_csv takes</p></td>
     </tr>
     </table>
 

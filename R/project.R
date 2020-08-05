@@ -370,8 +370,9 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @param models Character vector of model abbreviations
+#' @param units character vector of units to retrieve, e.g., c("01003", "US")
 #' @param targets character vector of targets to retrieve, for example
-#'   c('1 wk ahead cum death', '2 wk ahead cum death')
+#'   c("1 wk ahead cum death", "2 wk ahead cum death")
 #' @param timezeros character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'
 #' @param types character vector of types as documented at at \url{https://docs.zoltardata.com/}
 #' @param verbose if TRUE, print messages on job status poll
@@ -379,12 +380,13 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
 #' @examples \dontrun{
 #'   forecast_data <- do_zoltar_query(
 #'     conn, "https://www.zoltardata.com/api/project/44/",
-#'     c("CMU-TimeSeries", "UMass-MechBayes"), c("1 wk ahead inc death"),
+#'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
 #'     c("2020-07-19", "2020-07-20"), c("quantile"))
 #' }
-do_zoltar_query <- function(zoltar_connection, project_url, models, targets, timezeros, types, verbose = TRUE) {
+do_zoltar_query <- function(zoltar_connection, project_url, models, units, targets, timezeros, types, verbose = TRUE) {
   query <- list(
     "models" = models,
+    "units" = units,
     "targets" = targets,
     "timezeros" = timezeros,
     "types" = types

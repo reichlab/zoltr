@@ -28,12 +28,20 @@ add_auth_headers <- function(zoltar_connection) {
 #' @return A `list` that contiains JSON information for the passed URL
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param url A string of the resource's URL
-get_resource <- function(zoltar_connection, url) {
+#' @param col_types Same as readr::read_csv takes
+get_resource <- function(zoltar_connection, url, col_types = NULL) {
   re_authenticate_if_necessary(zoltar_connection)
   message(paste0("get_resource(): GET: ", url))
   response <- httr::GET(url = url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
-  httr::content(response, as = "parsed", encoding = "UTF-8")
+  if (httr::http_type(response) == "application/json") {
+    jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"), simplifyVector = FALSE)
+  } else if (httr::http_type(response) == "text/csv") {
+    readr::read_csv(httr::content(response, "raw"), col_types = col_types,
+                    locale = readr::locale(encoding = "UTF-8"))
+  } else {
+    stop(paste0("un-handled content type: '", httr::http_type(response), "'"), call. = FALSE)
+  }
 }
 
 
@@ -161,7 +169,7 @@ projects <- function(zoltar_connection) {
   }
   data.frame(id = id_column, url = url_column, owner_url = owner_url_column, public = is_public_column, name = name_column,
              description = description_column, home_url = home_url_column,
-             time_interval_type = time_interval_type_column, visualization_y_label=visualization_y_label_column,
+             time_interval_type = time_interval_type_column, visualization_y_label = visualization_y_label_column,
              core_data = core_data_column, stringsAsFactors = FALSE)
 }
 
