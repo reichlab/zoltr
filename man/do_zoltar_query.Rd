@@ -9,11 +9,11 @@ given date.}
 do_zoltar_query(
   zoltar_connection,
   project_url,
-  models,
-  units,
-  targets,
-  timezeros,
-  types,
+  models = NULL,
+  units = NULL,
+  targets = NULL,
+  timezeros = NULL,
+  types = NULL,
   verbose = TRUE
 )
 }

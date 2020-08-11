@@ -383,7 +383,8 @@ query_with_ids <- function(zoltar_connection, project_url, query) {
 #'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
 #'     c("2020-07-19", "2020-07-20"), c("quantile"))
 #' }
-do_zoltar_query <- function(zoltar_connection, project_url, models, units, targets, timezeros, types, verbose = TRUE) {
+do_zoltar_query <- function(zoltar_connection, project_url, models = NULL, units = NULL, targets = NULL,
+                            timezeros = NULL, types = NULL, verbose = TRUE) {
   query <- list(
     "models" = models,
     "units" = units,

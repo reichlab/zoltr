@@ -1,3 +1,7 @@
+# zoltr 0.5.10
+- Changed `do_zoltar_query()` query args to all be optional.
+
+
 # zoltr 0.5.9
 - Fixed `job_data()` to return `units` column as character, not numeric.
 - Added `units` arg to `do_zoltar_query()` to match `submit_query()`.
