@@ -47,6 +47,8 @@ test_that("create_project() calls re_authenticate_if_necessary(), and returns a 
 
 test_that("submit_query() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
+
+  # test `is_forecast_query = TRUE` POSTs to correct uri
   m <- mock()
   # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
   job_json <- jsonlite::read_json("data/job-2.json")
@@ -56,7 +58,22 @@ test_that("submit_query() calls re_authenticate_if_necessary()", {
         body = job_json,
         status = 200,
         headers = list('Content-Type' = 'application/json; charset=utf-8'))
-    submit_query(zoltar_connection, "http://example.com/api/project/1/", list())
+    submit_query(zoltar_connection, "http://example.com/api/project/1/", TRUE, list())
+    expect_equal(length(mock_calls(m)), 1)
+  })
+
+
+  # test `is_forecast_query = FALSE` POSTs to correct uri
+  m <- mock()
+  # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
+  job_json <- jsonlite::read_json("data/job-2.json")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("post", uri = "http://example.com/api/project/1/scores_queries/") %>%
+      to_return(
+        body = job_json,
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    submit_query(zoltar_connection, "http://example.com/api/project/1/", FALSE, list())
     expect_equal(length(mock_calls(m)), 1)
   })
 })
@@ -69,21 +86,6 @@ test_that("delete_project() calls delete_resource", {
     delete_project(zoltar_connection, "http://example.com/api/project/0/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/0/")
-  })
-})
-
-
-test_that("scores() returns a data.frame", {
-  zoltar_connection <- new_connection("http://example.com")
-  docs_scores <- utils::read.csv(file.path("data/Docs_Example_Project-scores.csv"))
-  m <- mock(docs_scores)
-  testthat::with_mock("zoltr::get_resource" = m, {
-    the_scores <- scores(zoltar_connection, "http://example.com/api/project/1/")
-    expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/score_data/")
-    expect_equal(dim(the_scores), c(1, 10))
-    expect_equal(names(the_scores), c("model", "timezero", "season", "unit", "target", "error", "abs_error",
-                                      "log_single_bin", "log_multi_bin", "pit"))
   })
 })
 
@@ -208,12 +210,12 @@ test_that("submit_query() creates a Job", {
     load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_forecast() call
     response  # actual response doesn't matter, just its class
   },
-                      submit_query(zoltar_connection, "http://example.com/api/project/1/", query))
+                      submit_query(zoltar_connection, "http://example.com/api/project/1/", TRUE, query))
   expect_equal(called_args$url, "http://example.com/api/project/1/forecast_queries/")
   expect_equal(as.character(called_args$body), "{\"query\":{}}")  # due to httr/jsonlite fighting
 
   # test a job url is returned
-  job_url <- submit_query(zoltar_connection, "http://example.com/api/project/1/", query)
+  job_url <- submit_query(zoltar_connection, "http://example.com/api/project/1/", TRUE, query)
   expect_equal(job_url, "http://example.com/api/job/2/")
 })
 
@@ -232,83 +234,6 @@ test_that("json_for_query() is correct", {
   )
   for (row in query_exp_chrs) {
     expect_equal(as.character(json_for_query(row$query)), row$exp_chr)
-  }
-})
-
-
-test_that("query_with_ids() is correct", {
-  zoltar_connection <- new_connection("http://example.com")
-
-  # set up get_resource() calls, ordered to match below query_with_ids() sequence:
-  models_list_json <- jsonlite::read_json("data/models-list.json")
-  units_list_json <- jsonlite::read_json("data/units-list.json")
-  targets_list_json <- jsonlite::read_json("data/targets-list.json")
-  timezeros_list_json <- jsonlite::read_json("data/timezeros-list.json")
-
-  # case: blue sky. set expected input and output queries
-  query_in_out <- list(
-    list(q_in = list(),
-         q_out = list()),
-    list(q_in = list("models" = list("docs-dfm"),  # abbreviation
-                     "units" = list("location1", "location2"),
-                     "targets" = list("pct next week", "season severity"),
-                     "timezeros" = list("2011-10-02", "2011-10-16"),
-                     "types" = list("point", "quantile")),
-         q_out = list("models" = list(5),
-                      "units" = list(23, 24),
-                      "targets" = list(15, 17),
-                      "timezeros" = list(5, 7),
-                      "types" = list("point", "quantile"))),
-    list(q_in = list("models" = list("docs-dfm"),  # abbreviation
-                     "units" = list("location1", "location2"),
-                     "targets" = list("pct next week", "season severity"),
-                     "timezeros" = list("2011-10-02", "2011-10-16"),
-                     "types" = list("point")),  # just points
-         q_out = list("models" = list(5),
-                      "units" = list(23, 24),
-                      "targets" = list(15, 17),
-                      "timezeros" = list(5, 7),
-                      "types" = list("point"))))
-
-  project_url <- "http://example.com/api/project/1/"
-  for (row in query_in_out) {
-    m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
-    testthat::with_mock("zoltr::get_resource" = m, {
-      act_query_out <- query_with_ids(zoltar_connection, project_url, row$q_in)
-      exp_query_out <- row$q_out
-      expect_equal(act_query_out, exp_query_out)
-    })
-  }
-
-  # case: names not found
-  bad_query_messages <- list(
-    list(query = list("models" = c("docs-dfm", "bad model name"),  # bad
-                      "units" = c("location1", "location2"),
-                      "targets" = c("pct next week", "season severity", "bad target"),
-                      "timezeros" = c("2011-10-02", "2011-10-16")),
-         exp_message = "model abbreviation(s) not found"),
-    list(query = list("models" = c("docs-dfm"),
-                      "units" = c("bad unit name"),  # bad
-                      "targets" = c("pct next week", "season severity"),
-                      "timezeros" = c("2011-10-02", "2011-10-16")),
-         exp_message = "unit(s) not found in project"),
-    list(query = list("models" = c("docs-dfm"),
-                      "units" = c("location1", "location2"),
-                      "targets" = c("bad target name"),  # bad
-                      "timezeros" = c("2011-10-02", "2011-10-16")),
-         exp_message = "target(s) not found in project"),
-    list(query = list("models" = c("docs-dfm"),
-                      "units" = c("location1", "location2"),
-                      "targets" = c("pct next week", "season severity"),
-                      "timezeros" = c("1999-10-02")), # bad
-         exp_message = "timezero(s) not found in project")
-  )
-  for (bad_query_message in bad_query_messages) {
-    m <- mock(models_list_json, units_list_json, targets_list_json, timezeros_list_json)  # return values in calling order
-    testthat::with_mock("zoltr::get_resource" = m, {
-      expect_warning(query_with_ids(zoltar_connection, project_url, bad_query_message$query),
-                     bad_query_message$message, fixed = TRUE)
-    })
   }
 })
 

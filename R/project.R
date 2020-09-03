@@ -50,21 +50,6 @@ delete_project <- function(zoltar_connection, project_url) {
 }
 
 
-#' Get a project's scores
-#'
-#' @return A `data.frame` of score data for all models in the passed project URL
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param project_url URL of a project in zoltar_connection's projects
-#' @export
-#' @examples \dontrun{
-#'   the_scores <- scores(conn, "https://www.zoltardata.com/api/project/9/")
-#' }
-scores <- function(zoltar_connection, project_url) {
-  scores_url <- paste0(project_url, 'score_data/')
-  get_resource(zoltar_connection, scores_url)
-}
-
-
 #' Get a project's truth
 #'
 #' @return A `data.frame` of truth data for the passed project URL
@@ -242,14 +227,19 @@ timezeros <- function(zoltar_connection, project_url) {
 #' @return a Job URL for tracking the query and getting its results when it successfully completes
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
-#' @param query A `list` of `list`s that constrains the queried data. It is the analog of the JSON
-#'   object documented at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it
-#'   contains IDs and not strings for objects. You can use utility methods to convert from strings
-#'   to IDs. Briefly, query is a list that contains up to five keys. The first four are vectors of
-#'   object IDs (ints) corresponding to each one's class, and the last is a vector of strings:
-#'   'models': optional list of ForecastModel IDs; 'units': "" Unit IDs. 'targets': "" Target IDs.
-#'   'timezeros': "". TimeZero IDs. 'types': optional list of one or more of: `bin`, `named`, `point`,
-#'   `sample`, and `quantile`.
+#' @param is_forecast_query boolean indicating whether this is to query forecasts or scores
+#' @param query A `list` of character `list`s that constrains the queried data. It is the analog of
+#'   the JSON object documented at \url{https://docs.zoltardata.com/}. Briefly, query is a list of up to five
+#'   keys, each containing a list of characters. The first four are independent of is_forecast_query,
+#'   and contain object identifiers in project_url:
+#'     - "models": optional list of model abbreviation strings
+#      - "units": "" unit name strings
+#      - "targets": "" target name strings
+#      - "timezeros": "" timezero timezero_date strings in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'
+#'   The fifth key is either "types" (if is_forecast_query is TRUE) or "scores" (if FALSE). 'types': contains
+#'   one or more of: `bin`, `named`, `point`, `sample`, and `quantile`. "scores": contains one or more score
+#'   abbreviations, currently: 'error' 'abs_error', 'log_single_bin', 'log_multi_bin', 'pit', 'interval_2',
+#'   'interval_5', 'interval_10', 'interval_20', ..., 'interval_100'.
 #' @export
 #' @examples \dontrun{
 #'   job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/",
@@ -257,9 +247,9 @@ timezeros <- function(zoltar_connection, project_url) {
 #'                           "targets"=list(1894, 1897), "timezeros"=list(739, 738),
 #'                           "types"=list("point", "quantile")))
 #' }
-submit_query <- function(zoltar_connection, project_url, query) {
+submit_query <- function(zoltar_connection, project_url, is_forecast_query, query) {
   re_authenticate_if_necessary(zoltar_connection)
-  queries_url <- paste0(project_url, 'forecast_queries/')
+  queries_url <- paste0(project_url, if (is_forecast_query) "forecast_queries/" else "scores_queries/")
   json_body <- json_for_query(query)
   response <- httr::POST(
     url = queries_url,
@@ -285,125 +275,58 @@ json_for_query <- function(query) {
 }
 
 
-#' Prepare a query
-#'
-#' A convenience function that prepares a query for \code{\link{submit_query}} by replacing strings
-#' with database IDs. Replaces these strings: "models": model_abbr -> ID. "units": unit_name -> ID.
-#' "targets": target_name -> ID. "timezeros" timezero_date in YYYY_MM_DD_DATE_FORMAT-> ID. Warns
-#' and ignores any that are invalid (i.e., those not in the project).
-#'
-#' @return a copy of query that has IDs substituted for strings
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param project_url URL of a project in zoltar_connection's projects
-#' @param query A `list` as documented in \code{\link{submit_query}}, but contains strings as
-#'   described above, not IDs
-#' @export
-#' @examples \dontrun{
-#'   prepared_query <- query_with_ids(
-#'     conn, "https://www.zoltardata.com/api/project/9/",
-#'     list("models" = c("CMU-TimeSeries", "UMass-MechBayes"), "units" = c("US", "01"),
-#'          "targets" = c("0 day ahead cum death", "1 wk ahead inc death"),
-#'          "timezeros" = c("2020-07-19", "2020-07-20"), "types" = c("point", "quantile")))
-#' }
-query_with_ids <- function(zoltar_connection, project_url, query) {
-  new_query <- list()  # return value. set next
-  if (!is.null(query$models)) {
-    the_models <- models(zoltar_connection, project_url)
-    invalid_models <- query$models[!(query$models %in% the_models$model_abbr)]
-    if (length(invalid_models) > 0) {
-      warning(paste0(length(invalid_models), " model abbreviation(s) not found in project: ", invalid_models),
-              call. = FALSE)
-    }
-    valid_models <- query$models[query$models %in% the_models$model_abbr]
-    model_ids <- as.list(the_models[the_models$model_abbr %in% valid_models, "id"])
-    new_query$models <- model_ids
-  }
-
-  if (!is.null(query$units)) {
-    the_units <- zoltar_units(zoltar_connection, project_url)
-    invalid_units <- query$units[!(query$units %in% the_units$name)]
-    if (length(invalid_units) > 0) {
-      warning(paste0(length(invalid_units), " unit(s) not found in project: ", invalid_units), call. = FALSE)
-    }
-    valid_units <- query$units[query$units %in% the_units$name]
-    unit_ids <- as.list(the_units[the_units$name %in% valid_units, "id"])
-    new_query$units <- unit_ids
-  }
-
-  if (!is.null(query$targets)) {
-    the_targets <- targets(zoltar_connection, project_url)
-    invalid_targets <- query$targets[!(query$targets %in% the_targets$name)]
-    if (length(invalid_targets) > 0) {
-      warning(paste0(length(invalid_targets), " target(s) not found in project: ", invalid_targets), call. = FALSE)
-    }
-    valid_targets <- query$targets[query$targets %in% the_targets$name]
-    target_ids <- as.list(the_targets[the_targets$name %in% valid_targets, "id"])
-    new_query$targets <- target_ids
-  }
-
-  if (!is.null(query$timezeros)) {
-    the_timezeros <- timezeros(zoltar_connection, project_url)
-    the_timezeros_strs <- lapply(the_timezeros$timezero_date, FUN = function(x) format(x, YYYY_MM_DD_DATE_FORMAT))
-    invalid_timezeros <- query$timezeros[!(query$timezeros %in% the_timezeros_strs)]
-    if (length(invalid_timezeros) > 0) {
-      warning(paste0(length(invalid_timezeros), " timezero(s) not found in project: ", invalid_timezeros),
-              call. = FALSE)
-    }
-    valid_timezeros <- query$timezeros[query$timezeros %in% the_timezeros_strs]
-    timezero_ids <- as.list(the_timezeros[format(the_timezeros$timezero_date, YYYY_MM_DD_DATE_FORMAT) %in% valid_timezeros, "id"])
-    new_query$timezeros <- timezero_ids
-  }
-
-  if (!is.null(query$types)) {
-    new_query$types <- as.list(query$types)
-  }
-
-  new_query
-}
-
-
-#' A convenience function to construct and execute a Zoltar query for all quantile
-#' forecasts submitted to a project within a specified number of days of a
-#' given date.
+#' A convenience function to construct and execute a Zoltar query for either forecast or score data.
 #'
 #' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
+#' @param is_forecast_query boolean indicating whether this is to query forecasts or scores
 #' @param models Character vector of model abbreviations
 #' @param units character vector of units to retrieve, e.g., c("01003", "US")
 #' @param targets character vector of targets to retrieve, for example
 #'   c("1 wk ahead cum death", "2 wk ahead cum death")
 #' @param timezeros character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'
-#' @param types character vector of types as documented at at \url{https://docs.zoltardata.com/}
+#' @param types used for forecast queries (i.e., is_forecast_query is TRUE), is a character vector of types
+#'   to retrieve as documented at at \url{https://docs.zoltardata.com/}
+#' @param scores used for score queries (i.e., is_forecast_query is FALSE), is a character vector of score
+#'   abbreviations to retrieve as documented at at \url{https://docs.zoltardata.com/}
 #' @param verbose if TRUE, print messages on job status poll
 #' @export
 #' @examples \dontrun{
 #'   forecast_data <- do_zoltar_query(
-#'     conn, "https://www.zoltardata.com/api/project/44/",
+#'     conn, "https://www.zoltardata.com/api/project/44/", TRUE,
 #'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
 #'     c("2020-07-19", "2020-07-20"), c("quantile"))
+#'   score_data <- do_zoltar_query(
+#'     conn, "https://www.zoltardata.com/api/project/44/", FALSE,
+#'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
+#'     c("2020-07-19", "2020-07-20"), c("abs_error", "pit"))
 #' }
-do_zoltar_query <- function(zoltar_connection, project_url, models = NULL, units = NULL, targets = NULL,
-                            timezeros = NULL, types = NULL, verbose = TRUE) {
-  query <- list(
-    "models" = models,
-    "units" = units,
-    "targets" = targets,
-    "timezeros" = timezeros,
-    "types" = types
+do_zoltar_query <- function(zoltar_connection, project_url, is_forecast_query, models = NULL, units = NULL,
+                            targets = NULL, timezeros = NULL, types = NULL, scores = NULL, verbose = TRUE) {
+  zoltar_query <- list(
+    "models" = as.list(models),
+    "units" = as.list(units),
+    "targets" = as.list(targets),
+    "timezeros" = as.list(timezeros)
   )
-  zoltar_query <- zoltr::query_with_ids(zoltar_connection, project_url, query)
-  job_url <- zoltr::submit_query(zoltar_connection, project_url, zoltar_query)
-  zoltr::busy_poll_job(zoltar_connection, job_url, verbose = verbose)
-  all_forecasts <- job_data(zoltar_connection, job_url)
-
-  # remove any duplicate rows
-  dup_inds <- which(duplicated(all_forecasts))
-  if (length(dup_inds) > 0) {
-    all_forecasts <- all_forecasts[-dup_inds, , drop = FALSE]
+  if (is_forecast_query) {
+    zoltar_query$types <- as.list(types)
+  } else {
+    zoltar_query$scores <- as.list(scores)
   }
 
-  all_forecasts
+  job_url <- zoltr::submit_query(zoltar_connection, project_url, is_forecast_query, zoltar_query)
+  zoltr::busy_poll_job(zoltar_connection, job_url, verbose = verbose)
+  data <- job_data(zoltar_connection, job_url, is_forecast_query)
+
+  # remove any duplicate rows
+  dup_inds <- which(duplicated(data))
+  if (length(dup_inds) > 0) {
+    data <- data[-dup_inds, , drop = FALSE]
+  }
+
+  data
 }
 
 

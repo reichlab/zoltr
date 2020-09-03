@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -129,6 +129,14 @@
       <small>Source: <a href='https://github.com/reichlab/zoltr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="zoltr-0-6-0" class="section level1">
+<h1 class="page-header" data-toc-text="0.6.0">
+<a href="#zoltr-0-6-0" class="anchor"></a>zoltr 0.6.0<small> Unreleased </small>
+</h1>
+<ul>
+<li>(API BREAK) Made to major changes. 1) Changed score downloading from the <code>scores()</code> function (removed from the library) that downloaded all scores to querying scores in a manner very similar to that of forecasts. This entailed generalizing <code>do_zoltar_query</code>, <code><a href="../reference/submit_query.html">submit_query()</a></code>, and <code><a href="../reference/job_data.html">job_data()</a></code>, which now take a <code>is_forecast_query</code> arg. The first two now accept either <code>"types"</code> or <code>"scores"</code>, depending on that arg. 2) Changed those two score query functions to pass strings, not database IDs, removing the need to call <code>query_with_ids()</code>, which has been deleted.</li>
+</ul>
+</div>
     <div id="zoltr-0-5-10" class="section level1">
 <h1 class="page-header" data-toc-text="0.5.10">
 <a href="#zoltr-0-5-10" class="anchor"></a>zoltr 0.5.10<small> Unreleased </small>
@@ -159,7 +167,7 @@
 <a href="#zoltr-0-5-7" class="anchor"></a>zoltr 0.5.7<small> Unreleased </small>
 </h1>
 <ul>
-<li>Changed <code><a href="../reference/query_with_ids.html">query_with_ids()</a></code> to warn and ignore invalid query values.</li>
+<li>Changed <code>query_with_ids()</code> to warn and ignore invalid query values.</li>
 </ul>
 </div>
     <div id="zoltr-0-5-6" class="section level1">
@@ -167,7 +175,7 @@
 <a href="#zoltr-0-5-6" class="anchor"></a>zoltr 0.5.6<small> Unreleased </small>
 </h1>
 <ul>
-<li>Changed <code><a href="../reference/query_with_ids.html">query_with_ids()</a></code>âs <code>query</code> arg to accept model abbreviations in âmodelsâ, instead of passing them in âmodel_abbrsâ, which is no longer accepted. This is because Zoltar now uses model abbreviations to uniquely identify them, not names.</li>
+<li>Changed <code>query_with_ids()</code>âs <code>query</code> arg to accept model abbreviations in âmodelsâ, instead of passing them in âmodel_abbrsâ, which is no longer accepted. This is because Zoltar now uses model abbreviations to uniquely identify them, not names.</li>
 </ul>
 </div>
     <div id="zoltr-0-5-5" class="section level1">

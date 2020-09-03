@@ -35,7 +35,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>, but briefly you use the <code><a href="reference/new_connection.html">new_connection()</a></code> function to create a connection to <a href="https://www.zoltardata.com/">Zoltar</a> and then pass that connection along with the <em>URL</em> of the resource of interest (e.g., a project, model, or forecast) to this packageâs various functions like <code><a href="reference/projects.html">projects()</a></code>, <code><a href="reference/project_info.html">project_info()</a></code>, or <code><a href="reference/scores.html">scores()</a></code>.</p>
+<p>Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>, but briefly you use the <code><a href="reference/new_connection.html">new_connection()</a></code> function to create a connection to <a href="https://www.zoltardata.com/">Zoltar</a> and then pass that connection along with the <em>URL</em> of the resource of interest (e.g., a project, model, or forecast) to this packageâs various functions like <code><a href="reference/projects.html">projects()</a></code>, <code><a href="reference/project_info.html">project_info()</a></code>, or <code>scores()</code>.</p>
 <div class="sourceCode"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">zoltr</span>)
 <span class="no">zoltar_connection</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/new_connection.html">new_connection</a></span>()
 <span class="fu"><a href="reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(<span class="no">zoltar_connection</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_USERNAME"</span>), <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_PASSWORD"</span>))

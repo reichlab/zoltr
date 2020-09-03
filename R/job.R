@@ -63,25 +63,44 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 
 #' Gets a job's file's data
 #'
-#' Downloads the data associated with a job that has an associated file, such as a query's results. Called on Jobs
-#' that are the results of a project forecast query via `submit_query()`. NB: It is a 404 Not Found error
-#' if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has passed
-#' (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For the latter
-#' you may use `busy_poll_job()` to ensure the job is done.
+#' Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
+#' that are the results of a project forecast or score queries via `submit_query()`. NB: It is a 404 Not Found
+#' error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
+#' passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
+#' the latter you may use `busy_poll_job()` to ensure the job is done.
 #'
-#' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
+#' @return A `data.frame` of Job's data. The columns depend on is_forecast_query. Full documentation at
+#'   \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param job_url URL of a valid job in zoltar_connection that has a data file associated with it
+#' @param is_forecast_query boolean indicating whether this is to query forecasts or scores
 #' @export
 #' @examples \dontrun{
 #'   the_job_data <- job_data(conn, "http://example.com/api/job/2/")
 #' }
-job_data <- function(zoltar_connection, job_url) {
+job_data <- function(zoltar_connection, job_url, is_forecast_query) {
   data_url <- paste0(job_url, 'data/')
-  # recall columns and expected types:
+  # columns and expected types depend on is_forecast_query:
+  #
+  # `is_forecast_query = TRUE`:
   #   model,timezero,season,unit,target,class,value,cat,prob,sample,quantile,family,param1,param2,param3
   #   c     D        c      c    c      c     ?     ?   ?    ?      ?        ?      ?      ?      ?
-  get_resource(zoltar_connection, data_url, col_types = "cDcccc?????????")
+  #
+  # `is_forecast_query = FALSE`: recall that the first six columns are fixed, but the number of score ones varies:
+  #   model,timezero,season,unit,target,truth,score_1,score_2,...
+  #   c     c        c      c    c      ?     ?       ?       ...
+  score_cols <- readr::cols(
+    .default = readr::col_double(),  # scores
+    model = readr::col_character(),
+    timezero = readr::col_date(format = ""),
+    season = readr::col_character(),
+    unit = readr::col_character(),
+    target = readr::col_character(),
+    log_single_bin = readr::col_logical(),
+    log_multi_bin = readr::col_logical(),
+    pit = readr::col_logical()
+  )
+  get_resource(zoltar_connection, data_url, if (is_forecast_query) "cDcccc?????????" else score_cols)
 }
 
 

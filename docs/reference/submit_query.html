@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -135,7 +135,7 @@
     <p>Submits a request for the execution of a query of forecasts in this Project.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>submit_query</span>(<span class='no'>zoltar_connection</span>, <span class='no'>project_url</span>, <span class='no'>query</span>)</pre>
+    <pre class="usage"><span class='fu'>submit_query</span>(<span class='no'>zoltar_connection</span>, <span class='no'>project_url</span>, <span class='no'>is_forecast_query</span>, <span class='no'>query</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -149,15 +149,20 @@
       <td><p>URL of a project in zoltar_connection's projects</p></td>
     </tr>
     <tr>
+      <th>is_forecast_query</th>
+      <td><p>boolean indicating whether this is to query forecasts or scores</p></td>
+    </tr>
+    <tr>
       <th>query</th>
-      <td><p>A `list` of `list`s that constrains the queried data. It is the analog of the JSON
-object documented at <a href='https://docs.zoltardata.com/'>https://docs.zoltardata.com/</a>. NB: this is a "raw" query in that it
-contains IDs and not strings for objects. You can use utility methods to convert from strings
-to IDs. Briefly, query is a list that contains up to five keys. The first four are vectors of
-object IDs (ints) corresponding to each one's class, and the last is a vector of strings:
-'models': optional list of ForecastModel IDs; 'units': "" Unit IDs. 'targets': "" Target IDs.
-'timezeros': "". TimeZero IDs. 'types': optional list of one or more of: `bin`, `named`, `point`,
-`sample`, and `quantile`.</p></td>
+      <td><p>A `list` of character `list`s that constrains the queried data. It is the analog of
+the JSON object documented at <a href='https://docs.zoltardata.com/'>https://docs.zoltardata.com/</a>. Briefly, query is a list of up to five
+keys, each containing a list of characters. The first four are independent of is_forecast_query,
+and contain object identifiers in project_url:
+  - "models": optional list of model abbreviation strings
+The fifth key is either "types" (if is_forecast_query is TRUE) or "scores" (if FALSE). 'types': contains
+one or more of: `bin`, `named`, `point`, `sample`, and `quantile`. "scores": contains one or more score
+abbreviations, currently: 'error' 'abs_error', 'log_single_bin', 'log_multi_bin', 'pit', 'interval_2',
+'interval_5', 'interval_10', 'interval_20', ..., 'interval_100'.</p></td>
     </tr>
     </table>
 

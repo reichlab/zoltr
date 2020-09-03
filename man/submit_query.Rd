@@ -4,21 +4,24 @@
 \alias{submit_query}
 \title{Submit a query}
 \usage{
-submit_query(zoltar_connection, project_url, query)
+submit_query(zoltar_connection, project_url, is_forecast_query, query)
 }
 \arguments{
 \item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
-\item{query}{A `list` of `list`s that constrains the queried data. It is the analog of the JSON
-object documented at \url{https://docs.zoltardata.com/}. NB: this is a "raw" query in that it
-contains IDs and not strings for objects. You can use utility methods to convert from strings
-to IDs. Briefly, query is a list that contains up to five keys. The first four are vectors of
-object IDs (ints) corresponding to each one's class, and the last is a vector of strings:
-'models': optional list of ForecastModel IDs; 'units': "" Unit IDs. 'targets': "" Target IDs.
-'timezeros': "". TimeZero IDs. 'types': optional list of one or more of: `bin`, `named`, `point`,
-`sample`, and `quantile`.}
+\item{is_forecast_query}{boolean indicating whether this is to query forecasts or scores}
+
+\item{query}{A `list` of character `list`s that constrains the queried data. It is the analog of
+the JSON object documented at \url{https://docs.zoltardata.com/}. Briefly, query is a list of up to five
+keys, each containing a list of characters. The first four are independent of is_forecast_query,
+and contain object identifiers in project_url:
+  - "models": optional list of model abbreviation strings
+The fifth key is either "types" (if is_forecast_query is TRUE) or "scores" (if FALSE). 'types': contains
+one or more of: `bin`, `named`, `point`, `sample`, and `quantile`. "scores": contains one or more score
+abbreviations, currently: 'error' 'abs_error', 'log_single_bin', 'log_multi_bin', 'pit', 'interval_2',
+'interval_5', 'interval_10', 'interval_20', ..., 'interval_100'.}
 }
 \value{
 a Job URL for tracking the query and getting its results when it successfully completes

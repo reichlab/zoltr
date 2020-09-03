@@ -15,7 +15,6 @@
     "model_owners": [
       "http://example.com/api/user/3/"
     ],
-    "score_data": "http://example.com/api/project/1/score_data/",
     "models": [
       "http://example.com/api/model/1/",
       "http://example.com/api/model/2/"
@@ -63,7 +62,6 @@
     "model_owners": [
       "http://example.com/api/user/3/"
     ],
-    "score_data": "http://example.com/api/project/2/score_data/",
     "models": [
       "http://example.com/api/model/5/"
     ],
