@@ -134,7 +134,7 @@
 <a href="#zoltr-0-6-0" class="anchor"></a>zoltr 0.6.0<small> Unreleased </small>
 </h1>
 <ul>
-<li>(API BREAK) Made to major changes. 1) Changed score downloading from the <code>scores()</code> function (removed from the library) that downloaded all scores to querying scores in a manner very similar to that of forecasts. This entailed generalizing <code>do_zoltar_query</code>, <code><a href="../reference/submit_query.html">submit_query()</a></code>, and <code><a href="../reference/job_data.html">job_data()</a></code>, which now take a <code>is_forecast_query</code> arg. The first two now accept either <code>"types"</code> or <code>"scores"</code>, depending on that arg. 2) Changed those two score query functions to pass strings, not database IDs, removing the need to call <code>query_with_ids()</code>, which has been deleted.</li>
+<li>(API BREAK) Made two major changes. 1) Changed score downloading from the <code>scores()</code> function (removed from the library) that downloaded all scores to querying scores in a manner very similar to that of forecasts. This entailed generalizing <code>do_zoltar_query</code>, <code><a href="../reference/submit_query.html">submit_query()</a></code>, and <code><a href="../reference/job_data.html">job_data()</a></code>, which now take a <code>is_forecast_query</code> arg. The first two now accept either <code>"types"</code> or <code>"scores"</code>, depending on that arg. 2) Changed those two score query functions to pass strings, not database IDs, removing the need to call <code>query_with_ids()</code>, which has been deleted.</li>
 </ul>
 </div>
     <div id="zoltr-0-5-10" class="section level1">
