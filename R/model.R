@@ -49,7 +49,8 @@ create_model <- function(zoltar_connection, project_url, model_config) {
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(json_response$error, call. = FALSE)
+    stop(paste0("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+         call. = FALSE)
   }
 
   json_response$url  # throw away rest of the model json and let model_info() reload/refresh it
@@ -81,7 +82,8 @@ edit_model <- function(zoltar_connection, model_url, model_config) {
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(json_response$error, call. = FALSE)
+    stop(paste0("PUT status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+         call. = FALSE)
   }
 }
 
@@ -179,7 +181,8 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(json_response$error, call. = FALSE)
+    stop(paste0("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+         call. = FALSE)
   }
 
   json_response$url  # throw away rest of job json and let job_info() reload/refresh it

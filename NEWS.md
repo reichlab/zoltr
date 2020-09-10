@@ -1,3 +1,7 @@
+# zoltr 0.6.1
+- added error message tweaks, fixed small example typos
+
+
 # zoltr 0.6.0
 - (API BREAK) Made two major changes. 1) Changed score downloading from the `scores()` function (removed from the
   library) that downloaded all scores to querying scores in a manner very similar to that of forecasts. This
