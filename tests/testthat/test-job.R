@@ -66,10 +66,7 @@ test_that("job_data() column types are correct for score CSV data", {  # JSON da
           timezero = readr::col_date(format = ""),
           season = readr::col_character(),
           unit = readr::col_character(),
-          target = readr::col_character(),
-          log_single_bin = readr::col_logical(),
-          log_multi_bin = readr::col_logical(),
-          pit = readr::col_logical()
+          target = readr::col_character()
         )
         expect_equal(mock_args(mock_read_csv)[[1]]$col_types, score_cols)
         # note: we do not test the column types of the actual data returned by job_data b/c we trust that
