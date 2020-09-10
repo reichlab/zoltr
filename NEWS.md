@@ -1,5 +1,5 @@
 # zoltr 0.6.0
-- (API BREAK) Made to major changes. 1) Changed score downloading from the `scores()` function (removed from the
+- (API BREAK) Made two major changes. 1) Changed score downloading from the `scores()` function (removed from the
   library) that downloaded all scores to querying scores in a manner very similar to that of forecasts. This
   entailed generalizing `do_zoltar_query`, `submit_query()`, and `job_data()`, which now take a `is_forecast_query` arg.
   The first two now accept either `"types"` or `"scores"`, depending on that arg. 2) Changed those two score query
