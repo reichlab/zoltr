@@ -84,6 +84,7 @@ models <- function(zoltar_connection, project_url) {
   owner_url_column <- c()     # ""
   name_column <- c()          # ""
   abbreviation_column <- c()  # ""
+  notes_column <- c()         # ""
   description_column <- c()   # ""
   home_url_column <- c()      # ""
   aux_data_url_column <- c()  # "". might be NULL. substitute NA if so
@@ -97,6 +98,7 @@ models <- function(zoltar_connection, project_url) {
 
     name_column <- append(name_column, model_json$name)
     abbreviation_column <- append(abbreviation_column, model_json$abbreviation)
+    notes_column <- append(notes_column, if (is.null(model_json$notes)) as.character(NA) else model_json$notes)
     description_column <- append(description_column, model_json$description)
     home_url_column <- append(home_url_column, model_json$home_url)
 
@@ -104,8 +106,9 @@ models <- function(zoltar_connection, project_url) {
     aux_data_url_column <- append(aux_data_url_column, aux_data_value)
   }
   data.frame(id = id_column, url = url_column, project_url = project_url_column, owner_url = owner_url_column,
-             name = name_column, model_abbr = abbreviation_column, description = description_column,
-             home_url = home_url_column, aux_data_url = aux_data_url_column, stringsAsFactors = FALSE)
+             name = name_column, model_abbr = abbreviation_column, notes = notes_column,
+             description = description_column, home_url = home_url_column, aux_data_url = aux_data_url_column,
+             stringsAsFactors = FALSE)
 }
 
 

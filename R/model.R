@@ -116,27 +116,42 @@ delete_model <- function(zoltar_connection, model_url) {
 forecasts <- function(zoltar_connection, model_url) {
   forecasts_url <- paste0(model_url, 'forecasts/')
   forecasts_json <- get_resource(zoltar_connection, forecasts_url)
-  id_column <- c()                  # integer
-  url_column <- c()                 # character
-  forecast_model_url_column <- c()  # ""
-  source_column <- c()              # ""
-  timezero_url_column <- c()        # ""
-  created_at_column <- c()          # Date
-  notes_column <- c()               # character
-  forecast_data_url_column <- c()   # ""
+  id_column <- c()                          # integer
+  url_column <- c()                         # character
+  forecast_model_url_column <- c()          # ""
+  source_column <- c()                      # ""
+  timezero_url_column <- c()                # ""
+  timezero_timezero_date_column <- c()      # Date
+  timezero_data_version_date_column <- c()  # ""
+  timezero_is_season_start_column <- c()    # logical
+  created_at_column <- c()                  # Date
+  notes_column <- c()                       # character
+  forecast_data_url_column <- c()           # ""
   for (forecast_json in forecasts_json) {
     id_column <- append(id_column, forecast_json$id)
     url_column <- append(url_column, forecast_json$url)
     forecast_model_url_column <- append(forecast_model_url_column, forecast_json$forecast_model)
     source_column <- append(source_column, forecast_json$source)
-    timezero_url_column <- append(timezero_url_column, forecast_json$time_zero$url)  # "unnest" timezeros to URL
+
+    # "unnest" timezero information:
+    timezero_url_column <- append(timezero_url_column, forecast_json$time_zero$url)
+    timezero_timezero_date_column <- append(timezero_timezero_date_column,
+                                            if (is.null(forecast_json$time_zero$timezero_date)) as.Date(NA)
+                                            else as.Date(forecast_json$time_zero$timezero_date))
+    timezero_data_version_date_column <- append(timezero_data_version_date_column,
+                                                if (is.null(forecast_json$time_zero$data_version_date)) as.Date(NA)
+                                                else as.Date(forecast_json$time_zero$data_version_date))
+    timezero_is_season_start_column <- append(timezero_is_season_start_column, forecast_json$time_zero$is_season_start)
+
     created_at_column <- append(created_at_column, as.Date(forecast_json$created_at))  # "2020-03-05T15:47:47.369231-05:00"
     notes_column <- append(notes_column, if (is.null(forecast_json$notes)) as.character(NA) else forecast_json$notes)
     forecast_data_url_column <- append(forecast_data_url_column, forecast_json$forecast_data)
   }
   data.frame(id = id_column, url = url_column, forecast_model_url = forecast_model_url_column, source = source_column,
-             timezero_url = timezero_url_column, created_at = created_at_column, notes = notes_column,
-             forecast_data_url = forecast_data_url_column, stringsAsFactors = FALSE)
+             timezero_url = timezero_url_column, timezero_timezero_date = timezero_timezero_date_column,
+             timezero_data_version_date = timezero_data_version_date_column,
+             timezero_is_season_start = timezero_is_season_start_column, created_at = created_at_column,
+             notes = notes_column, forecast_data_url = forecast_data_url_column, stringsAsFactors = FALSE)
 }
 
 

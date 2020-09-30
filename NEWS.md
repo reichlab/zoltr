@@ -1,3 +1,9 @@
+# zoltr 0.6.2
+- `models()`: added "notes" column
+- `forecasts()`: added three timezero columns in addition to "url": "timezero_date", "data_version_date",
+   "is_season_start"
+
+
 # zoltr 0.6.1
 - added error message tweaks, fixed small example typos
 
