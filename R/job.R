@@ -97,7 +97,7 @@ job_data <- function(zoltar_connection, job_url, is_forecast_query) {
     unit = readr::col_character(),
     target = readr::col_character()
   )
-  get_resource(zoltar_connection, data_url, if (is_forecast_query) "cDcccc?????????" else score_cols)
+  get_resource(zoltar_connection, data_url, if (is_forecast_query) "cDcccc????d????" else score_cols)
 }
 
 

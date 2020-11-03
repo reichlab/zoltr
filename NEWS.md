@@ -1,3 +1,8 @@
+# zoltr 0.6.3
+- changed `job_data()` (and therefore `do_zoltar_query()`) to parse the quantile column as double (was defaulting to
+  logical in some cases)
+
+
 # zoltr 0.6.2
 - `models()`: added "notes" column
 - `forecasts()`: added three timezero columns in addition to "url": "timezero_date", "data_version_date",
