@@ -125,6 +125,7 @@ forecasts <- function(zoltar_connection, model_url) {
   data_version_date_column <- c()  # ""
   is_season_start_column <- c()    # logical
   created_at_column <- c()                  # Date
+  issue_date_column <- c()                  # Date
   notes_column <- c()                       # character
   forecast_data_url_column <- c()           # ""
   for (forecast_json in forecasts_json) {
@@ -143,14 +144,15 @@ forecasts <- function(zoltar_connection, model_url) {
                                        else as.Date(forecast_json$time_zero$data_version_date))
     is_season_start_column <- append(is_season_start_column, forecast_json$time_zero$is_season_start)
 
-    created_at_column <- append(created_at_column, as.Date(forecast_json$created_at))  # "2020-03-05T15:47:47.369231-05:00"
+    created_at_column <- append(created_at_column, as.Date(forecast_json$created_at))  # e.g., "2020-03-05T15:47:47.369231-05:00"
+    issue_date_column <- append(issue_date_column, as.Date(forecast_json$issue_date))  # e.g., "2020-03-05"
     notes_column <- append(notes_column, if (is.null(forecast_json$notes)) as.character(NA) else forecast_json$notes)
     forecast_data_url_column <- append(forecast_data_url_column, forecast_json$forecast_data)
   }
   data.frame(id = id_column, url = url_column, forecast_model_url = forecast_model_url_column, source = source_column,
              timezero_url = timezero_url_column, timezero_date = timezero_date_column,
              data_version_date = data_version_date_column,
-             is_season_start = is_season_start_column, created_at = created_at_column,
+             is_season_start = is_season_start_column, created_at = created_at_column, issue_date = issue_date_column,
              notes = notes_column, forecast_data_url = forecast_data_url_column, stringsAsFactors = FALSE)
 }
 

@@ -15,7 +15,8 @@ forecast_info <- function(zoltar_connection, forecast_url) {
   the_forecast_info <- get_resource(zoltar_connection, forecast_url)
   the_forecast_info$forecast_model_url <- the_forecast_info$forecast_model
   the_forecast_info$forecast_model <- NULL
-  the_forecast_info$created_at <- as.Date(the_forecast_info$created_at)  # "2020-03-05T15:47:47.369231-05:00"
+  the_forecast_info$created_at <- as.Date(the_forecast_info$created_at)  # e.g., "2020-03-05T15:47:47.369231-05:00"
+  the_forecast_info$issue_date <- as.Date(the_forecast_info$issue_date)  # e.g., "2020-03-05"
   the_forecast_info$time_zero$timezero_date <- as.Date(the_forecast_info$time_zero$timezero_date)
   the_forecast_info$time_zero$data_version_date <- if (is.null(the_forecast_info$time_zero$data_version_date)) NA
   else as.Date(the_forecast_info$time_zero$data_version_date)

@@ -1,3 +1,7 @@
+# zoltr 0.6.4
+- changed `xx()` to support forecast issue_date
+
+
 # zoltr 0.6.3
 - changed `job_data()` (and therefore `do_zoltar_query()`) to parse the quantile column as double (was defaulting to
   logical in some cases)

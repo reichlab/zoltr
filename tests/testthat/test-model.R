@@ -114,10 +114,10 @@ test_that("forecasts() returns a data.frame", {
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/5/forecasts/")
     expect_is(the_forecasts, "data.frame")
     expect_equal(names(the_forecasts), c("id", "url", "forecast_model_url", "source", "timezero_url", "timezero_date",
-                                         "data_version_date", "is_season_start", "created_at", "notes",
+                                         "data_version_date", "is_season_start", "created_at", "issue_date", "notes",
                                          "forecast_data_url"))
     expect_equal(nrow(the_forecasts), 2)  # 2 forecasts
-    expect_equal(ncol(the_forecasts), 11)
+    expect_equal(ncol(the_forecasts), 12)
 
     exp_row <- data.frame(id = 3, url = "http://example.com/api/forecast/3/",
                           forecast_model_url = "http://example.com/api/model/5/",
@@ -127,6 +127,7 @@ test_that("forecasts() returns a data.frame", {
                           data_version_date = as.Date(NA),
                           is_season_start = TRUE,
                           created_at = as.Date("2020-03-05T15:47:47.369231-05:00"),
+                          issue_date = as.Date("2020-03-05"),
                           notes = "a small prediction file",
                           forecast_data_url = "http://example.com/api/forecast/3/data/",
                           stringsAsFactors = FALSE)
@@ -146,10 +147,10 @@ test_that("forecasts() can handle null notes", {
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/model/5/forecasts/")
     expect_is(the_forecasts, "data.frame")
     expect_equal(names(the_forecasts), c("id", "url", "forecast_model_url", "source", "timezero_url", "timezero_date",
-                                         "data_version_date", "is_season_start", "created_at", "notes",
+                                         "data_version_date", "is_season_start", "created_at", "issue_date", "notes",
                                          "forecast_data_url"))
     expect_equal(nrow(the_forecasts), 2)  # 2 forecasts
-    expect_equal(ncol(the_forecasts), 11)
+    expect_equal(ncol(the_forecasts), 12)
 
     exp_row <- data.frame(id = 3, url = "http://example.com/api/forecast/3/",
                           forecast_model_url = "http://example.com/api/model/5/",
@@ -159,6 +160,7 @@ test_that("forecasts() can handle null notes", {
                           data_version_date = as.Date(NA),
                           is_season_start = TRUE,
                           created_at = as.Date("2020-03-05T15:47:47.369231-05:00"),
+                          issue_date = as.Date("2020-03-05"),
                           notes = as.character(NA),
                           forecast_data_url = "http://example.com/api/forecast/3/data/",
                           stringsAsFactors = FALSE)
