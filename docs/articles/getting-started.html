@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.4</span>
       </span>
     </div>
 
@@ -130,16 +130,16 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_projects</span>)
 <span class="co">#&gt; 'data.frame':    6 obs. of  10 variables:</span>
-<span class="co">#&gt;  $ id                   : int  218 44 4 9 41 6</span>
-<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/218/" "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/4/" "https://www.zoltardata.com/api/project/9/" ...</span>
-<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/72/" "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/4/" "https://www.zoltardata.com/api/user/7/" ...</span>
+<span class="co">#&gt;  $ id                   : int  44 218 4 9 41 6</span>
+<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/218/" "https://www.zoltardata.com/api/project/4/" "https://www.zoltardata.com/api/project/9/" ...</span>
+<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/72/" "https://www.zoltardata.com/api/user/4/" "https://www.zoltardata.com/api/user/7/" ...</span>
 <span class="co">#&gt;  $ public               : logi  TRUE TRUE FALSE TRUE TRUE TRUE</span>
-<span class="co">#&gt;  $ name                 : chr  "2020 Election Forecasts" "COVID-19 Forecasts" "Impetus Province Forecasts" "CDC Real-time Forecasts" ...</span>
-<span class="co">#&gt;  $ description          : chr  "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ "Guidelines and forecasts for a collaborative U.S. influenza forecasting project." ...</span>
-<span class="co">#&gt;  $ home_url             : chr  "https://reichlab.io" "https://covid19forecasthub.org" "http://www.iddynamics.jhsph.edu/projects/impetus" "https://github.com/FluSightNetwork/cdc-flusight-ensemble" ...</span>
+<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "2020 Election Forecasts" "Impetus Province Forecasts" "CDC Real-time Forecasts" ...</span>
+<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ "Guidelines and forecasts for a collaborative U.S. influenza forecasting project." ...</span>
+<span class="co">#&gt;  $ home_url             : chr  "https://covid19forecasthub.org" "https://reichlab.io" "http://www.iddynamics.jhsph.edu/projects/impetus" "https://github.com/FluSightNetwork/cdc-flusight-ensemble" ...</span>
 <span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Biweek" "Week" ...</span>
-<span class="co">#&gt;  $ visualization_y_label: chr  "Votes/voteshare (percent)" "Weighted ILI (%)" "DHF cases" "Weighted ILI (%)" ...</span>
-<span class="co">#&gt;  $ core_data            : chr  "https://zoltardata.com/" "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://github.com/reichlab/dengue-data" "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/real-time-component-models" ...</span></pre></body></html></div>
+<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "Votes/voteshare (percent)" "DHF cases" "Weighted ILI (%)" ...</span>
+<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://zoltardata.com/" "https://github.com/reichlab/dengue-data" "https://github.com/FluSightNetwork/cdc-flusight-ensemble/tree/master/model-forecasts/real-time-component-models" ...</span></pre></body></html></div>
 </div>
 <div id="get-a-project-to-work-with-and-list-its-info-and-models" class="section level2">
 <h2 class="hasAnchor">
@@ -189,7 +189,8 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="fl">TRUE</span>, <span class="st">"docs forecast model"</span>,
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">types</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"point"</span>, <span class="st">"quantile"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/31205/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/32666/</span>
+<span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">forecast_data</span>
@@ -221,7 +222,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">score_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="fl">FALSE</span>, <span class="st">"docs forecast model"</span>,
                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">scores</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"abs_error"</span>, <span class="st">"pit"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/31206/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/32667/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">score_data</span>
@@ -245,7 +246,7 @@
 
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
-<span class="co">#&gt; 'data.frame':    1 obs. of  11 variables:</span>
+<span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span>
 <span class="co">#&gt;  $ id                : int 9753</span>
 <span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/9753/"</span>
 <span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/139/"</span>
@@ -255,6 +256,7 @@
 <span class="co">#&gt;  $ data_version_date : Date, format: NA</span>
 <span class="co">#&gt;  $ is_season_start   : logi TRUE</span>
 <span class="co">#&gt;  $ created_at        : Date, format: "2020-04-13"</span>
+<span class="co">#&gt;  $ issue_date        : Date, format: "2020-04-13"</span>
 <span class="co">#&gt;  $ notes             : chr NA</span>
 <span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/9753/data/"</span></pre></body></html></div>
 </div>
