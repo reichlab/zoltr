@@ -73,31 +73,47 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #'   \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param job_url URL of a valid job in zoltar_connection that has a data file associated with it
-#' @param is_forecast_query boolean indicating whether this is to query forecasts or scores
+#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".
 #' @export
 #' @examples \dontrun{
 #'   the_job_data <- job_data(conn, "http://example.com/api/job/2/")
 #' }
-job_data <- function(zoltar_connection, job_url, is_forecast_query) {
+job_data <- function(zoltar_connection, job_url, query_type) {
+  if (!query_type %in% c("forecasts", "scores", "truth")) {
+    stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
+  }
+
   data_url <- paste0(job_url, 'data/')
-  # columns and expected types depend on is_forecast_query:
+  # columns and expected types depend on query_type:
   #
-  # `is_forecast_query = TRUE`:
+  # query_type == "forecasts": recall all but the first six columns have types that depend on the target, and can be
+  #                            number, character, Date, or logical, so we use '?':
   #   model,timezero,season,unit,target,class,value,cat,prob,sample,quantile,family,param1,param2,param3
   #   c     D        c      c    c      c     ?     ?   ?    ?      ?        ?      ?      ?      ?
   #
-  # `is_forecast_query = FALSE`: recall that the first six columns are fixed, but the number of score ones varies:
+  # query_type == "scores": recall the first six columns are fixed, but the number of score ones varies:
   #   model,timezero,season,unit,target,truth,score_1,score_2,...
   #   c     c        c      c    c      ?     ?       ?       ...
-  score_cols <- readr::cols(
-    .default = readr::col_double(),  # scores
-    model = readr::col_character(),
-    timezero = readr::col_date(format = ""),
-    season = readr::col_character(),
-    unit = readr::col_character(),
-    target = readr::col_character()
-  )
-  get_resource(zoltar_connection, data_url, if (is_forecast_query) "cDcccc????d????" else score_cols)
+  #
+  # query_type == "truth": recall that the value column's type depend on the target, and can be number, character, Date,
+  #                        or logical, so we use '?':
+  #   timezero,unit,target,value
+  #   D        c    c      ?
+  if (query_type == "forecasts") {
+    col_types <- "cDcccc????d????"
+  } else if (query_type == "scores") {
+    col_types <- readr::cols(
+      .default = readr::col_double(),  # scores
+      model = readr::col_character(),
+      timezero = readr::col_date(format = ""),
+      season = readr::col_character(),
+      unit = readr::col_character(),
+      target = readr::col_character()
+    )
+  } else {  # query_type == "truth"
+    col_types <- "Dcc?"
+  }
+  get_resource(zoltar_connection, data_url, col_types)
 }
 
 

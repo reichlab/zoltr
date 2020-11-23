@@ -7,7 +7,7 @@
 do_zoltar_query(
   zoltar_connection,
   project_url,
-  is_forecast_query,
+  query_type,
   models = NULL,
   units = NULL,
   targets = NULL,
@@ -22,7 +22,7 @@ do_zoltar_query(
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
-\item{is_forecast_query}{boolean indicating whether this is to query forecasts or scores}
+\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".}
 
 \item{models}{Character vector of model abbreviations}
 
@@ -33,11 +33,11 @@ c("1 wk ahead cum death", "2 wk ahead cum death")}
 
 \item{timezeros}{character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'}
 
-\item{types}{used for forecast queries (i.e., is_forecast_query is TRUE), is a character vector of types
-to retrieve as documented at at \url{https://docs.zoltardata.com/}}
+\item{types}{used for forecast queries, is a character vector of types to retrieve as documented at
+\url{https://docs.zoltardata.com/}}
 
-\item{scores}{used for score queries (i.e., is_forecast_query is FALSE), is a character vector of score
-abbreviations to retrieve as documented at at \url{https://docs.zoltardata.com/}}
+\item{scores}{used for score queries, is a character vector of score abbreviations to retrieve as documented at
+\url{https://docs.zoltardata.com/}}
 
 \item{verbose}{if TRUE, print messages on job status poll}
 }

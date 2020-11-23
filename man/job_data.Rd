@@ -4,14 +4,14 @@
 \alias{job_data}
 \title{Gets a job's file's data}
 \usage{
-job_data(zoltar_connection, job_url, is_forecast_query)
+job_data(zoltar_connection, job_url, query_type)
 }
 \arguments{
 \item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
 \item{job_url}{URL of a valid job in zoltar_connection that has a data file associated with it}
 
-\item{is_forecast_query}{boolean indicating whether this is to query forecasts or scores}
+\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".}
 }
 \value{
 A `data.frame` of Job's data. The columns depend on is_forecast_query. Full documentation at

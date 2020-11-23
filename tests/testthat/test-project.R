@@ -48,7 +48,7 @@ test_that("create_project() calls re_authenticate_if_necessary(), and returns a 
 test_that("submit_query() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
 
-  # test `is_forecast_query = TRUE` POSTs to correct uri
+  # test `is_forecast_query = "forecasts"` POSTs to correct uri
   m <- mock()
   # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
   job_json <- jsonlite::read_json("data/job-2.json")
@@ -58,12 +58,12 @@ test_that("submit_query() calls re_authenticate_if_necessary()", {
         body = job_json,
         status = 200,
         headers = list('Content-Type' = 'application/json; charset=utf-8'))
-    submit_query(zoltar_connection, "http://example.com/api/project/1/", TRUE, list())
+    submit_query(zoltar_connection, "http://example.com/api/project/1/", "forecasts", list())
     expect_equal(length(mock_calls(m)), 1)
   })
 
 
-  # test `is_forecast_query = FALSE` POSTs to correct uri
+  # test `is_forecast_query = "scores"` POSTs to correct uri
   m <- mock()
   # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
   job_json <- jsonlite::read_json("data/job-2.json")
@@ -73,7 +73,22 @@ test_that("submit_query() calls re_authenticate_if_necessary()", {
         body = job_json,
         status = 200,
         headers = list('Content-Type' = 'application/json; charset=utf-8'))
-    submit_query(zoltar_connection, "http://example.com/api/project/1/", FALSE, list())
+    submit_query(zoltar_connection, "http://example.com/api/project/1/", "scores", list())
+    expect_equal(length(mock_calls(m)), 1)
+  })
+
+
+  # test `is_forecast_query = "truth"` POSTs to correct uri
+  m <- mock()
+  # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
+  job_json <- jsonlite::read_json("data/job-2.json")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("post", uri = "http://example.com/api/project/1/truth_queries/") %>%
+      to_return(
+        body = job_json,
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    submit_query(zoltar_connection, "http://example.com/api/project/1/", "truth", list())
     expect_equal(length(mock_calls(m)), 1)
   })
 })
@@ -86,20 +101,6 @@ test_that("delete_project() calls delete_resource", {
     delete_project(zoltar_connection, "http://example.com/api/project/0/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/0/")
-  })
-})
-
-
-test_that("truth() returns a data.frame", {
-  zoltar_connection <- new_connection("http://example.com")
-  docs_truth <- utils::read.csv(file.path("data/docs-ground-truth-validated.csv"))
-  m <- mock(docs_truth)
-  testthat::with_mock("zoltr::get_resource" = m, {
-    the_truth <- truth(zoltar_connection, "http://example.com/api/project/1/")
-    expect_equal(length(mock_calls(m)), 1)
-    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/truth_data/")
-    expect_equal(dim(the_truth), c(14, 4))
-    expect_equal(names(the_truth), c("timezero", "unit", "target", "value"))
   })
 })
 
@@ -210,12 +211,12 @@ test_that("submit_query() creates a Job", {
     load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_forecast() call
     response  # actual response doesn't matter, just its class
   },
-                      submit_query(zoltar_connection, "http://example.com/api/project/1/", TRUE, query))
+                      submit_query(zoltar_connection, "http://example.com/api/project/1/", "forecasts", query))
   expect_equal(called_args$url, "http://example.com/api/project/1/forecast_queries/")
   expect_equal(as.character(called_args$body), "{\"query\":{}}")  # due to httr/jsonlite fighting
 
   # test a job url is returned
-  job_url <- submit_query(zoltar_connection, "http://example.com/api/project/1/", TRUE, query)
+  job_url <- submit_query(zoltar_connection, "http://example.com/api/project/1/", "forecasts", query)
   expect_equal(job_url, "http://example.com/api/job/2/")
 })
 

@@ -4,34 +4,28 @@
 \alias{submit_query}
 \title{Submit a query}
 \usage{
-submit_query(zoltar_connection, project_url, is_forecast_query, query)
+submit_query(zoltar_connection, project_url, query_type, query)
 }
 \arguments{
 \item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
-\item{is_forecast_query}{boolean indicating whether this is to query forecasts or scores}
+\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".}
 
 \item{query}{A `list` of character `list`s that constrains the queried data. It is the analog of
-the JSON object documented at \url{https://docs.zoltardata.com/}. Briefly, query is a list of up to five
-keys, each containing a list of characters. The first four are independent of is_forecast_query,
-and contain object identifiers in project_url:
-  - "models": optional list of model abbreviation strings
-The fifth key is either "types" (if is_forecast_query is TRUE) or "scores" (if FALSE). 'types': contains
-one or more of: `bin`, `named`, `point`, `sample`, and `quantile`. "scores": contains one or more score
-abbreviations, currently: 'error' 'abs_error', 'log_single_bin', 'log_multi_bin', 'pit', 'interval_2',
-'interval_5', 'interval_10', 'interval_20', ..., 'interval_100'.}
+the JSON object documented at \url{https://docs.zoltardata.com/}. The keys vary depending on query_type. References
+to models, units, targets, and timezeros are strings that name the objects, and not IDs.}
 }
 \value{
 a Job URL for tracking the query and getting its results when it successfully completes
 }
 \description{
-Submits a request for the execution of a query of forecasts in this Project.
+Submits a request for the execution of a query of either forecasts, scores, or truth in this Project.
 }
 \examples{
 \dontrun{
-  job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/", TRUE,
+  job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/", "forecasts",
                           list("models"=list(150, 237), "units"=list(335),
                           "targets"=list(1894, 1897), "timezeros"=list(739, 738),
                           "types"=list("point", "quantile")))
