@@ -1,5 +1,9 @@
+# zoltr 0.6.5
+- changed truth retrieval from file-based to query-based (like forecast and score data)
+
+
 # zoltr 0.6.4
-- changed `xx()` to support forecast issue_date
+- changed `forecast_info()` and `forecasts()` to support forecast issue_date
 
 
 # zoltr 0.6.3

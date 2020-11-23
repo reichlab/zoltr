@@ -1,6 +1,6 @@
 Package: zoltr
 Title: Interface to the 'Zoltar' Forecast Repository API
-Version: 0.6.4
+Version: 0.6.5
 Authors@R: c(
     person("Matthew", "Cornell", role = c("aut", "cre"), email = "cornell@umass.edu"),
     person("Nicholas", "Reich", role = c("aut", "cph"), email = "nick@schoolph.umass.edu"))
