@@ -76,7 +76,7 @@ the latter you may use `busy_poll_job()` to ensure the job is done." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.5</span>
       </span>
     </div>
 
@@ -143,7 +143,7 @@ passed (the expiration time) or 2) the Job is not complete and therefore has not
 the latter you may use `busy_poll_job()` to ensure the job is done.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>job_data</span>(<span class='no'>zoltar_connection</span>, <span class='no'>job_url</span>, <span class='no'>is_forecast_query</span>)</pre>
+    <pre class="usage"><span class='fu'>job_data</span>(<span class='no'>zoltar_connection</span>, <span class='no'>job_url</span>, <span class='no'>query_type</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -157,8 +157,8 @@ the latter you may use `busy_poll_job()` to ensure the job is done.</p>
       <td><p>URL of a valid job in zoltar_connection that has a data file associated with it</p></td>
     </tr>
     <tr>
-      <th>is_forecast_query</th>
-      <td><p>boolean indicating whether this is to query forecasts or scores</p></td>
+      <th>query_type</th>
+      <td><p>A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".</p></td>
     </tr>
     </table>
 

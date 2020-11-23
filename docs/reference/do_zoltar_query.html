@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.5</span>
       </span>
     </div>
 
@@ -138,7 +138,7 @@
     <pre class="usage"><span class='fu'>do_zoltar_query</span>(
   <span class='no'>zoltar_connection</span>,
   <span class='no'>project_url</span>,
-  <span class='no'>is_forecast_query</span>,
+  <span class='no'>query_type</span>,
   <span class='kw'>models</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>units</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
@@ -160,8 +160,8 @@
       <td><p>URL of a project in zoltar_connection's projects</p></td>
     </tr>
     <tr>
-      <th>is_forecast_query</th>
-      <td><p>boolean indicating whether this is to query forecasts or scores</p></td>
+      <th>query_type</th>
+      <td><p>A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".</p></td>
     </tr>
     <tr>
       <th>models</th>
@@ -182,13 +182,13 @@ c("1 wk ahead cum death", "2 wk ahead cum death")</p></td>
     </tr>
     <tr>
       <th>types</th>
-      <td><p>used for forecast queries (i.e., is_forecast_query is TRUE), is a character vector of types
-to retrieve as documented at at <a href='https://docs.zoltardata.com/'>https://docs.zoltardata.com/</a></p></td>
+      <td><p>used for forecast queries, is a character vector of types to retrieve as documented at
+<a href='https://docs.zoltardata.com/'>https://docs.zoltardata.com/</a></p></td>
     </tr>
     <tr>
       <th>scores</th>
-      <td><p>used for score queries (i.e., is_forecast_query is FALSE), is a character vector of score
-abbreviations to retrieve as documented at at <a href='https://docs.zoltardata.com/'>https://docs.zoltardata.com/</a></p></td>
+      <td><p>used for score queries, is a character vector of score abbreviations to retrieve as documented at
+<a href='https://docs.zoltardata.com/'>https://docs.zoltardata.com/</a></p></td>
     </tr>
     <tr>
       <th>verbose</th>
