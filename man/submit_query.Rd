@@ -26,8 +26,8 @@ Submits a request for the execution of a query of either forecasts, scores, or t
 \examples{
 \dontrun{
   job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/", "forecasts",
-                          list("models"=list(150, 237), "units"=list(335),
-                          "targets"=list(1894, 1897), "timezeros"=list(739, 738),
+                          list("models"=list("60-contact", "CovidIL_100"), "units"=list("US"),
+                          "targets"=list(1894, 1897), "timezeros"=list("2020-05-14", "2020-05-09"),
                           "types"=list("point", "quantile")))
 }
 }

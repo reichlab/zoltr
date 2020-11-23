@@ -223,8 +223,8 @@ timezeros <- function(zoltar_connection, project_url) {
 #' @export
 #' @examples \dontrun{
 #'   job_url <- submit_query(conn, "https://www.zoltardata.com/api/project/9/", "forecasts",
-#'                           list("models"=list(150, 237), "units"=list(335),
-#'                           "targets"=list(1894, 1897), "timezeros"=list(739, 738),
+#'                           list("models"=list("60-contact", "CovidIL_100"), "units"=list("US"),
+#'                           "targets"=list(1894, 1897), "timezeros"=list("2020-05-14", "2020-05-09"),
 #'                           "types"=list("point", "quantile")))
 #' }
 submit_query <- function(zoltar_connection, project_url, query_type, query) {
@@ -268,30 +268,35 @@ json_for_query <- function(query) {
 #' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
-#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".
-#' @param models Character vector of model abbreviations
-#' @param units character vector of units to retrieve, e.g., c("01003", "US")
-#' @param targets character vector of targets to retrieve, for example
-#'   c("1 wk ahead cum death", "2 wk ahead cum death")
-#' @param timezeros character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'
-#' @param types used for forecast queries, is a character vector of types to retrieve as documented at
-#'   \url{https://docs.zoltardata.com/}
-#' @param scores used for score queries, is a character vector of score abbreviations to retrieve as documented at
-#'   \url{https://docs.zoltardata.com/}
+#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts", "scores",
+#'   or "truth".
+#' @param models Character vector of model abbreviations. Used for query_type = "forecasts" and "scores".
+#' @param units Character vector of units to retrieve. Used for all query_types.
+#' @param targets Character vector of targets to retrieve. Used for all query_types.
+#' @param timezeros Character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'.
+#'   Used for all query_types.
+#' @param types Character vector of prediction types to retrieve. Used for query_type = "forecasts".
+#' @param scores Character vector of score abbreviations to retrieve. Used for query_type = "scores".
+#' @param as_of A date in YYYY_MM_DD_DATE_FORMAT that constrains based on forecast `issue_date`. See
+#'   documentation on forecast versions for details. Used for query_type = "forecasts".
 #' @param verbose if TRUE, print messages on job status poll
 #' @export
 #' @examples \dontrun{
 #'   forecast_data <- do_zoltar_query(
-#'     conn, "https://www.zoltardata.com/api/project/44/", TRUE,
-#'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
-#'     c("2020-07-19", "2020-07-20"), c("quantile"))
+#'     conn, "https://www.zoltardata.com/api/project/44/", "forecasts",
+#'     models=c("CMU-TimeSeries", "UMass-MechBayes"), units=c("01003", "US"),
+#'     targets=c("1 wk ahead inc death"), targets=c("2020-07-19", "2020-07-20"),
+#'     types=c("quantile"), as_of="2020-07-10")
 #'   score_data <- do_zoltar_query(
-#'     conn, "https://www.zoltardata.com/api/project/44/", FALSE,
+#'     conn, "https://www.zoltardata.com/api/project/44/", "scores",
 #'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
 #'     c("2020-07-19", "2020-07-20"), c("abs_error", "pit"))
+#'   truth_data <- do_zoltar_query(
+#'     conn, "https://www.zoltardata.com/api/project/44/", "truth", c("01003", "US"),
+#'     c("1 wk ahead inc death"), c("2020-07-19", "2020-07-20"))
 #' }
 do_zoltar_query <- function(zoltar_connection, project_url, query_type, models = NULL, units = NULL,
-                            targets = NULL, timezeros = NULL, types = NULL, scores = NULL, verbose = TRUE) {
+                            targets = NULL, timezeros = NULL, types = NULL, scores = NULL, as_of=NULL, verbose = TRUE) {
   if (!query_type %in% c("forecasts", "scores", "truth")) {
     stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
   }
@@ -304,6 +309,7 @@ do_zoltar_query <- function(zoltar_connection, project_url, query_type, models =
   if (query_type == "forecasts") {
     zoltar_query$models <- as.list(models)
     zoltar_query$types <- as.list(types)
+    zoltar_query$as_of <- as_of
   } else if (query_type == "scores") {
     zoltar_query$models <- as.list(models)
     zoltar_query$scores <- as.list(scores)
