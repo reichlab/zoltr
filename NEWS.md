@@ -1,3 +1,8 @@
+# zoltr 0.6.6
+- changed `truth_info()` to match a server change in truth naming: now has `source` and `created_at` instead  of
+  `truth_csv_filename` and `truth_updated_at`, respectively
+
+
 # zoltr 0.6.5
 - changed truth retrieval from file-based to query-based (like forecast and score data)
 

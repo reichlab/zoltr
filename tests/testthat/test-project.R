@@ -309,7 +309,7 @@ test_that("truth_info() returns a list", {
   m <- mock(truth_info_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     exp_truth_info <- truth_info_json
-    exp_truth_info$truth_updated_at <- as.Date(exp_truth_info$truth_updated_at)
+    exp_truth_info$created_at <- as.Date(exp_truth_info$created_at)
     act_truth_info <- truth_info(zoltar_connection, "http://example.com/api/project/1/")
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/truth/")

@@ -359,7 +359,7 @@ project_info <- function(zoltar_connection, project_url) {
 truth_info <- function(zoltar_connection, project_url) {
   truth_info_url <- paste0(project_url, 'truth/')
   the_truth_info <- get_resource(zoltar_connection, truth_info_url)
-  the_truth_info$truth_updated_at <- as.Date(the_truth_info$truth_updated_at)
+  the_truth_info$created_at <- as.Date(the_truth_info$created_at)
   the_truth_info
 }
 
