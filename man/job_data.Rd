@@ -11,7 +11,7 @@ job_data(zoltar_connection, job_url, query_type)
 
 \item{job_url}{URL of a valid job in zoltar_connection that has a data file associated with it}
 
-\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".}
+\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts" or "truth".}
 }
 \value{
 A `data.frame` of Job's data. The columns depend on is_forecast_query. Full documentation at
@@ -19,7 +19,7 @@ A `data.frame` of Job's data. The columns depend on is_forecast_query. Full docu
 }
 \description{
 Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
-that are the results of a project forecast or score queries via `submit_query()`. NB: It is a 404 Not Found
+that are the results of a project forecast or truth queries via `submit_query()`. NB: It is a 404 Not Found
 error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
 passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
 the latter you may use `busy_poll_job()` to ensure the job is done.

@@ -1,2 +1,0 @@
-model,timezero,season,unit,target,error,abs_error,log_single_bin,log_multi_bin,pit
-docs forecast model,2011-10-02,2011-2012,location1,pct next week,2.4432,2.4432,,,

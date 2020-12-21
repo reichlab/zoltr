@@ -211,12 +211,12 @@ timezeros <- function(zoltar_connection, project_url) {
 
 #' Submit a query
 #'
-#' Submits a request for the execution of a query of either forecasts, scores, or truth in this Project.
+#' Submits a request for the execution of a query of either forecasts or truth in this Project.
 #'
 #' @return a Job URL for tracking the query and getting its results when it successfully completes
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
-#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".
+#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".
 #' @param query A `list` of character `list`s that constrains the queried data. It is the analog of
 #'   the JSON object documented at \url{https://docs.zoltardata.com/}. The keys vary depending on query_type. References
 #'   to models, units, targets, and timezeros are strings that name the objects, and not IDs.
@@ -228,13 +228,12 @@ timezeros <- function(zoltar_connection, project_url) {
 #'                           "types"=list("point", "quantile")))
 #' }
 submit_query <- function(zoltar_connection, project_url, query_type, query) {
-  if (!query_type %in% c("forecasts", "scores", "truth")) {
+  if (!query_type %in% c("forecasts", "truth")) {
     stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
   }
 
   re_authenticate_if_necessary(zoltar_connection)
   queries_url_part <- list("forecasts" = "forecast_queries/",
-                           "scores" = "scores_queries/",
                            "truth" = "truth_queries/")[query_type]
   queries_url <- paste0(project_url, queries_url_part)
   json_body <- json_for_query(query)
@@ -263,20 +262,18 @@ json_for_query <- function(query) {
 }
 
 
-#' A convenience function to construct and execute a Zoltar query for either forecast or score data.
+#' A convenience function to construct and execute a Zoltar query for either forecast or truth data.
 #'
 #' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
-#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts", "scores",
-#'   or "truth".
-#' @param models Character vector of model abbreviations. Used for query_type = "forecasts" and "scores".
+#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".
+#' @param models Character vector of model abbreviations. Used for query_type = "forecasts".
 #' @param units Character vector of units to retrieve. Used for all query_types.
 #' @param targets Character vector of targets to retrieve. Used for all query_types.
 #' @param timezeros Character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'.
 #'   Used for all query_types.
 #' @param types Character vector of prediction types to retrieve. Used for query_type = "forecasts".
-#' @param scores Character vector of score abbreviations to retrieve. Used for query_type = "scores".
 #' @param as_of A date in YYYY_MM_DD_DATE_FORMAT that constrains based on forecast `issue_date`. See
 #'   documentation on forecast versions for details. Used for query_type = "forecasts".
 #' @param verbose if TRUE, print messages on job status poll
@@ -287,17 +284,13 @@ json_for_query <- function(query) {
 #'     models=c("CMU-TimeSeries", "UMass-MechBayes"), units=c("01003", "US"),
 #'     targets=c("1 wk ahead inc death"), targets=c("2020-07-19", "2020-07-20"),
 #'     types=c("quantile"), as_of="2020-07-10")
-#'   score_data <- do_zoltar_query(
-#'     conn, "https://www.zoltardata.com/api/project/44/", "scores",
-#'     c("CMU-TimeSeries", "UMass-MechBayes"), c("01003", "US"), c("1 wk ahead inc death"),
-#'     c("2020-07-19", "2020-07-20"), c("abs_error", "pit"))
 #'   truth_data <- do_zoltar_query(
 #'     conn, "https://www.zoltardata.com/api/project/44/", "truth", c("01003", "US"),
 #'     c("1 wk ahead inc death"), c("2020-07-19", "2020-07-20"))
 #' }
 do_zoltar_query <- function(zoltar_connection, project_url, query_type, models = NULL, units = NULL,
-                            targets = NULL, timezeros = NULL, types = NULL, scores = NULL, as_of=NULL, verbose = TRUE) {
-  if (!query_type %in% c("forecasts", "scores", "truth")) {
+                            targets = NULL, timezeros = NULL, types = NULL, as_of=NULL, verbose = TRUE) {
+  if (!query_type %in% c("forecasts", "truth")) {
     stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
   }
 
@@ -310,9 +303,6 @@ do_zoltar_query <- function(zoltar_connection, project_url, query_type, models =
     zoltar_query$models <- as.list(models)
     zoltar_query$types <- as.list(types)
     zoltar_query$as_of <- as_of
-  } else if (query_type == "scores") {
-    zoltar_query$models <- as.list(models)
-    zoltar_query$scores <- as.list(scores)
   }
 
   job_url <- zoltr::submit_query(zoltar_connection, project_url, query_type, zoltar_query)

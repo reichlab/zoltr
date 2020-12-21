@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 ## Overview
 
-This package contains functions for working with the [Zoltar](https://www.zoltardata.com/) forecast repository's API, including projects, models, forecasts, and scores. Read more about this package at the [zoltr pkgdown site](http://reichlab.io/zoltr/). Documentation on Zolar itself is at [docs.zoltardata.com](https://docs.zoltardata.com/).
+This package contains functions for working with the [Zoltar](https://www.zoltardata.com/) forecast repository's API, including projects, models, forecasts, and truth. Read more about this package at the [zoltr pkgdown site](http://reichlab.io/zoltr/). Documentation on Zolar itself is at [docs.zoltardata.com](https://docs.zoltardata.com/).
 
 
 ## Installation
@@ -47,7 +47,7 @@ For those starting out we recommend you begin with the [Getting Started vignette
 
 ## Usage
 
-Read more at the [zoltr pkgdown site](http://reichlab.io/zoltr/), but briefly you use the `new_connection()` function to create a connection to [Zoltar](https://www.zoltardata.com/) and then pass that connection along with the _URL_ of the resource of interest (e.g., a project, model, or forecast) to this package's various functions like `projects()`, `project_info()`, or `scores()`.
+Read more at the [zoltr pkgdown site](http://reichlab.io/zoltr/), but briefly you use the `new_connection()` function to create a connection to [Zoltar](https://www.zoltardata.com/) and then pass that connection along with the _URL_ of the resource of interest (e.g., a project, model, or forecast) to this package's various functions like `projects()` or `project_info()`.
 
 ```{r}
 library(zoltr)

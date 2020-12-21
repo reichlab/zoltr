@@ -64,7 +64,7 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #' Gets a job's file's data
 #'
 #' Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
-#' that are the results of a project forecast or score queries via `submit_query()`. NB: It is a 404 Not Found
+#' that are the results of a project forecast or truth queries via `submit_query()`. NB: It is a 404 Not Found
 #' error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
 #' passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
 #' the latter you may use `busy_poll_job()` to ensure the job is done.
@@ -73,13 +73,13 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #'   \url{https://docs.zoltardata.com/}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param job_url URL of a valid job in zoltar_connection that has a data file associated with it
-#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".
+#' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".
 #' @export
 #' @examples \dontrun{
 #'   the_job_data <- job_data(conn, "http://example.com/api/job/2/")
 #' }
 job_data <- function(zoltar_connection, job_url, query_type) {
-  if (!query_type %in% c("forecasts", "scores", "truth")) {
+  if (!query_type %in% c("forecasts", "truth")) {
     stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
   }
 
@@ -91,25 +91,12 @@ job_data <- function(zoltar_connection, job_url, query_type) {
   #   model,timezero,season,unit,target,class,value,cat,prob,sample,quantile,family,param1,param2,param3
   #   c     D        c      c    c      c     ?     ?   ?    ?      ?        ?      ?      ?      ?
   #
-  # query_type == "scores": recall the first six columns are fixed, but the number of score ones varies:
-  #   model,timezero,season,unit,target,truth,score_1,score_2,...
-  #   c     c        c      c    c      ?     ?       ?       ...
-  #
   # query_type == "truth": recall that the value column's type depend on the target, and can be number, character, Date,
   #                        or logical, so we use '?':
   #   timezero,unit,target,value
   #   D        c    c      ?
   if (query_type == "forecasts") {
     col_types <- "cDcccc????d????"
-  } else if (query_type == "scores") {
-    col_types <- readr::cols(
-      .default = readr::col_double(),  # scores
-      model = readr::col_character(),
-      timezero = readr::col_date(format = ""),
-      season = readr::col_character(),
-      unit = readr::col_character(),
-      target = readr::col_character()
-    )
   } else {  # query_type == "truth"
     col_types <- "Dcc?"
   }

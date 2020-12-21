@@ -126,18 +126,6 @@ Hopefully you'll "SUCCESS" eventually printed and then the resulting data itself
 > Note: Zoltar limits the number of rows a query can return, giving you an error if they are exceeded. The job's failure message will indicate whether this has happened.
 
 
-## Query a project's score data
-
-Querying scores uses the same functions as that of querying forecasts, along with a very similar query format - all args are the same except `query_type` is `"scores"` and we pass `scores` instead of `types`:
-
-```{r}
-score_data <- do_zoltar_query(zoltar_connection, project_url, "scores", "docs forecast model", 
-                              c("location1", "location2"), c("pct next week", "cases next week"),
-                              c("2011-10-02", "2011-10-09", "2011-10-16"), scores = c("abs_error", "pit"))
-score_data
-```
-
-
 ## Query a project's truth data
 
 Similarly, querying truth is done by passing a `query_type` of `"truth"`. Further, only the `xx`, `xx`, and `xx` args are allowed:

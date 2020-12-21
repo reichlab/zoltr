@@ -63,21 +63,6 @@ test_that("submit_query() calls re_authenticate_if_necessary()", {
   })
 
 
-  # test `is_forecast_query = "scores"` POSTs to correct uri
-  m <- mock()
-  # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
-  job_json <- jsonlite::read_json("data/job-2.json")
-  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
-    webmockr::stub_request("post", uri = "http://example.com/api/project/1/scores_queries/") %>%
-      to_return(
-        body = job_json,
-        status = 200,
-        headers = list('Content-Type' = 'application/json; charset=utf-8'))
-    submit_query(zoltar_connection, "http://example.com/api/project/1/", "scores", list())
-    expect_equal(length(mock_calls(m)), 1)
-  })
-
-
   # test `is_forecast_query = "truth"` POSTs to correct uri
   m <- mock()
   # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:

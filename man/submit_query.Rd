@@ -11,7 +11,7 @@ submit_query(zoltar_connection, project_url, query_type, query)
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
-\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".}
+\item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts" or "truth".}
 
 \item{query}{A `list` of character `list`s that constrains the queried data. It is the analog of
 the JSON object documented at \url{https://docs.zoltardata.com/}. The keys vary depending on query_type. References
@@ -21,7 +21,7 @@ to models, units, targets, and timezeros are strings that name the objects, and 
 a Job URL for tracking the query and getting its results when it successfully completes
 }
 \description{
-Submits a request for the execution of a query of either forecasts, scores, or truth in this Project.
+Submits a request for the execution of a query of either forecasts or truth in this Project.
 }
 \examples{
 \dontrun{

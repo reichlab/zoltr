@@ -1,3 +1,7 @@
+# zoltr 0.7
+- removed scoring-related features, which are transitioning from the server to client libraries
+
+
 # zoltr 0.6.6
 - changed `truth_info()` to match a server change in truth naming: now has `source` and `created_at` instead  of
   `truth_csv_filename` and `truth_updated_at`, respectively
