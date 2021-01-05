@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A convenience function to construct and execute a Zoltar query for either forecast or score data. — do_zoltar_query • zoltr</title>
+<title>A convenience function to construct and execute a Zoltar query for either forecast or truth data. — do_zoltar_query • zoltr</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="A convenience function to construct and execute a Zoltar query for either forecast or score data. — do_zoltar_query" />
-<meta property="og:description" content="A convenience function to construct and execute a Zoltar query for either forecast or score data." />
+<meta property="og:title" content="A convenience function to construct and execute a Zoltar query for either forecast or truth data. — do_zoltar_query" />
+<meta property="og:description" content="A convenience function to construct and execute a Zoltar query for either forecast or truth data." />
 
 
 
@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7</span>
       </span>
     </div>
 
@@ -126,13 +126,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A convenience function to construct and execute a Zoltar query for either forecast or score data.</h1>
+    <h1>A convenience function to construct and execute a Zoltar query for either forecast or truth data.</h1>
     <small class="dont-index">Source: <a href='https://github.com/reichlab/zoltr/blob/master/R/project.R'><code>R/project.R</code></a></small>
     <div class="hidden name"><code>do_zoltar_query.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A convenience function to construct and execute a Zoltar query for either forecast or score data.</p>
+    <p>A convenience function to construct and execute a Zoltar query for either forecast or truth data.</p>
     </div>
 
     <pre class="usage"><span class='fu'>do_zoltar_query</span>(
@@ -144,7 +144,6 @@
   <span class='kw'>targets</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>timezeros</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>types</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
-  <span class='kw'>scores</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>as_of</span> <span class='kw'>=</span> <span class='kw'>NULL</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
@@ -162,12 +161,11 @@
     </tr>
     <tr>
       <th>query_type</th>
-      <td><p>A character indicating the type of query to run. Must be one of: "forecasts", "scores",
-or "truth".</p></td>
+      <td><p>A character indicating the type of query to run. Must be one of: "forecasts" or "truth".</p></td>
     </tr>
     <tr>
       <th>models</th>
-      <td><p>Character vector of model abbreviations. Used for query_type = "forecasts" and "scores".</p></td>
+      <td><p>Character vector of model abbreviations. Used for query_type = "forecasts".</p></td>
     </tr>
     <tr>
       <th>units</th>
@@ -185,10 +183,6 @@ Used for all query_types.</p></td>
     <tr>
       <th>types</th>
       <td><p>Character vector of prediction types to retrieve. Used for query_type = "forecasts".</p></td>
-    </tr>
-    <tr>
-      <th>scores</th>
-      <td><p>Character vector of score abbreviations to retrieve. Used for query_type = "scores".</p></td>
     </tr>
     <tr>
       <th>as_of</th>
@@ -212,10 +206,6 @@ documentation on forecast versions for details. Used for query_type = "forecasts
     <span class='kw'>models</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CMU-TimeSeries"</span>, <span class='st'>"UMass-MechBayes"</span>), <span class='kw'>units</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"01003"</span>, <span class='st'>"US"</span>),
     <span class='kw'>targets</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1 wk ahead inc death"</span>), <span class='kw'>targets</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-07-19"</span>, <span class='st'>"2020-07-20"</span>),
     <span class='kw'>types</span><span class='kw'>=</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"quantile"</span>), <span class='kw'>as_of</span><span class='kw'>=</span><span class='st'>"2020-07-10"</span>)
-  <span class='no'>score_data</span> <span class='kw'>&lt;-</span> <span class='fu'>do_zoltar_query</span>(
-    <span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/44/"</span>, <span class='st'>"scores"</span>,
-    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"CMU-TimeSeries"</span>, <span class='st'>"UMass-MechBayes"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"01003"</span>, <span class='st'>"US"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1 wk ahead inc death"</span>),
-    <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-07-19"</span>, <span class='st'>"2020-07-20"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"abs_error"</span>, <span class='st'>"pit"</span>))
   <span class='no'>truth_data</span> <span class='kw'>&lt;-</span> <span class='fu'>do_zoltar_query</span>(
     <span class='no'>conn</span>, <span class='st'>"https://www.zoltardata.com/api/project/44/"</span>, <span class='st'>"truth"</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"01003"</span>, <span class='st'>"US"</span>),
     <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"1 wk ahead inc death"</span>), <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"2020-07-19"</span>, <span class='st'>"2020-07-20"</span>))

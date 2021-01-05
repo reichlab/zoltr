@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Gets a job's file's data — job_data" />
 <meta property="og:description" content="Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
-that are the results of a project forecast or score queries via `submit_query()`. NB: It is a 404 Not Found
+that are the results of a project forecast or truth queries via `submit_query()`. NB: It is a 404 Not Found
 error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
 passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
 the latter you may use `busy_poll_job()` to ensure the job is done." />
@@ -76,7 +76,7 @@ the latter you may use `busy_poll_job()` to ensure the job is done." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7</span>
       </span>
     </div>
 
@@ -137,7 +137,7 @@ the latter you may use `busy_poll_job()` to ensure the job is done." />
 
     <div class="ref-description">
     <p>Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
-that are the results of a project forecast or score queries via `submit_query()`. NB: It is a 404 Not Found
+that are the results of a project forecast or truth queries via `submit_query()`. NB: It is a 404 Not Found
 error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
 passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
 the latter you may use `busy_poll_job()` to ensure the job is done.</p>
@@ -158,7 +158,7 @@ the latter you may use `busy_poll_job()` to ensure the job is done.</p>
     </tr>
     <tr>
       <th>query_type</th>
-      <td><p>A character indicating the type of query to run. Must be one of: "forecasts", "scores", or "truth".</p></td>
+      <td><p>A character indicating the type of query to run. Must be one of: "forecasts" or "truth".</p></td>
     </tr>
     </table>
 

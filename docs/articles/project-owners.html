@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7</span>
       </span>
     </div>
 
@@ -116,7 +116,7 @@
 <h2 class="hasAnchor">
 <a href="#create-a-sandbox-project-to-play-with" class="anchor"></a>Create a sandbox project to play with</h2>
 <p>Let’s use the <code><a href="../reference/create_project.html">create_project()</a></code> function to make a temporary project to work with. (Note that if you’re repeating this step and need to delete a previously-created project, you can either use the web UI’s delete button on the project detail page or call the zoltr <code><a href="../reference/delete_project.html">delete_project()</a></code> function to do it programmatically.) <code><a href="../reference/create_project.html">create_project()</a></code> takes a <code>project_config</code> parameter that is a <code>list</code> specifying everything Zoltar needs to create a project, including meta information like name, whether it’s public, etc. In addition it lists the units, targets, and timezeros to create. The new project’s URL is returned, which you can pass to other functions. Here we use <code>docs-project.json</code>, which is the one that creates the example documentation project.</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">project_config</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-project.json"</span>)  <span class="co"># "name": "My project"</span>
+<div class="sourceCode"><html><body><pre class="r"><span class="no">project_config</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html">read_json</a></span>(<span class="st">"docs-project.json"</span>)  <span class="co"># "name": "My project"</span>
 <span class="no">project_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/create_project.html">create_project</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_config</span>)
 <span class="no">the_project_info</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/project_info.html">project_info</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)</pre></body></html></div>
 </div>
@@ -142,10 +142,10 @@
 </blockquote>
 <p><code><a href="../reference/upload_forecast.html">upload_forecast()</a></code> takes the <code>model_url</code> to upload to, the <code>timezero_date</code> in the project to associate the forecast with, and the <code>forecast_data</code> itself. The latter is a nested <code>list</code> of <em>predictions</em> as documented in <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a>, but you can learn about it by looking at the example <code>docs-predictions.json</code>. Briefly, you can see that there is a <code>predictions</code> list of <code>prediction elements</code> (the <code>meta</code> section is ignored), each of which encodes data for a particular unit and target combination. Each <code>prediction element</code> has a class that’s one of four possibilities: <code>bin</code>, <code>named</code>, <code>point</code>, and <code>sample</code>. The structure of the <code>prediction element's</code> contents (the <code>prediction</code> section) is determined by the particular class. For example, a <code>point</code> just has a <code>value</code>, but a <code>bin</code> has a table of <code>cat</code> and <code>prob</code> values.</p>
 <p>Here we will upload the <code>docs-predictions.json</code> file. Note that the passed <code>timezero_date</code> matches one of the timezeros in <code>docs-project.json</code>, the file that was used to create the project. It is an error otherwise.</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://jeroen.cran.dev/jsonlite/reference/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
+<div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="kw pkg">jsonlite</span><span class="kw ns">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html">read_json</a></span>(<span class="st">"docs-predictions.json"</span>)
 <span class="no">job_url</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="no">forecast_data</span>)
 <span class="fu"><a href="../reference/busy_poll_job.html">busy_poll_job</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/34764/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/35035/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span></pre></body></html></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a “SUCCESS” one. (How long it takes will depend on how much other work Zoltar is handling.)</p>
@@ -156,26 +156,26 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span>
-<span class="co">#&gt;  $ id                : int 17622</span>
-<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/17622/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/467/"</span>
-<span class="co">#&gt;  $ source            : chr "forecaste495613de91.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/1472/"</span>
+<span class="co">#&gt;  $ id                : int 17960</span>
+<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/17960/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/468/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast157506697104e.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/1480/"</span>
 <span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span>
 <span class="co">#&gt;  $ data_version_date : Date, format: NA</span>
 <span class="co">#&gt;  $ is_season_start   : logi TRUE</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-12-17"</span>
-<span class="co">#&gt;  $ issue_date        : Date, format: "2020-12-17"</span>
+<span class="co">#&gt;  $ created_at        : Date, format: "2020-12-22"</span>
+<span class="co">#&gt;  $ issue_date        : Date, format: "2020-12-22"</span>
 <span class="co">#&gt;  $ notes             : chr ""</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/17622/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/17960/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up-by-deleting-the-sandbox-project" class="anchor"></a>Clean up by deleting the sandbox project</h2>
 <p><strong>NB: This will delete all of the data associated with the project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
-<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/236/]</span>
-<span class="co">#&gt;   Date: 2020-12-17 19:58</span>
+<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/237/]</span>
+<span class="co">#&gt;   Date: 2020-12-22 18:37</span>
 <span class="co">#&gt;   Status: 204</span>
 <span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span>
 <span class="co">#&gt; &lt;EMPTY BODY&gt;</span></pre></body></html></div>

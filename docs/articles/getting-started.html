@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7</span>
       </span>
     </div>
 
@@ -189,7 +189,8 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs forecast model"</span>,
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">types</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"point"</span>, <span class="st">"quantile"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/34761/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/35033/</span>
+<span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">forecast_data</span>
 <span class="co">#&gt; # A tibble: 8 x 15</span>
@@ -213,29 +214,13 @@
 <p>Note: Zoltar limits the number of rows a query can return, giving you an error if they are exceeded. The job’s failure message will indicate whether this has happened.</p>
 </blockquote>
 </div>
-<div id="query-a-projects-score-data" class="section level2">
-<h2 class="hasAnchor">
-<a href="#query-a-projects-score-data" class="anchor"></a>Query a project’s score data</h2>
-<p>Querying scores uses the same functions as that of querying forecasts, along with a very similar query format - all args are the same except <code>query_type</code> is <code>"scores"</code> and we pass <code>scores</code> instead of <code>types</code>:</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">score_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"scores"</span>, <span class="st">"docs forecast model"</span>,
-                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
-                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">scores</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"abs_error"</span>, <span class="st">"pit"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/34762/</span>
-<span class="co">#&gt; QUEUED</span>
-<span class="co">#&gt; SUCCESS</span>
-<span class="no">score_data</span>
-<span class="co">#&gt; # A tibble: 1 x 8</span>
-<span class="co">#&gt;   model           timezero   season    unit    target      truth abs_error   pit</span>
-<span class="co">#&gt;   &lt;chr&gt;           &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;   &lt;chr&gt;       &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 docs forecast … 2011-10-02 2011-2012 locati… pct next w…  4.54      2.44    NA</span></pre></body></html></div>
-</div>
 <div id="query-a-projects-truth-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#query-a-projects-truth-data" class="anchor"></a>Query a project’s truth data</h2>
 <p>Similarly, querying truth is done by passing a <code>query_type</code> of <code>"truth"</code>. Further, only the <code>xx</code>, <code>xx</code>, and <code>xx</code> args are allowed:</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">truth_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"truth"</span>, <span class="kw">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>),
                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/34763/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/35034/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">truth_data</span>
