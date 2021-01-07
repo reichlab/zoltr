@@ -69,8 +69,9 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #' passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
 #' the latter you may use `busy_poll_job()` to ensure the job is done.
 #'
-#' @return A `data.frame` of Job's data. The columns depend on is_forecast_query. Full documentation at
-#'   \url{https://docs.zoltardata.com/}.
+#' @return A `data.frame` of Job's data. The columns depend on query_type - see
+#'   \url{https://docs.zoltardata.com/fileformats/#truth-data-format-csv} and
+#'   \url{https://docs.zoltardata.com/fileformats/#forecast-data-format-csv}.
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param job_url URL of a valid job in zoltar_connection that has a data file associated with it
 #' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".

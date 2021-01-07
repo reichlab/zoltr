@@ -48,7 +48,7 @@ test_that("create_project() calls re_authenticate_if_necessary(), and returns a 
 test_that("submit_query() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
 
-  # test `is_forecast_query = "forecasts"` POSTs to correct uri
+  # test `query_type = "forecasts"` POSTs to correct uri
   m <- mock()
   # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
   job_json <- jsonlite::read_json("data/job-2.json")
@@ -63,7 +63,7 @@ test_that("submit_query() calls re_authenticate_if_necessary()", {
   })
 
 
-  # test `is_forecast_query = "truth"` POSTs to correct uri
+  # test `query_type = "truth"` POSTs to correct uri
   m <- mock()
   # NB: todo this overrides `test_that("submit_query() creates a Job"` !?:
   job_json <- jsonlite::read_json("data/job-2.json")
