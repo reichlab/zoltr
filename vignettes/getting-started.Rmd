@@ -119,7 +119,7 @@ forecast_data <- do_zoltar_query(zoltar_connection, project_url, "forecasts", "d
 forecast_data
 ```
 
-Hopefully you'll "SUCCESS" eventually printed and then the resulting data itself.
+Hopefully you'll see "SUCCESS" eventually printed and then the resulting data itself.
 
 > Note: Zoltar returns a 404 Not Found error if `job_data()` is called on a Job that has no underlying data file (Zoltar saves query results as temporary files on the server). This can happen for two reasons: 1) 24 hours has passed (the expiration time for temporary files) or 2) the Job is not complete and therefore there is no data file yet. As noted above, you can avoid the latter condition by using `busy_poll_job()` to ensure the job is done.
 
@@ -128,7 +128,7 @@ Hopefully you'll "SUCCESS" eventually printed and then the resulting data itself
 
 ## Query a project's truth data
 
-Similarly, querying truth is done by passing a `query_type` of `"truth"`. Further, only the `xx`, `xx`, and `xx` args are allowed:
+Similarly, querying truth is done by passing a `query_type` of `"truth"`. Further, only the `units`, `targets`, and `timezeros` args are allowed:
 
 ```{r}
 truth_data <- do_zoltar_query(zoltar_connection, project_url, "truth", NULL, c("location1", "location2"),

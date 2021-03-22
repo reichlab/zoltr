@@ -94,7 +94,7 @@
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
-<p>This package contains functions for working with the <a href="https://www.zoltardata.com/">Zoltar</a> forecast repositoryâs API, including projects, models, forecasts, and scores. Read more about this package at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>. Documentation on Zolar itself is at <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a>.</p>
+<p>This package contains functions for working with the <a href="https://www.zoltardata.com/">Zoltar</a> forecast repositoryâs API, including projects, models, forecasts, and truth. Read more about this package at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>. Documentation on Zolar itself is at <a href="https://docs.zoltardata.com/">docs.zoltardata.com</a>.</p>
 </div>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -116,12 +116,12 @@
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
-<p>Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>, but briefly you use the <code><a href="reference/new_connection.html">new_connection()</a></code> function to create a connection to <a href="https://www.zoltardata.com/">Zoltar</a> and then pass that connection along with the <em>URL</em> of the resource of interest (e.g., a project, model, or forecast) to this packageâs various functions like <code><a href="reference/projects.html">projects()</a></code>, <code><a href="reference/project_info.html">project_info()</a></code>, or <code>scores()</code>.</p>
+<p>Read more at the <a href="http://reichlab.io/zoltr/">zoltr pkgdown site</a>, but briefly you use the <code><a href="reference/new_connection.html">new_connection()</a></code> function to create a connection to <a href="https://www.zoltardata.com/">Zoltar</a> and then pass that connection along with the <em>URL</em> of the resource of interest (e.g., a project, model, or forecast) to this packageâs various functions like <code><a href="reference/projects.html">projects()</a></code> or <code><a href="reference/project_info.html">project_info()</a></code>.</p>
 <div class="sourceCode"><pre class="r"><span class="fu"><a href="https://rdrr.io/r/base/library.html">library</a></span>(<span class="no">zoltr</span>)
 <span class="no">zoltar_connection</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/new_connection.html">new_connection</a></span>()
 <span class="fu"><a href="reference/zoltar_authenticate.html">zoltar_authenticate</a></span>(<span class="no">zoltar_connection</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_USERNAME"</span>), <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html">Sys.getenv</a></span>(<span class="st">"Z_PASSWORD"</span>))
 <span class="no">zoltar_connection</span>
-<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2020-07-31 18:36:18 UTC)</span>
+<span class="co">#&gt; ZoltarConnection 'https://zoltardata.com' authenticated (exp=2021-03-22 13:57:11 UTC)</span>
 
 <span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="no">project_url</span> <span class="kw">&lt;-</span> <span class="no">the_projects</span>[<span class="no">the_projects</span>$<span class="no">name</span> <span class="kw">==</span> <span class="st">"Docs Example Project"</span>, <span class="st">"url"</span>]
@@ -131,8 +131,8 @@
 <span class="co">#&gt;  [4] "is_public"             "name"                  "description"          </span>
 <span class="co">#&gt;  [7] "home_url"              "logo_url"              "core_data"            </span>
 <span class="co">#&gt; [10] "time_interval_type"    "visualization_y_label" "truth"                </span>
-<span class="co">#&gt; [13] "model_owners"          "score_data"            "models"               </span>
-<span class="co">#&gt; [16] "units"                 "targets"               "timezeros"</span>
+<span class="co">#&gt; [13] "model_owners"          "models"                "units"                </span>
+<span class="co">#&gt; [16] "targets"               "timezeros"</span>
 <span class="no">the_project_info</span>$<span class="no">name</span>
 <span class="co">#&gt; [1] "Docs Example Project"</span></pre></div>
 </div>

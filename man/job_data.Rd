@@ -14,8 +14,9 @@ job_data(zoltar_connection, job_url, query_type)
 \item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts" or "truth".}
 }
 \value{
-A `data.frame` of Job's data. The columns depend on is_forecast_query. Full documentation at
-  \url{https://docs.zoltardata.com/}.
+A `data.frame` of Job's data. The columns depend on query_type - see
+  \url{https://docs.zoltardata.com/fileformats/#truth-data-format-csv} and
+  \url{https://docs.zoltardata.com/fileformats/#forecast-data-format-csv}.
 }
 \description{
 Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
