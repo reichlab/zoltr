@@ -14,7 +14,8 @@ A `data.frame` from forecast_data in zoltar-specific format. The columns are:
   'unit', 'target', 'class', 'value', 'cat', 'prob', 'sample', 'quantile', 'family',
   'param1', 'param2', 'param3'. They are documented at
   https://docs.zoltardata.com/fileformats/#forecast-data-format-csv .
-  NB: columns are all character (i.e., data type information from forecast_data is lost)
+  NB: columns are all character (i.e., data type information from forecast_data is lost). Also note that a retracted
+  prediction element is represented as a single row with NA values for all but the first four columns.
 }
 \description{
 Converts forecast data from Zoltar's native `list` format to a `data.frame`

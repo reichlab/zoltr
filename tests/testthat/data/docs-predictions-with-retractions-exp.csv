@@ -1,0 +1,30 @@
+unit,target,class,value,cat,prob,sample,quantile,family,param1,param2,param3
+location1,pct next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,pct next week,named,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,pct next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,pct next week,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,pct next week,quantile,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,pct next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,pct next week,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,cases next week,named,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,cases next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,cases next week,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,cases next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,cases next week,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,cases next week,quantile,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,season severity,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,season severity,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,season severity,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,season severity,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,above baseline,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,above baseline,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,above baseline,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,above baseline,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,Season peak week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,Season peak week,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location1,Season peak week,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,Season peak week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,Season peak week,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location2,Season peak week,quantile,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,Season peak week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+location3,Season peak week,sample,NA,NA,NA,NA,NA,NA,NA,NA,NA

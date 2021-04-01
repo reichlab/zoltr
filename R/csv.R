@@ -4,7 +4,8 @@
 #'   'unit', 'target', 'class', 'value', 'cat', 'prob', 'sample', 'quantile', 'family',
 #'   'param1', 'param2', 'param3'. They are documented at
 #'   https://docs.zoltardata.com/fileformats/#forecast-data-format-csv .
-#'   NB: columns are all character (i.e., data type information from forecast_data is lost)
+#'   NB: columns are all character (i.e., data type information from forecast_data is lost). Also note that a retracted
+#'   prediction element is represented as a single row with NA values for all but the first four columns.
 #' @param forecast_data Forecast data as a `list` in the Zoltar standard format
 #' @export
 #' @examples \dontrun{
@@ -24,7 +25,15 @@ data_frame_from_forecast_data <- function(forecast_data) {
     prediction_class <- prediction_element$class
     prediction <- prediction_element$prediction
     value_val <- cat_val <- prob_val <- sample_val <- quantile_val <- family_val <- param1_val <- param2_val <- param3_val <- NA
-    if (prediction_element$class == "bin") {
+    if (is.null(prediction)) {
+      pred_row <- list(unit = as.character(unit_val), target = as.character(target_val),
+                       class = as.character(prediction_class), value = as.character(value_val),
+                       cat = as.character(cat_val), prob = as.character(prob_val), sample = as.character(sample_val),
+                       quantile = as.character(quantile_val), family = as.character(family_val),
+                       param1 = as.character(param1_val), param2 = as.character(param2_val),
+                       param3 = as.character(param3_val))
+      rows[[length(rows) + 1]] <- as.list(pred_row)  # append
+    } else if (prediction_element$class == "bin") {
       for (cat_prob_idx in seq_along(prediction$cat)) {
         cat_val <- prediction$cat[[cat_prob_idx]]
         prob_val <- prediction$prob[[cat_prob_idx]]
@@ -34,8 +43,6 @@ data_frame_from_forecast_data <- function(forecast_data) {
                          sample = as.character(sample_val), quantile = as.character(quantile_val),
                          family = as.character(family_val), param1 = as.character(param1_val),
                          param2 = as.character(param2_val), param3 = as.character(param3_val))
-        # pred_row <- c(unit_val, target_val, prediction_class, value_val, cat_val, prob_val, sample_val,
-        #               quantile_val, family_val, param1_val, param2_val, param3_val)
         rows[[length(rows) + 1]] <- as.list(pred_row)  # append
       }
     } else if (prediction_element$class == "named") {
@@ -49,8 +56,6 @@ data_frame_from_forecast_data <- function(forecast_data) {
                        sample = as.character(sample_val), quantile = as.character(quantile_val),
                        family = as.character(family_val), param1 = as.character(param1_val),
                        param2 = as.character(param2_val), param3 = as.character(param3_val))
-      # pred_row <- c(unit_val, target_val, prediction_class, value_val, cat_val, prob_val, sample_val,
-      #               quantile_val, family_val, param1_val, param2_val, param3_val)
       rows[[length(rows) + 1]] <- as.list(pred_row)  # append
     } else if (prediction_element$class == "point") {
       value_val <- prediction$value
@@ -60,8 +65,6 @@ data_frame_from_forecast_data <- function(forecast_data) {
                        sample = as.character(sample_val), quantile = as.character(quantile_val),
                        family = as.character(family_val), param1 = as.character(param1_val),
                        param2 = as.character(param2_val), param3 = as.character(param3_val))
-      # pred_row <- c(unit_val, target_val, prediction_class, value_val, cat_val, prob_val, sample_val,
-      #               quantile_val, family_val, param1_val, param2_val, param3_val)
       rows[[length(rows) + 1]] <- as.list(pred_row)  # append
     } else if (prediction_element$class == "sample") {
       for (sample_idx in seq_along(prediction$sample)) {
@@ -72,8 +75,6 @@ data_frame_from_forecast_data <- function(forecast_data) {
                          sample = as.character(sample_val), quantile = as.character(quantile_val),
                          family = as.character(family_val), param1 = as.character(param1_val),
                          param2 = as.character(param2_val), param3 = as.character(param3_val))
-        # pred_row <- c(unit_val, target_val, prediction_class, value_val, cat_val, prob_val, sample_val,
-        #               quantile_val, family_val, param1_val, param2_val, param3_val)
         rows[[length(rows) + 1]] <- as.list(pred_row)  # append
       }
     } else {  # prediction_element$class == "quantile"
@@ -86,8 +87,6 @@ data_frame_from_forecast_data <- function(forecast_data) {
                          sample = as.character(sample_val), quantile = as.character(quantile_val),
                          family = as.character(family_val), param1 = as.character(param1_val),
                          param2 = as.character(param2_val), param3 = as.character(param3_val))
-        # pred_row <- c(unit_val, target_val, prediction_class, value_val, cat_val, prob_val, sample_val,
-        #               quantile_val, family_val, param1_val, param2_val, param3_val)
         rows[[length(rows) + 1]] <- as.list(pred_row)  # append
       }
     }
