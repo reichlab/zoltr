@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8</span>
       </span>
     </div>
 
@@ -189,7 +189,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs forecast model"</span>,
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">types</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"point"</span>, <span class="st">"quantile"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/49790/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/54308/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">forecast_data</span>
@@ -198,12 +198,12 @@
 <span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt;     &lt;dbl&gt;</span>
 <span class="co">#&gt; 1 docs… 2011-10-02 2011-… loca… pct n… point   2.1 NA    NA    NA       NA    </span>
 <span class="co">#&gt; 2 docs… 2011-10-02 2011-… loca… pct n… point   2   NA    NA    NA       NA    </span>
-<span class="co">#&gt; 3 docs… 2011-10-02 2011-… loca… cases… point   5   NA    NA    NA       NA    </span>
-<span class="co">#&gt; 4 docs… 2011-10-02 2011-… loca… pct n… quan…   1   NA    NA    NA        0.025</span>
-<span class="co">#&gt; 5 docs… 2011-10-02 2011-… loca… pct n… quan…   2.2 NA    NA    NA        0.25 </span>
-<span class="co">#&gt; 6 docs… 2011-10-02 2011-… loca… pct n… quan…   2.2 NA    NA    NA        0.5  </span>
-<span class="co">#&gt; 7 docs… 2011-10-02 2011-… loca… pct n… quan…   5   NA    NA    NA        0.75 </span>
-<span class="co">#&gt; 8 docs… 2011-10-02 2011-… loca… pct n… quan…  50   NA    NA    NA        0.975</span>
+<span class="co">#&gt; 3 docs… 2011-10-02 2011-… loca… pct n… quan…   1   NA    NA    NA        0.025</span>
+<span class="co">#&gt; 4 docs… 2011-10-02 2011-… loca… pct n… quan…   2.2 NA    NA    NA        0.25 </span>
+<span class="co">#&gt; 5 docs… 2011-10-02 2011-… loca… pct n… quan…   2.2 NA    NA    NA        0.5  </span>
+<span class="co">#&gt; 6 docs… 2011-10-02 2011-… loca… pct n… quan…   5   NA    NA    NA        0.75 </span>
+<span class="co">#&gt; 7 docs… 2011-10-02 2011-… loca… pct n… quan…  50   NA    NA    NA        0.975</span>
+<span class="co">#&gt; 8 docs… 2011-10-02 2011-… loca… cases… point   5   NA    NA    NA       NA    </span>
 <span class="co">#&gt; # … with 4 more variables: family &lt;lgl&gt;, param1 &lt;lgl&gt;, param2 &lt;lgl&gt;,</span>
 <span class="co">#&gt; #   param3 &lt;lgl&gt;</span></pre></body></html></div>
 <p>Hopefully you’ll see “SUCCESS” eventually printed and then the resulting data itself.</p>
@@ -220,7 +220,7 @@
 <p>Similarly, querying truth is done by passing a <code>query_type</code> of <code>"truth"</code>. Further, only the <code>units</code>, <code>targets</code>, and <code>timezeros</code> args are allowed:</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">truth_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"truth"</span>, <span class="kw">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>),
                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/49791/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/54309/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">truth_data</span>
@@ -278,10 +278,10 @@
 <span class="co">#&gt; Classes 'data.table' and 'data.frame':   62 obs. of  12 variables:</span>
 <span class="co">#&gt;  $ unit    : chr  "location1" "location1" "location1" "location1" ...</span>
 <span class="co">#&gt;  $ target  : chr  "Season peak week" "Season peak week" "Season peak week" "Season peak week" ...</span>
-<span class="co">#&gt;  $ class   : chr  "point" "bin" "bin" "bin" ...</span>
-<span class="co">#&gt;  $ value   : chr  "2019-12-22" NA NA NA ...</span>
-<span class="co">#&gt;  $ cat     : chr  NA "2019-12-15" "2019-12-22" "2019-12-29" ...</span>
-<span class="co">#&gt;  $ prob    : chr  NA "0.01" "0.1" "0.89" ...</span>
+<span class="co">#&gt;  $ class   : chr  "bin" "bin" "bin" "point" ...</span>
+<span class="co">#&gt;  $ value   : chr  NA NA NA "2019-12-22" ...</span>
+<span class="co">#&gt;  $ cat     : chr  "2019-12-15" "2019-12-22" "2019-12-29" NA ...</span>
+<span class="co">#&gt;  $ prob    : chr  "0.01" "0.1" "0.89" NA ...</span>
 <span class="co">#&gt;  $ sample  : chr  NA NA NA NA ...</span>
 <span class="co">#&gt;  $ quantile: chr  NA NA NA NA ...</span>
 <span class="co">#&gt;  $ family  : chr  NA NA NA NA ...</span>

@@ -72,7 +72,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.7</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8</span>
       </span>
     </div>
 
@@ -152,7 +152,8 @@
   'unit', 'target', 'class', 'value', 'cat', 'prob', 'sample', 'quantile', 'family',
   'param1', 'param2', 'param3'. They are documented at
   https://docs.zoltardata.com/fileformats/#forecast-data-format-csv .
-  NB: columns are all character (i.e., data type information from forecast_data is lost)</p>
+  NB: columns are all character (i.e., data type information from forecast_data is lost). Also note that a retracted
+  prediction element is represented as a single row with NA values for all but the first four columns.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
