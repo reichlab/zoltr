@@ -1,3 +1,7 @@
+# zoltr 0.8
+- updated package to be compatible with Zoltar 4
+
+
 # zoltr 0.7
 - removed scoring-related features, which are transitioning from the server to client libraries
 
