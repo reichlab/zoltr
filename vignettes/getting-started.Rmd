@@ -1,7 +1,7 @@
 ---
 title: "Getting Started"
 author: "Matthew Cornell"
-date: "2020-09-02"
+date: "2021-05-06"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -134,6 +134,16 @@ Similarly, querying truth is done by passing a `query_type` of `"truth"`. Furthe
 truth_data <- do_zoltar_query(zoltar_connection, project_url, "truth", NULL, c("location1", "location2"),
                               c("pct next week", "cases next week"), c("2011-10-02", "2011-10-09", "2011-10-16"))
 truth_data
+```
+
+
+## Get project's latest forecast IDs and their sources
+
+This is a somewhat specialized function that returns the `ID` and `source` of the latest versions of a project's forecasts. (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id', 'time_zero_id', 'issue_date', 'created_at', 'source', and 'notes'.)
+
+```{r}
+the_latest_forecasts <- latest_forecasts(zoltar_connection, project_url)
+the_latest_forecasts
 ```
 
 

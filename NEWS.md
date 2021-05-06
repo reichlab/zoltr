@@ -1,3 +1,7 @@
+# zoltr 0.9
+- added `latest_forecasts(zoltar_connection, project_url)` function
+
+
 # zoltr 0.8
 - updated package to be compatible with Zoltar 4
 

@@ -205,6 +205,23 @@ timezeros <- function(zoltar_connection, project_url) {
 }
 
 
+#' Get a project's latest_forecasts
+#'
+#' @return A `data.frame` of all of the latest forecasts for the passed project. columns: forecast_id, source.
+#'   (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id',
+#'   'time_zero_id', 'issue_date', 'created_at', 'source', and 'notes'.)
+#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @export
+#' @examples \dontrun{
+#'   the_latest_forecasts <- latest_forecasts(conn, "https://www.zoltardata.com/api/project/9/")
+#' }
+latest_forecasts <- function(zoltar_connection, project_url) {
+  latest_forecasts_url <- paste0(project_url, 'forecasts/')
+  get_resource(zoltar_connection, latest_forecasts_url, "ic")
+}
+
+
 #
 # ---- query functions ----
 #
