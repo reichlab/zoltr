@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.9</span>
       </span>
     </div>
 
@@ -88,7 +88,7 @@
       <h1 data-toc-skip>Getting Started</h1>
                         <h4 class="author">Matthew Cornell</h4>
             
-            <h4 class="date">2020-09-02</h4>
+            <h4 class="date">2021-05-06</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/reichlab/zoltr/blob/master/vignettes/getting-started.Rmd"><code>vignettes/getting-started.Rmd</code></a></small>
       <div class="hidden name"><code>getting-started.Rmd</code></div>
@@ -189,7 +189,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs forecast model"</span>,
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">types</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"point"</span>, <span class="st">"quantile"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/54308/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/57556/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">forecast_data</span>
@@ -220,7 +220,7 @@
 <p>Similarly, querying truth is done by passing a <code>query_type</code> of <code>"truth"</code>. Further, only the <code>units</code>, <code>targets</code>, and <code>timezeros</code> args are allowed:</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">truth_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"truth"</span>, <span class="kw">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>),
                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/54309/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/57557/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">truth_data</span>
@@ -233,6 +233,17 @@
 <span class="co">#&gt; 4 2011-10-09 location2 cases next week  3   </span>
 <span class="co">#&gt; 5 2011-10-16 location1 pct next week    0   </span>
 <span class="co">#&gt; 6 2011-10-16 location1 cases next week  0</span></pre></body></html></div>
+</div>
+<div id="get-projects-latest-forecast-ids-and-their-sources" class="section level2">
+<h2 class="hasAnchor">
+<a href="#get-projects-latest-forecast-ids-and-their-sources" class="anchor"></a>Get project’s latest forecast IDs and their sources</h2>
+<p>This is a somewhat specialized function that returns the <code>ID</code> and <code>source</code> of the latest versions of a project’s forecasts. (Later we may generalize to allow passing specific columns to retrieve, such as ‘forecast_model_id’, ‘time_zero_id’, ‘issue_date’, ‘created_at’, ‘source’, and ‘notes’.)</p>
+<div class="sourceCode"><html><body><pre class="r"><span class="no">the_latest_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/latest_forecasts.html">latest_forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
+<span class="no">the_latest_forecasts</span>
+<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt;   forecast_id source               </span>
+<span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;                </span>
+<span class="co">#&gt; 1        9753 docs-predictions.json</span></pre></body></html></div>
 </div>
 <div id="get-a-model-to-work-with-and-list-its-info-and-forecasts" class="section level2">
 <h2 class="hasAnchor">
