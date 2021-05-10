@@ -17,7 +17,7 @@ test_that("forecast_info() returns a list", {
     exp_forecast_info$forecast_model_url <- exp_forecast_info$forecast_model
     exp_forecast_info$forecast_model <- NULL
     exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
-    exp_forecast_info$issue_date <- as.Date("2020-03-05")
+    exp_forecast_info$issued_at <- as.Date("2021-05-10T08:38:41.296500-04:00")
     exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
     exp_forecast_info$time_zero$data_version_date <- NA
     act_forecast_info <- forecast_info(zoltar_connection, "http://example.com/api/forecast/1/")
@@ -36,7 +36,7 @@ test_that("forecast_info() returns a list", {
     exp_forecast_info$forecast_model_url <- exp_forecast_info$forecast_model
     exp_forecast_info$forecast_model <- NULL
     exp_forecast_info$created_at <- as.Date("2020-03-05T15:47:47.369231-05:00")
-    exp_forecast_info$issue_date <- as.Date("2020-03-05")
+    exp_forecast_info$issued_at <- as.Date("2021-05-10T08:38:41.296500-04:00")
     exp_forecast_info$time_zero$timezero_date <- as.Date("2011-10-02")
     exp_forecast_info$time_zero$data_version_date <- as.Date("2011-10-03")
     act_forecast_info <- forecast_info(zoltar_connection, "http://example.com/api/forecast/1/")

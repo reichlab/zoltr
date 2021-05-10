@@ -139,7 +139,7 @@ truth_data
 
 ## Get project's latest forecast IDs and their sources
 
-This is a somewhat specialized function that returns the `ID` and `source` of the latest versions of a project's forecasts. (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id', 'time_zero_id', 'issue_date', 'created_at', 'source', and 'notes'.)
+This is a somewhat specialized function that returns the `ID` and `source` of the latest versions of a project's forecasts. (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id', 'time_zero_id', 'issued_at', 'created_at', 'source', and 'notes'.)
 
 ```{r}
 the_latest_forecasts <- latest_forecasts(zoltar_connection, project_url)

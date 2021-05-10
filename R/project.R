@@ -209,7 +209,7 @@ timezeros <- function(zoltar_connection, project_url) {
 #'
 #' @return A `data.frame` of all of the latest forecasts for the passed project. columns: forecast_id, source.
 #'   (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id',
-#'   'time_zero_id', 'issue_date', 'created_at', 'source', and 'notes'.)
+#'   'time_zero_id', 'issued_at', 'created_at', 'source', and 'notes'.)
 #' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
@@ -291,8 +291,9 @@ json_for_query <- function(query) {
 #' @param timezeros Character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'.
 #'   Used for all query_types.
 #' @param types Character vector of prediction types to retrieve. Used for query_type = "forecasts".
-#' @param as_of A date in YYYY_MM_DD_DATE_FORMAT that constrains based on forecast `issue_date`. See
-#'   documentation on forecast versions for details. Used for query_type = "forecasts".
+#' @param as_of a datetime used for query_type = "forecasts" that constrains based on forecast `issued_at`.
+#'   must be a datetime as parsed by the dateutil python library
+#'   https://dateutil.readthedocs.io/en/stable/index.html , which accepts a variety of styles.
 #' @param verbose if TRUE, print messages on job status poll
 #' @export
 #' @examples \dontrun{

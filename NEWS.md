@@ -1,3 +1,11 @@
+# zoltr 0.91
+- replaced `issue_date` date field with `issued_at` datetime field to match server change 
+
+
+# zoltr 0.9
+- added `latest_forecasts(zoltar_connection, project_url)` function
+
+
 # zoltr 0.9
 - added `latest_forecasts(zoltar_connection, project_url)` function
 

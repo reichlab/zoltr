@@ -14,7 +14,7 @@ latest_forecasts(zoltar_connection, project_url)
 \value{
 A `data.frame` of all of the latest forecasts for the passed project. columns: forecast_id, source.
   (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id',
-  'time_zero_id', 'issue_date', 'created_at', 'source', and 'notes'.)
+  'time_zero_id', 'issued_at', 'created_at', 'source', and 'notes'.)
 }
 \description{
 Get a project's latest_forecasts
