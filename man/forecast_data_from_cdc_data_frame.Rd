@@ -2,18 +2,18 @@
 % Please edit documentation in R/cdc.R
 \name{forecast_data_from_cdc_data_frame}
 \alias{forecast_data_from_cdc_data_frame}
-\title{`forecast_data_from_cdc_csv_file()`helper}
+\title{\code{forecast_data_from_cdc_csv_file()}helper}
 \usage{
 forecast_data_from_cdc_data_frame(season_start_year, cdc_data_frame)
 }
 \arguments{
-\item{season_start_year}{as passed to `forecast_data_from_cdc_csv_file()`}
+\item{season_start_year}{as passed to \code{forecast_data_from_cdc_csv_file()}}
 
 \item{cdc_data_frame}{""}
 }
 \value{
-same as `forecast_data_from_cdc_csv_file()`
+same as \code{forecast_data_from_cdc_csv_file()}
 }
 \description{
-`forecast_data_from_cdc_csv_file()`helper
+\code{forecast_data_from_cdc_csv_file()}helper
 }

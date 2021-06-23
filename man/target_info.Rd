@@ -7,12 +7,12 @@
 target_info(zoltar_connection, target_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{target_url}{URL of a target in zoltar_connection's targets}
 }
 \value{
-A `list` of target information for the passed target_url
+A \code{list} of target information for the passed target_url
 }
 \description{
 Get information about a target

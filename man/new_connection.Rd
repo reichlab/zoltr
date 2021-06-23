@@ -7,14 +7,14 @@
 new_connection(host = "https://zoltardata.com")
 }
 \arguments{
-\item{host}{The Zoltar site to connect to. Does *not* include a trailing slash ('/'). Defaults to \url{https://zoltardata.com}}
+\item{host}{The Zoltar site to connect to. Does \emph{not} include a trailing slash ('/'). Defaults to \url{https://zoltardata.com}}
 }
 \value{
-A `ZoltarConnection` object
+A \code{ZoltarConnection} object
 }
 \description{
 Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list
+connection you can call \code{\link[=zoltar_authenticate]{zoltar_authenticate()}} on it, and then call \code{\link[=projects]{projects()}} to get a list
 of Project objects to start working with.
 }
 \details{

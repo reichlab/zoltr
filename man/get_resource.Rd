@@ -7,14 +7,14 @@
 get_resource(zoltar_connection, url, col_types = NULL)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{url}{A string of the resource's URL}
 
 \item{col_types}{Same as readr::read_csv takes}
 }
 \value{
-A `list` that contiains JSON information for the passed URL
+A \code{list} that contiains JSON information for the passed URL
 }
 \description{
 Get JSON for a resource (URL). Authenticates if necessary

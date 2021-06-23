@@ -8,9 +8,9 @@
 #'   exists.
 #'
 #' @return project_url of the newly-created project
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_config A `list` containing a Zoltar project configuration. note that this list validated by the
-#'   server and not here. An example: cdc-project.json Full documentation at \url{https://docs.zoltardata.com/}.
+#'   server and not here. An example: cdc-project.json Full documentation at <https://docs.zoltardata.com/>.
 #' @export
 #' @examples \dontrun{
 #'   new_project_url <- create_project(conn, jsonlite::read_json("cdc-project.json"))
@@ -40,7 +40,7 @@ create_project <- function(zoltar_connection, project_config) {
 #' Deletes the project with the passed URL. This is permanent and cannot be undone.
 #'
 #' @return None
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -54,7 +54,7 @@ delete_project <- function(zoltar_connection, project_url) {
 #' Get a project's models
 #'
 #' @return A `data.frame` of model contents for all models in the passed project
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -100,7 +100,7 @@ models <- function(zoltar_connection, project_url) {
 #' Get a project's zoltar_units
 #'
 #' @return A `data.frame` of unit contents for the passed project
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -124,7 +124,7 @@ zoltar_units <- function(zoltar_connection, project_url) {
 #' Get a project's targets
 #'
 #' @return A `data.frame` of target contents for the passed project
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -170,7 +170,7 @@ data_frame_from_targets_json <- function(targets_json) {
 #' Get a project's timezeros
 #'
 #' @return A `data.frame` of timezero contents for the passed project
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -210,7 +210,7 @@ timezeros <- function(zoltar_connection, project_url) {
 #' @return A `data.frame` of all of the latest forecasts for the passed project. columns: forecast_id, source.
 #'   (Later we may generalize to allow passing specific columns to retrieve, such as 'forecast_model_id',
 #'   'time_zero_id', 'issued_at', 'created_at', 'source', and 'notes'.)
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -231,11 +231,11 @@ latest_forecasts <- function(zoltar_connection, project_url) {
 #' Submits a request for the execution of a query of either forecasts or truth in this Project.
 #'
 #' @return a Job URL for tracking the query and getting its results when it successfully completes
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".
 #' @param query A `list` of character `list`s that constrains the queried data. It is the analog of
-#'   the JSON object documented at \url{https://docs.zoltardata.com/}. The keys vary depending on query_type. References
+#'   the JSON object documented at <https://docs.zoltardata.com/>. The keys vary depending on query_type. References
 #'   to models, units, targets, and timezeros are strings that name the objects, and not IDs.
 #' @export
 #' @examples \dontrun{
@@ -281,8 +281,8 @@ json_for_query <- function(query) {
 
 #' A convenience function to construct and execute a Zoltar query for either forecast or truth data.
 #'
-#' @return A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @return A `data.frame` of Job's data. Full documentation at <https://docs.zoltardata.com/>.
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".
 #' @param models Character vector of model abbreviations. Used for query_type = "forecasts".
@@ -344,7 +344,7 @@ do_zoltar_query <- function(zoltar_connection, project_url, query_type, models =
 #' Get information about a project
 #'
 #' @return A `list` of project information for the passed project_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -358,7 +358,7 @@ project_info <- function(zoltar_connection, project_url) {
 #' Get information about a project's truth
 #'
 #' @return A `list` of project truth information for the passed project_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @export
 #' @examples \dontrun{
@@ -375,7 +375,7 @@ truth_info <- function(zoltar_connection, project_url) {
 #' Get information about a target
 #'
 #' @return A `list` of target information for the passed target_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param target_url URL of a target in zoltar_connection's targets
 #' @export
 #' @examples \dontrun{
@@ -389,7 +389,7 @@ target_info <- function(zoltar_connection, target_url) {
 #' Get information about a timezero
 #'
 #' @return A `list` of timezero information for the passed timezero_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param timezero_url URL of a timezero in zoltar_connection's timezeros
 #' @export
 #' @examples \dontrun{
@@ -403,7 +403,7 @@ timezero_info <- function(zoltar_connection, timezero_url) {
 #' Get information about a unit
 #'
 #' @return A `list` of unit information for the passed unit_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param unit_url URL of a unit in zoltar_connection's zoltar_units
 #' @export
 #' @examples \dontrun{

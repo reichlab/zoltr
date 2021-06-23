@@ -7,13 +7,13 @@
 job_info(zoltar_connection, job_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{job_url}{URL of a valid job in zoltar_connection}
 }
 \value{
-A `list` of job information for the passed job_url. it has these names:
-  id, url, status, user, created_at, updated_at, failure_message, input_json, output_json
+A \code{list} of job information for the passed job_url. it has these names:
+id, url, status, user, created_at, updated_at, failure_message, input_json, output_json
 }
 \description{
 Gets a job's information that can be used to track the job's progress. Jobs represent long-running

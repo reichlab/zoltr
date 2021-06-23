@@ -5,7 +5,7 @@
 #' Gets a forecast's information
 #'
 #' @return A `list` of forecast information for the passed forecast_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param forecast_url URL of a forecast in zoltar_connection's forecasts
 #' @export
 #' @examples \dontrun{
@@ -29,7 +29,7 @@ forecast_info <- function(zoltar_connection, forecast_url) {
 #' Deletes the forecast with the passed URL. This is permanent and cannot be undone.
 #'
 #' @return A Job URL for the deletion
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param forecast_url URL of a forecast in zoltar_connection's forecasts
 #' @export
 #' @examples \dontrun{
@@ -45,8 +45,8 @@ delete_forecast <- function(zoltar_connection, forecast_url) {
 #' Gets a forecast's data
 #'
 #' @return Forecast data as a `list` in the Zoltar standard format. meta information is ignored. Full documentation at
-#'   \url{https://docs.zoltardata.com/}.
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#'   <https://docs.zoltardata.com/>.
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param forecast_url URL of a forecast in zoltar_connection's forecasts
 #' @export
 #' @examples \dontrun{

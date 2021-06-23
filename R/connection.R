@@ -26,7 +26,7 @@ add_auth_headers <- function(zoltar_connection) {
 #' Get JSON for a resource (URL). Authenticates if necessary
 #'
 #' @return A `list` that contiains JSON information for the passed URL
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param url A string of the resource's URL
 #' @param col_types Same as readr::read_csv takes
 get_resource <- function(zoltar_connection, url, col_types = NULL) {
@@ -62,14 +62,14 @@ delete_resource <- function(zoltar_connection, url) {
 #' Get a connection to a Zoltar host
 #'
 #' Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-#' connection you can call \code{\link{zoltar_authenticate}} on it, and then call \code{\link{projects}} to get a list
+#' connection you can call [zoltar_authenticate()] on it, and then call [projects()] to get a list
 #' of Project objects to start working with.
 #'
 #' A note on URLs: We require a trailing slash ('/') on all URLs. The only exception is the host arg passed to this
 #' function. This convention matches Django REST framework one, which is what Zoltar is written in.
 #'
 #' @return A `ZoltarConnection` object
-#' @param host The Zoltar site to connect to. Does *not* include a trailing slash ('/'). Defaults to \url{https://zoltardata.com}
+#' @param host The Zoltar site to connect to. Does *not* include a trailing slash ('/'). Defaults to <https://zoltardata.com>
 #' @export
 #' @examples \dontrun{
 #'   conn <- new_connection()
@@ -102,7 +102,7 @@ print.ZoltarConnection <-
 #' to start working with.
 #'
 #' @return None
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}.
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()].
 #' @param username Username for the account to use on the connection's host
 #' @param password Password ""
 #' @export
@@ -135,7 +135,7 @@ re_authenticate_if_necessary <- function(zoltar_connection) {
 #' Get information about all projects
 #'
 #' @return A `data.frame` of all projects' contents
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @export
 #' @examples \dontrun{
 #'   the_projects <- projects(conn)

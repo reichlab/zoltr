@@ -7,10 +7,10 @@
 projects(zoltar_connection)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 }
 \value{
-A `data.frame` of all projects' contents
+A \code{data.frame} of all projects' contents
 }
 \description{
 Get information about all projects

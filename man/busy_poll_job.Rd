@@ -7,7 +7,7 @@
 busy_poll_job(zoltar_connection, job_url, verbose = TRUE)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{job_url}{URL of a valid job in zoltar_connection}
 

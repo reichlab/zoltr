@@ -7,9 +7,9 @@
 job_info_forecast_url(zoltar_connection, the_job_info)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
-\item{the_job_info}{a `list` object as returned by \code{\link{job_info}}}
+\item{the_job_info}{a \code{list} object as returned by \code{\link[=job_info]{job_info()}}}
 }
 \value{
 A URL of the new forecast

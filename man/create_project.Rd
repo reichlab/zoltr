@@ -7,9 +7,9 @@
 create_project(zoltar_connection, project_config)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
-\item{project_config}{A `list` containing a Zoltar project configuration. note that this list validated by the
+\item{project_config}{A \code{list} containing a Zoltar project configuration. note that this list validated by the
 server and not here. An example: cdc-project.json Full documentation at \url{https://docs.zoltardata.com/}.}
 }
 \value{
@@ -17,7 +17,7 @@ project_url of the newly-created project
 }
 \description{
 Creates the project using the passed project configuration list. Fails if a project with the passed name already
-  exists.
+exists.
 }
 \examples{
 \dontrun{
