@@ -30,6 +30,7 @@ Imports:
     MMWRweek,
     utils,
     rlang,
-    magrittr
-RoxygenNote: 7.1.0
+    magrittr,
+    lubridate
+RoxygenNote: 7.1.1
 VignetteBuilder: knitr

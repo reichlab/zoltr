@@ -6,7 +6,7 @@ library(mockery)
 library(testthat)
 library(webmockr)
 library(zoltr)
-
+library(lubridate)
 
 test_that("model_info() returns a list", {
   zoltar_connection <- new_connection("http://example.com")
@@ -126,8 +126,10 @@ test_that("forecasts() returns a data.frame", {
                           timezero_date = as.Date("2011-10-02", YYYY_MM_DD_DATE_FORMAT),
                           data_version_date = as.Date(NA),
                           is_season_start = TRUE,
-                          created_at = as.Date("2020-03-05T15:47:47.369231-05:00"),
-                          issued_at = as.Date("2021-05-10T08:38:41.296500-04:00"),
+                          created_at = lubridate::parse_date_time(
+                            "2020-03-05T15:47:47.369231-05:00", DATE_TIME_TZ_FORMAT, exact=TRUE),
+                          issued_at = lubridate::parse_date_time(
+                            "2021-05-10T08:38:41.296500-04:00", DATE_TIME_TZ_FORMAT, exact=TRUE),
                           notes = "a small prediction file",
                           forecast_data_url = "http://example.com/api/forecast/3/data/",
                           stringsAsFactors = FALSE)
@@ -159,8 +161,10 @@ test_that("forecasts() can handle null notes", {
                           timezero_date = as.Date("2011-10-02", YYYY_MM_DD_DATE_FORMAT),
                           data_version_date = as.Date(NA),
                           is_season_start = TRUE,
-                          created_at = as.Date("2020-03-05T15:47:47.369231-05:00"),
-                          issued_at = as.Date("2021-05-10T08:38:41.296500-04:00"),
+                          created_at = lubridate::parse_date_time(
+                            "2020-03-05T15:47:47.369231-05:00", DATE_TIME_TZ_FORMAT, exact=TRUE),
+                          issued_at = lubridate::parse_date_time(
+                            "2021-05-10T08:38:41.296500-04:00", DATE_TIME_TZ_FORMAT, exact=TRUE),
                           notes = as.character(NA),
                           forecast_data_url = "http://example.com/api/forecast/3/data/",
                           stringsAsFactors = FALSE)
@@ -206,8 +210,10 @@ test_that("upload_forecast() returns a Job URL, and job_info() is correct", {
 
   exp_job_json <- job_json
   exp_job_json$status <- "SUCCESS"
-  exp_job_json$created_at <- as.Date("2019-03-26T14:55:31.028436-04:00")
-  exp_job_json$updated_at <- as.Date("2019-03-26T14:55:37.812924-04:00")
+  exp_job_json$created_at <- lubridate::parse_date_time(
+    "2019-03-26T14:55:31.028436-04:00", DATE_TIME_TZ_FORMAT, exact=TRUE)
+  exp_job_json$updated_at <- lubridate::parse_date_time(
+    "2019-03-26T14:55:37.812924-04:00", DATE_TIME_TZ_FORMAT, exact=TRUE)
   exp_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2, notes = "a few predictions")
   exp_job_json$output_json <- list("forecast_pk" = 3)
 
