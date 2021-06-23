@@ -25,7 +25,7 @@ add_auth_headers <- function(zoltar_connection) {
 
 #' Get JSON for a resource (URL). Authenticates if necessary
 #'
-#' @return A `list` that contiains JSON information for the passed URL
+#' @return A `list` that contains JSON information for the passed URL
 #' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param url A string of the resource's URL
 #' @param col_types Same as readr::read_csv takes

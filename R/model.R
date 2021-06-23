@@ -62,7 +62,7 @@ create_model <- function(zoltar_connection, project_url, model_config) {
 #' Edits the model in the passed project using the passed list. Fails if a model with the passed name already exists.
 #'
 #' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
-#' @param model_url url of a project in zoltar_connection's projects. this is the project the new model will be editd
+#' @param model_url url of a project in zoltar_connection's projects. this is the project the new model will be edited
 #'   in
 #' @param model_config A `list` containing a Zoltar model configuration. An example: example-model-config.json .
 #'   Full documentation at <https://docs.zoltardata.com/>.
