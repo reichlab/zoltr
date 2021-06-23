@@ -81,7 +81,7 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #' }
 job_data <- function(zoltar_connection, job_url, query_type) {
   if (!query_type %in% c("forecasts", "truth")) {
-    stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
+    stop("invalid query_type: '", query_type, "'", call. = FALSE)
   }
 
   data_url <- paste0(job_url, 'data/')
@@ -126,8 +126,9 @@ busy_poll_job <- function(zoltar_connection, job_url, verbose = TRUE) {
       message(the_job_info$status)
     }
     if ((the_job_info$status == "FAILED") || (the_job_info$status == "TIMEOUT")) {
-      stop(paste0("job failed or timed out: status=", the_job_info$status, ", job_url=", job_url, ", failure_message='",
-                  the_job_info$failure_message, "'"),
+      stop("job failed or timed out: status=", the_job_info$status,
+           ", job_url=", job_url,
+           ", failure_message='", the_job_info$failure_message, "'",
            call. = FALSE)
     }
     if (the_job_info$status == "SUCCESS") {

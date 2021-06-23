@@ -27,7 +27,7 @@ create_project <- function(zoltar_connection, project_config) {
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(paste0("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+    stop("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response,
          call. = FALSE)
   }
 
@@ -246,7 +246,7 @@ latest_forecasts <- function(zoltar_connection, project_url) {
 #' }
 submit_query <- function(zoltar_connection, project_url, query_type, query) {
   if (!query_type %in% c("forecasts", "truth")) {
-    stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
+    stop("invalid query_type: '", query_type, "'", call. = FALSE)
   }
 
   re_authenticate_if_necessary(zoltar_connection)
@@ -261,7 +261,7 @@ submit_query <- function(zoltar_connection, project_url, query_type, query) {
     httr::content_type_json())
   json_response <- httr::content(response, "parsed")
   if (response$status_code != 200) {
-    stop(paste0("POST status was not 200. status_code=", response$status_code, ", json_response=", json_response),
+    stop("POST status was not 200. status_code=", response$status_code, ", json_response=", json_response,
          call. = FALSE)
   }
 
@@ -309,7 +309,7 @@ json_for_query <- function(query) {
 do_zoltar_query <- function(zoltar_connection, project_url, query_type, models = NULL, units = NULL,
                             targets = NULL, timezeros = NULL, types = NULL, as_of=NULL, verbose = TRUE) {
   if (!query_type %in% c("forecasts", "truth")) {
-    stop(paste0("invalid query_type: '", query_type, "'"), call. = FALSE)
+    stop("invalid query_type: '", query_type, "'", call. = FALSE)
   }
 
   zoltar_query <- list(

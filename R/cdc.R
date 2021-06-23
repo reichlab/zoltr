@@ -68,7 +68,7 @@ forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame)
     group_row <- cdc_data_frame_grouped[group_idx,]  # group_row$location,  group_row$target,  group_row$type
     if (!group_row$target %in% c("Season onset", "Season peak week", "Season peak percentage",
                                  "1 wk ahead", "2 wk ahead", "3 wk ahead", "4 wk ahead")) {
-      stop(paste0("invalid target_name: '", group_row$target, "'"), call. = FALSE)
+      stop("invalid target_name: '", group_row$target, "'", call. = FALSE)
     }
 
     point_values <- list()  # NB: should only be one point row, but collect all (but don't validate here)
@@ -98,7 +98,7 @@ forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame)
     # add the actual prediction dicts
     if (length(point_values) > 0) {  # yes warning
       if (length(point_values) > 1) {
-        stop(paste0("length(point_values) > 1: ", point_values), call. = FALSE)
+        stop("length(point_values) > 1: ", point_values, call. = FALSE)
       }
 
       point_value <- point_values[[1]]
@@ -138,7 +138,7 @@ process_csv_point_row <- function(season_start_year, target_name, value) {
       strftime(monday_date, YYYY_MM_DD_DATE_FORMAT)
     }
   } else if (is.na(value)) {
-    stop(paste0("None point values are only valid for 'Season onset' targets. target_name='", target_name, "'"),
+    stop("None point values are only valid for 'Season onset' targets. target_name='", target_name, "'",
          call. = FALSE)
   } else if (target_name == 'Season peak week') {  # date target. value: an EW Monday date
     # same 'wrapping' logic as above to handle rounding boundaries
@@ -165,13 +165,13 @@ process_csv_bin_row <- function(season_start_year, target_name, value, bin_start
       monday_date <- monday_date_from_ew_and_season_start_year(bin_start_incl, season_start_year)
       list(strftime(monday_date, YYYY_MM_DD_DATE_FORMAT), value)
     } else {
-      stop(paste0("got 'Season onset' row but not both start and end were None. bin_start_incl=", bin_start_incl,
-                  ", bin_end_notincl=", bin_end_notincl),
+      stop("got 'Season onset' row but not both start and end were None. bin_start_incl=", bin_start_incl,
+           ", bin_end_notincl=", bin_end_notincl,
            call. = FALSE)
     }
   } else if (is.na(bin_start_incl) || is.na(bin_end_notincl)) {
-    stop(paste0("None bins are only valid for 'Season onset' targets. target_name='", target_name, "', ",
-                ". bin_start_incl, bin_end_notincl: ", bin_start_incl, ", ", bin_end_notincl),
+    stop("None bins are only valid for 'Season onset' targets. target_name='", target_name, "', ",
+         ". bin_start_incl, bin_end_notincl: ", bin_start_incl, ", ", bin_end_notincl,
          call. = FALSE)
   } else if (target_name == 'Season peak week') {  # date target. value: an EW Monday date
     monday_date <- monday_date_from_ew_and_season_start_year(bin_start_incl, season_start_year)

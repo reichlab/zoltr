@@ -49,7 +49,7 @@ create_model <- function(zoltar_connection, project_url, model_config) {
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(paste0("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+    stop("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response,
          call. = FALSE)
   }
 
@@ -82,7 +82,7 @@ edit_model <- function(zoltar_connection, model_url, model_config) {
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(paste0("PUT status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+    stop("PUT status was not 400. status_code=", response$status_code, ", json_response=", json_response,
          call. = FALSE)
   }
 }
@@ -182,7 +182,7 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
 
   re_authenticate_if_necessary(zoltar_connection)
   forecasts_url <- paste0(model_url, 'forecasts/')
-  message(paste0("upload_forecast(): POST: ", forecasts_url))
+  message("upload_forecast(): POST: ", forecasts_url)
   temp_json_file <- tempfile(pattern = "forecast", fileext = ".json")
 
   # w/out auto_unbox: primitives are written as lists of one item, e.g.,
@@ -198,7 +198,7 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
   # error message
   json_response <- httr::content(response, "parsed")
   if (response$status_code == 400) {
-    stop(paste0("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response),
+    stop("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response,
          call. = FALSE)
   }
 
