@@ -98,7 +98,7 @@ print.ZoltarConnection <-
 #' Log in to a Zoltar host
 #'
 #' Returns a new `ZoltarConnection` object, which is the starting point for working with the Zoltar API.
-#' Once you have the connection you can call zoltar_authenticate() on it, and call projects() to get a list of objects
+#' Once you have the connection you can call [zoltar_authenticate()] on it, and call [projects()] to get a list of objects
 #' to start working with.
 #'
 #' @return None
