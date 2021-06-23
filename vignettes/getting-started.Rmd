@@ -128,11 +128,12 @@ Hopefully you'll see "SUCCESS" eventually printed and then the resulting data it
 
 ## Query a project's truth data
 
-Similarly, querying truth is done by passing a `query_type` of `"truth"`. Further, only the `units`, `targets`, and `timezeros` args are allowed:
+Similarly, querying truth is done by passing a `query_type` of `"truth"`. Further, only the `units`, `targets`, `timezeros`, and `as_of` args are allowed:
 
 ```{r}
 truth_data <- do_zoltar_query(zoltar_connection, project_url, "truth", NULL, c("location1", "location2"),
-                              c("pct next week", "cases next week"), c("2011-10-02", "2011-10-09", "2011-10-16"))
+                              c("pct next week", "cases next week"), c("2011-10-02", "2011-10-09", "2011-10-16"),
+                              "2020-12-18 12:00:00 UTC")
 truth_data
 ```
 

@@ -35,7 +35,7 @@ Used for all query_types.}
 
 \item{types}{Character vector of prediction types to retrieve. Used for query_type = "forecasts".}
 
-\item{as_of}{a datetime used for query_type = "forecasts" that constrains based on forecast `issued_at`.
+\item{as_of}{a datetime used for either query_type that constrains based on forecast `issued_at`.
 must be a datetime as parsed by the dateutil python library
 https://dateutil.readthedocs.io/en/stable/index.html , which accepts a variety of styles.}
 

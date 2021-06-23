@@ -291,7 +291,7 @@ json_for_query <- function(query) {
 #' @param timezeros Character vector of timezeros to retrieve in YYYY_MM_DD_DATE_FORMAT, e.g., '2017-01-17'.
 #'   Used for all query_types.
 #' @param types Character vector of prediction types to retrieve. Used for query_type = "forecasts".
-#' @param as_of a datetime used for query_type = "forecasts" that constrains based on forecast `issued_at`.
+#' @param as_of a datetime used for either query_type that constrains based on forecast `issued_at`.
 #'   must be a datetime as parsed by the dateutil python library
 #'   https://dateutil.readthedocs.io/en/stable/index.html , which accepts a variety of styles.
 #' @param verbose if TRUE, print messages on job status poll
@@ -317,10 +317,12 @@ do_zoltar_query <- function(zoltar_connection, project_url, query_type, models =
     "targets" = as.list(targets),
     "timezeros" = as.list(timezeros)
   )
+  if (!is.null(as_of)) {  # otherwise NULL -> python empty dict
+    zoltar_query$as_of <- as_of
+  }
   if (query_type == "forecasts") {
     zoltar_query$models <- as.list(models)
     zoltar_query$types <- as.list(types)
-    zoltar_query$as_of <- as_of
   }
 
   job_url <- zoltr::submit_query(zoltar_connection, project_url, query_type, zoltar_query)
