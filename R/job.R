@@ -118,12 +118,12 @@ job_data <- function(zoltar_connection, job_url, query_type) {
 #' }
 busy_poll_job <- function(zoltar_connection, job_url, verbose = TRUE) {
   if (verbose) {
-    cat(paste0("polling for status change. job_url=", job_url, "\n"))
+    message("polling for status change. job_url=", job_url)
   }
   while (TRUE) {
     the_job_info <- job_info(zoltar_connection, job_url)
     if (verbose) {
-      cat(paste0(the_job_info$status, "\n"))
+      message(the_job_info$status)
     }
     if ((the_job_info$status == "FAILED") || (the_job_info$status == "TIMEOUT")) {
       stop(paste0("job failed or timed out: status=", the_job_info$status, ", job_url=", job_url, ", failure_message='",
