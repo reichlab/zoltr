@@ -143,9 +143,12 @@ forecasts <- function(zoltar_connection, model_url) {
                                        if (is.null(forecast_json$time_zero$data_version_date)) as.Date(NA)
                                        else as.Date(forecast_json$time_zero$data_version_date))
     is_season_start_column <- append(is_season_start_column, forecast_json$time_zero$is_season_start)
-
-    created_at_column <- append(created_at_column, as.Date(forecast_json$created_at))  # e.g., "2020-03-05T15:47:47.369231-05:00"
-    issued_at_column <- append(issued_at_column, as.Date(forecast_json$issued_at))  # ""
+    created_at_column <- append(created_at_column,
+                                lubridate::parse_date_time(
+                                  forecast_json$created_at, "%Y-%m-%dT%H:%M:%OS%z", exact=TRUE))  # e.g., "2020-03-05T15:47:47.369231-05:00"
+    issued_at_column <- append(issued_at_column,
+                               lubridate::parse_date_time(
+                                 forecast_json$issued_at, "%Y-%m-%dT%H:%M:%OS%z", exact=TRUE))  # ""
     notes_column <- append(notes_column, if (is.null(forecast_json$notes)) as.character(NA) else forecast_json$notes)
     forecast_data_url_column <- append(forecast_data_url_column, forecast_json$forecast_data)
   }

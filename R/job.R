@@ -34,8 +34,8 @@ status_as_str <- function(status_int) {
 job_info <- function(zoltar_connection, job_url) {
   job_json <- get_resource(zoltar_connection, job_url)
   job_json$status <- status_as_str(job_json$status)
-  job_json$created_at <- as.Date(job_json$created_at)
-  job_json$updated_at <- as.Date(job_json$updated_at)
+  job_json$created_at <- lubridate::parse_date_time(job_json$created_at, "%Y-%m-%dT%H:%M:%OS%z", exact=TRUE)
+  job_json$updated_at <- lubridate::parse_date_time(job_json$updated_at, "%Y-%m-%dT%H:%M:%OS%z", exact=TRUE)
   job_json
 }
 
