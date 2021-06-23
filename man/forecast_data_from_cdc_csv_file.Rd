@@ -8,7 +8,7 @@ forecast_data_from_cdc_csv_file(season_start_year, cdc_csv_file)
 }
 \arguments{
 \item{season_start_year}{An integer specifying the "season" that cdc_csv_file is in. Used to convert EWs to
-YYYY_MM_DD_DATE_FORMAT. zoltr uses week 30 as the season breakpoint, e.g. the "2016/2017 season" starts with}
+YYYY_MM_DD_DATE_FORMAT. \pkg{zoltr} uses week 30 as the season breakpoint, e.g. the "2016/2017 season" starts with}
 
 \item{cdc_csv_file}{A CDC CSV file}
 }

@@ -14,7 +14,7 @@ get_resource(zoltar_connection, url, col_types = NULL)
 \item{col_types}{Same as readr::read_csv takes}
 }
 \value{
-A \code{list} that contiains JSON information for the passed URL
+A \code{list} that contains JSON information for the passed URL
 }
 \description{
 Get JSON for a resource (URL). Authenticates if necessary
