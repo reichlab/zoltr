@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.91</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.92</span>
       </span>
     </div>
 
@@ -189,7 +189,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs forecast model"</span>,
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">types</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"point"</span>, <span class="st">"quantile"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/60500/</span>
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/68611/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">forecast_data</span>
@@ -217,22 +217,23 @@
 <div id="query-a-projects-truth-data" class="section level2">
 <h2 class="hasAnchor">
 <a href="#query-a-projects-truth-data" class="anchor"></a>Query a project’s truth data</h2>
-<p>Similarly, querying truth is done by passing a <code>query_type</code> of <code>"truth"</code>. Further, only the <code>units</code>, <code>targets</code>, and <code>timezeros</code> args are allowed:</p>
+<p>Similarly, querying truth is done by passing a <code>query_type</code> of <code>"truth"</code>. Further, only the <code>units</code>, <code>targets</code>, <code>timezeros</code>, and <code>as_of</code> args are allowed:</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">truth_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"truth"</span>, <span class="kw">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>),
-                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>))
-<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/60501/</span>
+                              <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>),
+                              <span class="st">"2020-12-18 12:00:00 UTC"</span>)
+<span class="co">#&gt; polling for status change. job_url=https://www.zoltardata.com/api/job/68612/</span>
 <span class="co">#&gt; QUEUED</span>
 <span class="co">#&gt; SUCCESS</span>
 <span class="no">truth_data</span>
 <span class="co">#&gt; # A tibble: 6 x 4</span>
 <span class="co">#&gt;   timezero   unit      target          value</span>
 <span class="co">#&gt;   &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 2011-10-02 location1 pct next week    4.54</span>
-<span class="co">#&gt; 2 2011-10-02 location1 cases next week 10   </span>
-<span class="co">#&gt; 3 2011-10-09 location2 pct next week   99.9 </span>
-<span class="co">#&gt; 4 2011-10-09 location2 cases next week  3   </span>
-<span class="co">#&gt; 5 2011-10-16 location1 pct next week    0   </span>
-<span class="co">#&gt; 6 2011-10-16 location1 cases next week  0</span></pre></body></html></div>
+<span class="co">#&gt; 1 2011-10-02 location1 pct next week    5.54</span>
+<span class="co">#&gt; 2 2011-10-02 location1 cases next week 11   </span>
+<span class="co">#&gt; 3 2011-10-09 location2 pct next week   99.8 </span>
+<span class="co">#&gt; 4 2011-10-09 location2 cases next week  4   </span>
+<span class="co">#&gt; 5 2011-10-16 location1 pct next week    1   </span>
+<span class="co">#&gt; 6 2011-10-16 location1 cases next week  1</span></pre></body></html></div>
 </div>
 <div id="get-projects-latest-forecast-ids-and-their-sources" class="section level2">
 <h2 class="hasAnchor">
@@ -269,8 +270,8 @@
 <span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span>
 <span class="co">#&gt;  $ data_version_date : Date, format: NA</span>
 <span class="co">#&gt;  $ is_season_start   : logi TRUE</span>
-<span class="co">#&gt;  $ created_at        : Date, format: "2020-04-13"</span>
-<span class="co">#&gt;  $ issued_at         : Date, format: "2020-04-13"</span>
+<span class="co">#&gt;  $ created_at        : POSIXct, format: "2020-04-13 14:27:27"</span>
+<span class="co">#&gt;  $ issued_at         : POSIXct, format: "2020-04-13 08:00:00"</span>
 <span class="co">#&gt;  $ notes             : chr NA</span>
 <span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/9753/data/"</span></pre></body></html></div>
 </div>

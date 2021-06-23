@@ -1,3 +1,7 @@
+# zoltr 0.92
+- added support for `as_of` in truth queries
+
+
 # zoltr 0.91
 - replaced `issue_date` date field with `issued_at` datetime field to match server change 
 
