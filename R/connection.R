@@ -14,7 +14,7 @@ url_for_token_auth <- function(zoltar_connection) {
 
 add_auth_headers <- function(zoltar_connection) {
   if (!inherits(zoltar_connection, "ZoltarConnection")) {
-    stop(paste0("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'"), call. = FALSE)
+    stop("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'", call. = FALSE)
   }
 
   if (inherits(zoltar_connection$session, "ZoltarSession")) {
@@ -31,7 +31,7 @@ add_auth_headers <- function(zoltar_connection) {
 #' @param col_types Same as readr::read_csv takes
 get_resource <- function(zoltar_connection, url, col_types = NULL) {
   re_authenticate_if_necessary(zoltar_connection)
-  message(paste0("get_resource(): GET: ", url))
+  message("get_resource(): GET: ", url)
   response <- httr::GET(url = url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
   if (httr::http_type(response) == "application/json") {
@@ -40,7 +40,7 @@ get_resource <- function(zoltar_connection, url, col_types = NULL) {
     readr::read_csv(httr::content(response, "raw"), col_types = col_types,
                     locale = readr::locale(encoding = "UTF-8"))
   } else {
-    stop(paste0("un-handled content type: '", httr::http_type(response), "'"), call. = FALSE)
+    stop("un-handled content type: '", httr::http_type(response), "'", call. = FALSE)
   }
 }
 
@@ -48,7 +48,7 @@ get_resource <- function(zoltar_connection, url, col_types = NULL) {
 # deletes the resource at the passed URL
 delete_resource <- function(zoltar_connection, url) {
   re_authenticate_if_necessary(zoltar_connection)
-  message(paste0("delete_resource(): DELETE: ", url))
+  message("delete_resource(): DELETE: ", url)
   response <- httr::DELETE(url = url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
   response
@@ -111,7 +111,7 @@ print.ZoltarConnection <-
 #' }
 zoltar_authenticate <- function(zoltar_connection, username, password) {
   if (!inherits(zoltar_connection, "ZoltarConnection")) {
-    stop(paste0("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'"), call. = FALSE)
+    stop("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'", call. = FALSE)
   }
 
   zoltar_connection$username <- username
@@ -122,11 +122,11 @@ zoltar_authenticate <- function(zoltar_connection, username, password) {
 
 re_authenticate_if_necessary <- function(zoltar_connection) {
   if (!inherits(zoltar_connection, "ZoltarConnection")) {
-    stop(paste0("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'"), call. = FALSE)
+    stop("zoltar_connection was not a ZoltarConnection: '", zoltar_connection, "'", call. = FALSE)
   }
 
   if (inherits(zoltar_connection$session, "ZoltarSession") && is_token_expired(zoltar_connection$session)) {
-    message(paste0("re-authenticating expired token '", zoltar_connection$host, "'"))
+    message("re-authenticating expired token '", zoltar_connection$host, "'")
     zoltar_authenticate(zoltar_connection, zoltar_connection$username, zoltar_connection$password)
   }
 }
@@ -192,7 +192,7 @@ new_session <- function(zoltar_connection) {
 get_token <- function(zoltar_session) {
   zoltar_connection <- zoltar_session$zoltar_connection
   token_auth_url <- url_for_token_auth(zoltar_connection)
-  message(paste0("get_token(): POST: ", token_auth_url))
+  message("get_token(): POST: ", token_auth_url)
   response <-
     httr::POST(
       url = token_auth_url,
