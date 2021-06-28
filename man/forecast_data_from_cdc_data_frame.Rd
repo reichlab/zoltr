@@ -12,7 +12,7 @@ forecast_data_from_cdc_data_frame(season_start_year, cdc_data_frame)
 \item{cdc_data_frame}{""}
 }
 \value{
-same as [forecast_data_from_cdc_csv_file()}
+same as \code{\link[=forecast_data_from_cdc_csv_file]{forecast_data_from_cdc_csv_file()}}
 }
 \description{
 \code{\link[=forecast_data_from_cdc_csv_file]{forecast_data_from_cdc_csv_file()}} helper

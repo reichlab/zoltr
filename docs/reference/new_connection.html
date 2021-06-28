@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Get a connection to a Zoltar host — new_connection" />
 <meta property="og:description" content="Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-connection you can call zoltar_authenticate on it, and then call projects to get a list
+connection you can call zoltar_authenticate() on it, and then call projects() to get a list
 of Project objects to start working with." />
 
 
@@ -135,7 +135,7 @@ of Project objects to start working with." />
 
     <div class="ref-description">
     <p>Returns a new connection object, which is the starting point for working with the Zoltar API. Once you have the
-connection you can call <code><a href='zoltar_authenticate.html'>zoltar_authenticate</a></code> on it, and then call <code><a href='projects.html'>projects</a></code> to get a list
+connection you can call <code><a href='zoltar_authenticate.html'>zoltar_authenticate()</a></code> on it, and then call <code><a href='projects.html'>projects()</a></code> to get a list
 of Project objects to start working with.</p>
     </div>
 
@@ -146,13 +146,13 @@ of Project objects to start working with.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>host</th>
-      <td><p>The Zoltar site to connect to. Does *not* include a trailing slash ('/'). Defaults to <a href='https://zoltardata.com'>https://zoltardata.com</a></p></td>
+      <td><p>The Zoltar site to connect to. Does <em>not</em> include a trailing slash ('/'). Defaults to <a href='https://zoltardata.com'>https://zoltardata.com</a></p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A `ZoltarConnection` object</p>
+    <p>A <code>ZoltarConnection</code> object</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>A note on URLs: We require a trailing slash ('/') on all URLs. The only exception is the host arg passed to this
