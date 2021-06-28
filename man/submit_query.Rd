@@ -7,13 +7,13 @@
 submit_query(zoltar_connection, project_url, query_type, query)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
 \item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts" or "truth".}
 
-\item{query}{A `list` of character `list`s that constrains the queried data. It is the analog of
+\item{query}{A \code{list} of character \code{list}s that constrains the queried data. It is the analog of
 the JSON object documented at \url{https://docs.zoltardata.com/}. The keys vary depending on query_type. References
 to models, units, targets, and timezeros are strings that name the objects, and not IDs.}
 }

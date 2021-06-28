@@ -7,12 +7,12 @@
 forecast_info(zoltar_connection, forecast_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{forecast_url}{URL of a forecast in zoltar_connection's forecasts}
 }
 \value{
-A `list` of forecast information for the passed forecast_url
+A \code{list} of forecast information for the passed forecast_url
 }
 \description{
 Gets a forecast's information

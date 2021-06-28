@@ -7,23 +7,23 @@
 job_data(zoltar_connection, job_url, query_type)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{job_url}{URL of a valid job in zoltar_connection that has a data file associated with it}
 
 \item{query_type}{A character indicating the type of query to run. Must be one of: "forecasts" or "truth".}
 }
 \value{
-A `data.frame` of Job's data. The columns depend on query_type - see
-  \url{https://docs.zoltardata.com/fileformats/#truth-data-format-csv} and
-  \url{https://docs.zoltardata.com/fileformats/#forecast-data-format-csv}.
+A \code{data.frame} of Job's data. The columns depend on query_type - see
+\url{https://docs.zoltardata.com/fileformats/#truth-data-format-csv} and
+\url{https://docs.zoltardata.com/fileformats/#forecast-data-format-csv}.
 }
 \description{
 Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
-that are the results of a project forecast or truth queries via `submit_query()`. NB: It is a 404 Not Found
+that are the results of a project forecast or truth queries via \code{\link[=submit_query]{submit_query()}}. NB: It is a 404 Not Found
 error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
 passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
-the latter you may use `busy_poll_job()` to ensure the job is done.
+the latter you may use \code{\link[=busy_poll_job]{busy_poll_job()}} to ensure the job is done.
 }
 \examples{
 \dontrun{

@@ -2,21 +2,21 @@
 % Please edit documentation in R/cdc.R
 \name{forecast_data_from_cdc_csv_file}
 \alias{forecast_data_from_cdc_csv_file}
-\title{Loads and converts a CDC CSV file to Zoltar's native `list` format}
+\title{Loads and converts a CDC CSV file to Zoltar's native \code{list} format}
 \usage{
 forecast_data_from_cdc_csv_file(season_start_year, cdc_csv_file)
 }
 \arguments{
 \item{season_start_year}{An integer specifying the "season" that cdc_csv_file is in. Used to convert EWs to
-YYYY_MM_DD_DATE_FORMAT. zoltr uses week 30 as the season breakpoint, e.g. the "2016/2017 season" starts with}
+YYYY_MM_DD_DATE_FORMAT. \pkg{zoltr} uses week 30 as the season breakpoint, e.g. the "2016/2017 season" starts with}
 
 \item{cdc_csv_file}{A CDC CSV file}
 }
 \value{
-cdc_csv_file's data as Zoltar's native `list` format, but only the "predictions" item, and not "meta"
+cdc_csv_file's data as Zoltar's native \code{list} format, but only the "predictions" item, and not "meta"
 }
 \description{
-Loads and converts a CDC CSV file to Zoltar's native `list` format
+Loads and converts a CDC CSV file to Zoltar's native \code{list} format
 }
 \examples{
 \dontrun{

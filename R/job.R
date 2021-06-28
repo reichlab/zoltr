@@ -25,7 +25,7 @@ status_as_str <- function(status_int) {
 #'
 #' @return A `list` of job information for the passed job_url. it has these names:
 #'   id, url, status, user, created_at, updated_at, failure_message, input_json, output_json
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param job_url URL of a valid job in zoltar_connection
 #' @export
 #' @examples \dontrun{
@@ -46,8 +46,8 @@ job_info <- function(zoltar_connection, job_url) {
 #' from job_info.
 #'
 #' @return A URL of the new forecast
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param the_job_info a `list` object as returned by \code{\link{job_info}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
+#' @param the_job_info a `list` object as returned by [job_info()]
 #' @export
 #' @examples \dontrun{
 #'   new_forecast_url <- job_info_forecast_url(conn, "http://example.com/api/job/2/")
@@ -64,15 +64,15 @@ job_info_forecast_url <- function(zoltar_connection, the_job_info) {
 #' Gets a job's file's data
 #'
 #' Downloads the data for jobs that have an associated file, such as a query's results. Called on Jobs
-#' that are the results of a project forecast or truth queries via `submit_query()`. NB: It is a 404 Not Found
+#' that are the results of a project forecast or truth queries via [submit_query()]. NB: It is a 404 Not Found
 #' error if this is called on a Job that has no underlying S3 data file, which can happen b/c: 1) 24 hours has
 #' passed (the expiration time) or 2) the Job is not complete and therefore has not saved the data file. For
-#' the latter you may use `busy_poll_job()` to ensure the job is done.
+#' the latter you may use [busy_poll_job()] to ensure the job is done.
 #'
 #' @return A `data.frame` of Job's data. The columns depend on query_type - see
-#'   \url{https://docs.zoltardata.com/fileformats/#truth-data-format-csv} and
-#'   \url{https://docs.zoltardata.com/fileformats/#forecast-data-format-csv}.
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#'   <https://docs.zoltardata.com/fileformats/#truth-data-format-csv> and
+#'   <https://docs.zoltardata.com/fileformats/#forecast-data-format-csv>.
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param job_url URL of a valid job in zoltar_connection that has a data file associated with it
 #' @param query_type A character indicating the type of query to run. Must be one of: "forecasts" or "truth".
 #' @export
@@ -109,7 +109,7 @@ job_data <- function(zoltar_connection, job_url, query_type) {
 #'
 #' A convenience function that polls the passed Job's status waiting for either FAILED, TIMEOUT, or SUCCESS.
 #'
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param job_url URL of a valid job in zoltar_connection
 #' @param verbose if TRUE, print messages on job status poll
 #' @export

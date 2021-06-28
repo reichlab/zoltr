@@ -8,7 +8,7 @@ DATE_TIME_TZ_FORMAT <- "%Y-%m-%dT%H:%M:%OS%z"  # e.g., '2020-04-13 14:27:27 UTC'
 #' Get information about a model
 #'
 #' @return A `list` of model information for the passed model_url
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param model_url URL of a model in zoltar_connection's models
 #' @export
 #' @examples \dontrun{
@@ -27,11 +27,11 @@ model_info <- function(zoltar_connection, model_url) {
 #' Creates the model in the passed project using the passed list. Fails if a model with the passed name already exists.
 #'
 #' @return model_url of the newly-created model
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url url of a project in zoltar_connection's projects. this is the project the new model will be created
 #'   in
 #' @param model_config A `list` containing a Zoltar model configuration. An example: example-model-config.json .
-#'   Full documentation at \url{https://docs.zoltardata.com/}.
+#'   Full documentation at <https://docs.zoltardata.com/>.
 #' @export
 #' @examples \dontrun{
 #'   new_model_url <- create_model(conn, "https://www.zoltardata.com/api/project/9/",
@@ -61,11 +61,11 @@ create_model <- function(zoltar_connection, project_url, model_config) {
 #'
 #' Edits the model in the passed project using the passed list. Fails if a model with the passed name already exists.
 #'
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
-#' @param model_url url of a project in zoltar_connection's projects. this is the project the new model will be editd
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
+#' @param model_url url of a project in zoltar_connection's projects. this is the project the new model will be edited
 #'   in
 #' @param model_config A `list` containing a Zoltar model configuration. An example: example-model-config.json .
-#'   Full documentation at \url{https://docs.zoltardata.com/}.
+#'   Full documentation at <https://docs.zoltardata.com/>.
 #' @export
 #' @examples \dontrun{
 #'   edit_model(conn, "https://www.zoltardata.com/api/model/2/",
@@ -93,7 +93,7 @@ edit_model <- function(zoltar_connection, model_url, model_config) {
 #' Deletes the model with the passed ID. This is permanent and cannot be undone.
 #'
 #' @return None
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param model_url URL of a model in zoltar_connection's models
 #' @export
 #' @examples \dontrun{
@@ -107,7 +107,7 @@ delete_model <- function(zoltar_connection, model_url) {
 #' Get a model's forecasts
 #'
 #' @return A `data.frame` of forecast information for the passed model
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param model_url URL of a model in zoltar_connection's models
 #' @export
 #' @examples \dontrun{
@@ -167,7 +167,7 @@ forecasts <- function(zoltar_connection, model_url) {
 #' up, which depends on the number of current uploads in the queue. Zoltar tracks these via `Job` objects.)
 #'
 #' @return A Job URL for the upload
-#' @param zoltar_connection A `ZoltarConnection` object as returned by \code{\link{new_connection}}
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param model_url URL of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
 #' @param forecast_data Forecast data as a `list` in the Zoltar standard format

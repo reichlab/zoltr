@@ -7,12 +7,12 @@
 project_info(zoltar_connection, project_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 }
 \value{
-A `list` of project information for the passed project_url
+A \code{list} of project information for the passed project_url
 }
 \description{
 Get information about a project

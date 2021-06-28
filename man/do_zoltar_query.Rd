@@ -18,7 +18,7 @@ do_zoltar_query(
 )
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
@@ -35,14 +35,14 @@ Used for all query_types.}
 
 \item{types}{Character vector of prediction types to retrieve. Used for query_type = "forecasts".}
 
-\item{as_of}{a datetime used for either query_type that constrains based on forecast `issued_at`.
+\item{as_of}{a datetime used for query_type = "forecasts" that constrains based on forecast \code{issued_at}.
 must be a datetime as parsed by the dateutil python library
 https://dateutil.readthedocs.io/en/stable/index.html , which accepts a variety of styles.}
 
 \item{verbose}{if TRUE, print messages on job status poll}
 }
 \value{
-A `data.frame` of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
+A \code{data.frame} of Job's data. Full documentation at \url{https://docs.zoltardata.com/}.
 }
 \description{
 A convenience function to construct and execute a Zoltar query for either forecast or truth data.

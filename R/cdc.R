@@ -7,7 +7,7 @@ BIN_PREDICTION_CLASS <- "bin"  # "" bin ""
 #'
 #' @return cdc_csv_file's data as Zoltar's native `list` format, but only the "predictions" item, and not "meta"
 #' @param season_start_year An integer specifying the "season" that cdc_csv_file is in. Used to convert EWs to
-#'   YYYY_MM_DD_DATE_FORMAT. zoltr uses week 30 as the season breakpoint, e.g. the "2016/2017 season" starts with
+#'   YYYY_MM_DD_DATE_FORMAT. \pkg{zoltr} uses week 30 as the season breakpoint, e.g. the "2016/2017 season" starts with
 #    EW30-2016 (EWs 30 through 52/53) and ends with EW29-2017 (EWs 01 through 29).
 #' @param cdc_csv_file A CDC CSV file
 #' @export
@@ -41,10 +41,10 @@ forecast_data_from_cdc_csv_file <- function(season_start_year, cdc_csv_file) {
 #
 
 
-#' `forecast_data_from_cdc_csv_file()`helper
+#' [forecast_data_from_cdc_csv_file()] helper
 #'
-#' @return same as `forecast_data_from_cdc_csv_file()`
-#' @param season_start_year as passed to `forecast_data_from_cdc_csv_file()`
+#' @return same as [forecast_data_from_cdc_csv_file()]
+#' @param season_start_year as passed to [forecast_data_from_cdc_csv_file()]
 #' @param cdc_data_frame ""
 #' @importFrom rlang .data
 forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame) {  # testable internal function that does the work

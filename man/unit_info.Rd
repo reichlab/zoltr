@@ -7,12 +7,12 @@
 unit_info(zoltar_connection, unit_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{unit_url}{URL of a unit in zoltar_connection's zoltar_units}
 }
 \value{
-A `list` of unit information for the passed unit_url
+A \code{list} of unit information for the passed unit_url
 }
 \description{
 Get information about a unit

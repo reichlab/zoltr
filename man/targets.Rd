@@ -7,12 +7,12 @@
 targets(zoltar_connection, project_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{project_url}{URL of a project in zoltar_connection's projects}
 }
 \value{
-A `data.frame` of target contents for the passed project
+A \code{data.frame} of target contents for the passed project
 }
 \description{
 Get a project's targets

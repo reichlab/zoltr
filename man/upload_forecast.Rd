@@ -13,13 +13,13 @@ upload_forecast(
 )
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{model_url}{URL of a model in zoltar_connection's projects}
 
 \item{timezero_date}{The date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
-\item{forecast_data}{Forecast data as a `list` in the Zoltar standard format}
+\item{forecast_data}{Forecast data as a \code{list} in the Zoltar standard format}
 
 \item{notes}{Optional user notes for the new forecast}
 }
@@ -28,7 +28,7 @@ A Job URL for the upload
 }
 \description{
 This function submits forecast data to the server for uploading. Returns a Job object that can be used to
-up, which depends on the number of current uploads in the queue. Zoltar tracks these via `Job` objects.)
+up, which depends on the number of current uploads in the queue. Zoltar tracks these via \code{Job} objects.)
 }
 \examples{
 \dontrun{

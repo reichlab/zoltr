@@ -7,12 +7,12 @@
 timezero_info(zoltar_connection, timezero_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{timezero_url}{URL of a timezero in zoltar_connection's timezeros}
 }
 \value{
-A `list` of timezero information for the passed timezero_url
+A \code{list} of timezero information for the passed timezero_url
 }
 \description{
 Get information about a timezero

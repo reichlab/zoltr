@@ -7,13 +7,13 @@
 download_forecast(zoltar_connection, forecast_url)
 }
 \arguments{
-\item{zoltar_connection}{A `ZoltarConnection` object as returned by \code{\link{new_connection}}}
+\item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
 
 \item{forecast_url}{URL of a forecast in zoltar_connection's forecasts}
 }
 \value{
-Forecast data as a `list` in the Zoltar standard format. meta information is ignored. Full documentation at
-  \url{https://docs.zoltardata.com/}.
+Forecast data as a \code{list} in the Zoltar standard format. meta information is ignored. Full documentation at
+\url{https://docs.zoltardata.com/}.
 }
 \description{
 Gets a forecast's data
