@@ -43,7 +43,7 @@ forecast_data_from_cdc_csv_file <- function(season_start_year, cdc_csv_file) {
 
 #' [forecast_data_from_cdc_csv_file()] helper
 #'
-#' @return same as [forecast_data_from_cdc_csv_file()}
+#' @return same as [forecast_data_from_cdc_csv_file()]
 #' @param season_start_year as passed to [forecast_data_from_cdc_csv_file()]
 #' @param cdc_data_frame ""
 #' @importFrom rlang .data
