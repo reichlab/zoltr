@@ -24,7 +24,6 @@ test_that("create_project() creates a Project", {
   },
                       create_project(zoltar_connection, project_config))
   expect_equal(called_args$url, "http://example.com/api/projects/")
-  browser()
   expect_equal(called_args$body, jsonlite::toJSON(list(project_config = project_config),
                                                   auto_unbox = TRUE, null = "null"))
 })
