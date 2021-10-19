@@ -1,22 +1,22 @@
 location,target,type,quantile,value
-location1,Season peak week,point,,2019-12-22
-location1,above baseline,point,,TRUE
-location1,pct next week,point,,2.1
-location1,season severity,point,,mild
-location2,Season peak week,point,,2020-01-05
-location2,Season peak week,quantile,0.5,2019-12-22
-location2,Season peak week,quantile,0.75,2019-12-29
-location2,Season peak week,quantile,0.975,2020-01-05
-location2,cases next week,point,,5
-location2,pct next week,point,,2
-location2,pct next week,quantile,0.025,1
-location2,pct next week,quantile,0.25,2.2
-location2,pct next week,quantile,0.5,2.2
-location2,pct next week,quantile,0.75,5
-location2,pct next week,quantile,0.975,50
-location2,season severity,point,,moderate
-location3,Season peak week,point,,2019-12-29
-location3,cases next week,point,,10
-location3,cases next week,quantile,0.25,0
-location3,cases next week,quantile,0.75,50
-location3,pct next week,point,,3.567
+loc1,Season peak week,point,,2019-12-22
+loc1,above baseline,point,,TRUE
+loc1,pct next week,point,,2.1
+loc1,season severity,point,,mild
+loc2,Season peak week,point,,2020-01-05
+loc2,Season peak week,quantile,0.5,2019-12-22
+loc2,Season peak week,quantile,0.75,2019-12-29
+loc2,Season peak week,quantile,0.975,2020-01-05
+loc2,cases next week,point,,5
+loc2,pct next week,point,,2
+loc2,pct next week,quantile,0.025,1
+loc2,pct next week,quantile,0.25,2.2
+loc2,pct next week,quantile,0.5,2.2
+loc2,pct next week,quantile,0.75,5
+loc2,pct next week,quantile,0.975,50
+loc2,season severity,point,,moderate
+loc3,Season peak week,point,,2019-12-29
+loc3,cases next week,point,,10
+loc3,cases next week,quantile,0.25,0
+loc3,cases next week,quantile,0.75,50
+loc3,pct next week,point,,3.567

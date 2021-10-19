@@ -41,8 +41,7 @@ library(zoltr)
 zoltar_connection <- new_connection()
 zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 zoltar_connection
-#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2021-03-22 13:57:11 UTC)
-
+#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2021-10-19 15:07:55 UTC)
 the_projects <- projects(zoltar_connection)
 project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
 the_project_info <- project_info(zoltar_connection, project_url)

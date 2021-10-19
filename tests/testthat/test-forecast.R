@@ -88,25 +88,25 @@ test_that("download_forecast() returns JSON data as a list", {
 
     # spot-check a few "Season peak week" predictions (a date target)
     prediction_element <- act_data$predictions[[1]]
-    expect_equal(prediction_element$unit, "location1")
+    expect_equal(prediction_element$unit, "loc1")
     expect_equal(prediction_element$target, "Season peak week")
     expect_equal(prediction_element$class, "point")
     expect_equal(prediction_element$prediction$value, as.Date("2019-12-22", YYYY_MM_DD_DATE_FORMAT))
 
     prediction_element <- act_data$predictions[[11]]
-    expect_equal(prediction_element$unit, "location2")
+    expect_equal(prediction_element$unit, "loc2")
     expect_equal(prediction_element$target, "Season peak week")
     expect_equal(prediction_element$class, "bin")
     expect_equal(prediction_element$prediction$cat[[1]], as.Date("2019-12-15", YYYY_MM_DD_DATE_FORMAT))
 
     prediction_element <- act_data$predictions[[12]]
-    expect_equal(prediction_element$unit, "location2")
+    expect_equal(prediction_element$unit, "loc2")
     expect_equal(prediction_element$target, "Season peak week")
     expect_equal(prediction_element$class, "quantile")
     expect_equal(prediction_element$prediction$value[[1]], as.Date("2019-12-22", YYYY_MM_DD_DATE_FORMAT))
 
     prediction_element <- act_data$predictions[[23]]
-    expect_equal(prediction_element$unit, "location3")
+    expect_equal(prediction_element$unit, "loc3")
     expect_equal(prediction_element$target, "Season peak week")
     expect_equal(prediction_element$class, "sample")
     expect_equal(prediction_element$prediction$sample[[1]], as.Date("2020-01-06", YYYY_MM_DD_DATE_FORMAT))

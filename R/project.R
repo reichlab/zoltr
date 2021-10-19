@@ -18,11 +18,13 @@
 create_project <- function(zoltar_connection, project_config) {
   re_authenticate_if_necessary(zoltar_connection)
   projects_url <- url_for_projects(zoltar_connection)
+  json_body <- jsonlite::toJSON(list(project_config = project_config), auto_unbox = TRUE, null = "null")
   response <- httr::POST(
     url = projects_url,
     add_auth_headers(zoltar_connection),
-    body = list(project_config = project_config),
-    encode = "json")
+    body = json_body,
+    encode = "raw",
+    httr::content_type_json())
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")
@@ -111,13 +113,16 @@ zoltar_units <- function(zoltar_connection, project_url) {
   units_json <- get_resource(zoltar_connection, units_url)
   id_column <- c()                    # integer
   url_column <- c()                   # character
+  abbreviation_column <- c()          # ""
   name_column <- c()                  # ""
   for (unit_json in units_json) {
     id_column <- append(id_column, unit_json$id)
+    abbreviation_column <- append(abbreviation_column, unit_json$abbreviation)
     url_column <- append(url_column, unit_json$url)
     name_column <- append(name_column, unit_json$name)
   }
-  data.frame(id = id_column, url = url_column, name = name_column, stringsAsFactors = FALSE)
+  data.frame(id = id_column, url = url_column, abbreviation = abbreviation_column, name = name_column,
+             stringsAsFactors = FALSE)
 }
 
 

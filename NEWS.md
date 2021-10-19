@@ -1,3 +1,7 @@
+# zoltr 0.93
+- added support for [expand Unit to include human-readable field(s) #228](https://github.com/reichlab/forecast-repository/issues/228)
+
+
 # zoltr 0.92
 - added support for `as_of` in truth queries
 

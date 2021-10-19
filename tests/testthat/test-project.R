@@ -24,7 +24,9 @@ test_that("create_project() creates a Project", {
   },
                       create_project(zoltar_connection, project_config))
   expect_equal(called_args$url, "http://example.com/api/projects/")
-  expect_equal(called_args$body$project_config, project_config)
+  browser()
+  expect_equal(called_args$body, jsonlite::toJSON(list(project_config = project_config),
+                                                  auto_unbox = TRUE, null = "null"))
 })
 
 
@@ -116,9 +118,9 @@ test_that("zoltar_units() returns a data.frame", {
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/units/")
     expect_is(the_units, "data.frame")
-    expect_equal(names(the_units), c("id", "url", "name"))
+    expect_equal(names(the_units), c("id", "url", "abbreviation", "name"))
     expect_equal(nrow(the_units), 3)  # 3 units
-    expect_equal(ncol(the_units), 3)
+    expect_equal(ncol(the_units), 4)
   })
 })
 
