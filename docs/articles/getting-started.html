@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.92</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.93</span>
       </span>
     </div>
 
@@ -130,16 +130,16 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_projects</span>)
 <span class="co">#&gt; 'data.frame':    8 obs. of  10 variables:</span>
-<span class="co">#&gt;  $ id                   : int  218 238 44 4 9 41 6 239</span>
-<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/218/" "https://www.zoltardata.com/api/project/238/" "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/4/" ...</span>
-<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/72/" "https://www.zoltardata.com/api/user/97/" "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/4/" ...</span>
+<span class="co">#&gt;  $ id                   : int  44 218 238 4 9 41 6 239</span>
+<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/218/" "https://www.zoltardata.com/api/project/238/" "https://www.zoltardata.com/api/project/4/" ...</span>
+<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/72/" "https://www.zoltardata.com/api/user/97/" "https://www.zoltardata.com/api/user/4/" ...</span>
 <span class="co">#&gt;  $ public               : logi  TRUE TRUE TRUE FALSE TRUE TRUE ...</span>
-<span class="co">#&gt;  $ name                 : chr  "2020 Election Forecasts" "ECDC European COVID-19 Forecast Hub" "COVID-19 Forecasts" "Impetus Province Forecasts" ...</span>
-<span class="co">#&gt;  $ description          : chr  "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ ...</span>
-<span class="co">#&gt;  $ home_url             : chr  "https://reichlab.io" "https://github.com/epiforecasts/covid19-forecast-hub-europe" "https://covid19forecasthub.org" "http://www.iddynamics.jhsph.edu/projects/impetus" ...</span>
+<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Election Forecasts" "ECDC European COVID-19 Forecast Hub" "Impetus Province Forecasts" ...</span>
+<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ ...</span>
+<span class="co">#&gt;  $ home_url             : chr  "https://covid19forecasthub.org" "https://reichlab.io" "https://github.com/epiforecasts/covid19-forecast-hub-europe" "http://www.iddynamics.jhsph.edu/projects/impetus" ...</span>
 <span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Week" "Biweek" ...</span>
-<span class="co">#&gt;  $ visualization_y_label: chr  "Votes/voteshare (percent)" "Weighted ILI (%)" "Weighted ILI (%)" "DHF cases" ...</span>
-<span class="co">#&gt;  $ core_data            : chr  "https://zoltardata.com/" "https://github.com/epiforecasts/covid19-forecast-hub-europe/tree/master/data-processed" "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://github.com/reichlab/dengue-data" ...</span></pre></body></html></div>
+<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "Votes/voteshare (percent)" "Weighted ILI (%)" "DHF cases" ...</span>
+<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://zoltardata.com/" "https://github.com/epiforecasts/covid19-forecast-hub-europe/tree/master/data-processed" "https://github.com/reichlab/dengue-data" ...</span></pre></body></html></div>
 </div>
 <div id="get-a-project-to-work-with-and-list-its-info-and-models" class="section level2">
 <h2 class="hasAnchor">
@@ -156,7 +156,6 @@
 <span class="co">#&gt; [16] "targets"               "timezeros"</span>
 <span class="no">the_project_info</span>$<span class="no">description</span>
 <span class="co">#&gt; [1] "A template project for learning how to interact with Zoltar. Typically, a full description of the project would go here. You could include narrative details about what seasons are included, what group has provided data, whether the project focuses on real-time or retrospective forecasts."</span>
-
 <span class="no">the_models</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/models.html">models</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_models</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  10 variables:</span>
@@ -187,20 +186,20 @@
 <span class="no">the_job_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span>(<span class="no">zoltar_connection</span>, <span class="no">job_url</span>)
 <span class="no">the_job_data</span></pre></body></html></div>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs forecast model"</span>,
-                                 <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
+                                 <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"loc1"</span>, <span class="st">"loc2"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>),
                                  <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>), <span class="kw">types</span> <span class="kw">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"point"</span>, <span class="st">"quantile"</span>))
 <span class="no">forecast_data</span>
-<span class="co">#&gt; # A tibble: 8 x 15</span>
-<span class="co">#&gt;   model timezero   season unit  target class value cat   prob  sample quantile</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 docs… 2011-10-02 2011-… loca… pct n… point   2.1 NA    NA    NA       NA    </span>
-<span class="co">#&gt; 2 docs… 2011-10-02 2011-… loca… pct n… point   2   NA    NA    NA       NA    </span>
-<span class="co">#&gt; 3 docs… 2011-10-02 2011-… loca… pct n… quan…   1   NA    NA    NA        0.025</span>
-<span class="co">#&gt; 4 docs… 2011-10-02 2011-… loca… pct n… quan…   2.2 NA    NA    NA        0.25 </span>
-<span class="co">#&gt; 5 docs… 2011-10-02 2011-… loca… pct n… quan…   2.2 NA    NA    NA        0.5  </span>
-<span class="co">#&gt; 6 docs… 2011-10-02 2011-… loca… pct n… quan…   5   NA    NA    NA        0.75 </span>
-<span class="co">#&gt; 7 docs… 2011-10-02 2011-… loca… pct n… quan…  50   NA    NA    NA        0.975</span>
-<span class="co">#&gt; 8 docs… 2011-10-02 2011-… loca… cases… point   5   NA    NA    NA       NA    </span>
+<span class="co">#&gt; # A tibble: 8 × 15</span>
+<span class="co">#&gt;   model  timezero   season  unit  target class value cat   prob  sample quantile</span>
+<span class="co">#&gt;   &lt;chr&gt;  &lt;date&gt;     &lt;chr&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt; &lt;dbl&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;lgl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 docs … 2011-10-02 2011-2… loc1  pct n… point   2.1 NA    NA    NA       NA    </span>
+<span class="co">#&gt; 2 docs … 2011-10-02 2011-2… loc2  pct n… point   2   NA    NA    NA       NA    </span>
+<span class="co">#&gt; 3 docs … 2011-10-02 2011-2… loc2  pct n… quan…   1   NA    NA    NA        0.025</span>
+<span class="co">#&gt; 4 docs … 2011-10-02 2011-2… loc2  pct n… quan…   2.2 NA    NA    NA        0.25 </span>
+<span class="co">#&gt; 5 docs … 2011-10-02 2011-2… loc2  pct n… quan…   2.2 NA    NA    NA        0.5  </span>
+<span class="co">#&gt; 6 docs … 2011-10-02 2011-2… loc2  pct n… quan…   5   NA    NA    NA        0.75 </span>
+<span class="co">#&gt; 7 docs … 2011-10-02 2011-2… loc2  pct n… quan…  50   NA    NA    NA        0.975</span>
+<span class="co">#&gt; 8 docs … 2011-10-02 2011-2… loc2  cases… point   5   NA    NA    NA       NA    </span>
 <span class="co">#&gt; # … with 4 more variables: family &lt;lgl&gt;, param1 &lt;lgl&gt;, param2 &lt;lgl&gt;,</span>
 <span class="co">#&gt; #   param3 &lt;lgl&gt;</span></pre></body></html></div>
 <p>Hopefully you’ll see “SUCCESS” eventually printed and then the resulting data itself.</p>
@@ -215,19 +214,19 @@
 <h2 class="hasAnchor">
 <a href="#query-a-projects-truth-data" class="anchor"></a>Query a project’s truth data</h2>
 <p>Similarly, querying truth is done by passing a <code>query_type</code> of <code>"truth"</code>. Further, only the <code>units</code>, <code>targets</code>, <code>timezeros</code>, and <code>as_of</code> args are allowed:</p>
-<div class="sourceCode"><html><body><pre class="r"><span class="no">truth_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"truth"</span>, <span class="kw">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"location1"</span>, <span class="st">"location2"</span>),
+<div class="sourceCode"><html><body><pre class="r"><span class="no">truth_data</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>, <span class="st">"truth"</span>, <span class="kw">NULL</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"loc1"</span>, <span class="st">"loc2"</span>),
                               <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"pct next week"</span>, <span class="st">"cases next week"</span>), <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span>(<span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span>),
                               <span class="st">"2020-12-18 12:00:00 UTC"</span>)
 <span class="no">truth_data</span>
-<span class="co">#&gt; # A tibble: 6 x 4</span>
-<span class="co">#&gt;   timezero   unit      target          value</span>
-<span class="co">#&gt;   &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;           &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 2011-10-02 location1 pct next week    5.54</span>
-<span class="co">#&gt; 2 2011-10-02 location1 cases next week 11   </span>
-<span class="co">#&gt; 3 2011-10-09 location2 pct next week   99.8 </span>
-<span class="co">#&gt; 4 2011-10-09 location2 cases next week  4   </span>
-<span class="co">#&gt; 5 2011-10-16 location1 pct next week    1   </span>
-<span class="co">#&gt; 6 2011-10-16 location1 cases next week  1</span></pre></body></html></div>
+<span class="co">#&gt; # A tibble: 6 × 4</span>
+<span class="co">#&gt;   timezero   unit  target          value</span>
+<span class="co">#&gt;   &lt;date&gt;     &lt;chr&gt; &lt;chr&gt;           &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 2011-10-02 loc1  pct next week    4.54</span>
+<span class="co">#&gt; 2 2011-10-02 loc1  cases next week 10   </span>
+<span class="co">#&gt; 3 2011-10-09 loc2  pct next week   99.9 </span>
+<span class="co">#&gt; 4 2011-10-09 loc2  cases next week  3   </span>
+<span class="co">#&gt; 5 2011-10-16 loc1  pct next week    1   </span>
+<span class="co">#&gt; 6 2011-10-16 loc1  cases next week  1</span></pre></body></html></div>
 </div>
 <div id="get-projects-latest-forecast-ids-and-their-sources" class="section level2">
 <h2 class="hasAnchor">
@@ -235,7 +234,7 @@
 <p>This is a somewhat specialized function that returns the <code>ID</code> and <code>source</code> of the latest versions of a project’s forecasts. (Later we may generalize to allow passing specific columns to retrieve, such as ‘forecast_model_id’, ‘time_zero_id’, ‘issued_at’, ‘created_at’, ‘source’, and ‘notes’.)</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_latest_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/latest_forecasts.html">latest_forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
 <span class="no">the_latest_forecasts</span>
-<span class="co">#&gt; # A tibble: 1 x 2</span>
+<span class="co">#&gt; # A tibble: 1 × 2</span>
 <span class="co">#&gt;   forecast_id source               </span>
 <span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;                </span>
 <span class="co">#&gt; 1        9753 docs-predictions.json</span></pre></body></html></div>
@@ -252,7 +251,6 @@
 <span class="co">#&gt; [11] "notes"        "citation"     "methods"      "home_url"     "aux_data_url"</span>
 <span class="no">the_model_info</span>$<span class="no">name</span>
 <span class="co">#&gt; [1] "docs forecast model"</span>
-
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span>
@@ -282,7 +280,7 @@
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data_frame</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/data_frame_from_forecast_data.html">data_frame_from_forecast_data</a></span>(<span class="no">forecast_data</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">forecast_data_frame</span>)
 <span class="co">#&gt; Classes 'data.table' and 'data.frame':   62 obs. of  12 variables:</span>
-<span class="co">#&gt;  $ unit    : chr  "location1" "location1" "location1" "location1" ...</span>
+<span class="co">#&gt;  $ unit    : chr  "loc1" "loc1" "loc1" "loc1" ...</span>
 <span class="co">#&gt;  $ target  : chr  "Season peak week" "Season peak week" "Season peak week" "Season peak week" ...</span>
 <span class="co">#&gt;  $ class   : chr  "bin" "bin" "bin" "point" ...</span>
 <span class="co">#&gt;  $ value   : chr  NA NA NA "2019-12-22" ...</span>
@@ -298,8 +296,8 @@
 <p>And just quantile data:</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">forecast_data_frame</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/quantile_data_frame_from_forecast_data.html">quantile_data_frame_from_forecast_data</a></span>(<span class="no">forecast_data</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">forecast_data_frame</span>)
-<span class="co">#&gt; 'data.frame':    21 obs. of  5 variables:</span>
-<span class="co">#&gt;  $ location: chr  "location1" "location1" "location1" "location1" ...</span>
+<span class="co">#&gt; Classes 'data.table' and 'data.frame':   21 obs. of  5 variables:</span>
+<span class="co">#&gt;  $ location: chr  "loc1" "loc1" "loc1" "loc1" ...</span>
 <span class="co">#&gt;  $ target  : chr  "Season peak week" "above baseline" "pct next week" "season severity" ...</span>
 <span class="co">#&gt;  $ type    : chr  "point" "point" "point" "point" ...</span>
 <span class="co">#&gt;  $ quantile: chr  NA NA NA NA ...</span>
