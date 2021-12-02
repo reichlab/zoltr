@@ -22,22 +22,25 @@ forecast_data_from_cdc_csv_file <- function(season_start_year, cdc_csv_file) {
 
 #
 # Recall the seven cdc-project.json targets and their types:
-# -------------------------+-------------------------------+-----------+-----------+---------------------
-# Target name              | target_type                   | unit      | data_type | step_ahead_increment
-# -------------------------+-------------------------------+-----------+-----------+---------------------
-# "Season onset"           | Target.NOMINAL_TARGET_TYPE    | n/a (week)| date      | n/a
-# "Season peak week"       | Target.DATE_TARGET_TYPE       | "week"    | text      | n/a
-# "Season peak percentage" | Target.CONTINUOUS_TARGET_TYPE | "percent" | float     | n/a
-# "1 wk ahead"             | Target.CONTINUOUS_TARGET_TYPE | "percent" | float     | 1
-# "2 wk ahead"             | ""                            | ""        | ""        | 2
-# "3 wk ahead"             | ""                            | ""        | ""        | 3
-# "4 wk ahead"             | ""                            | ""        | ""        | 4
-# -------------------------+-------------------------------+-----------+-----------+---------------------
+# -------------------------+-------------------------------+--------------------------+-----------+----------------
+# Target name              | target_type                   | outcome_variable         | data_type | numeric_horizon
+# -------------------------+-------------------------------+--------------------------+-----------+----------------
+# "Season onset"           | Target.NOMINAL_TARGET_TYPE    | "season onset"           | date      | n/a
+# "Season peak week"       | Target.DATE_TARGET_TYPE       | "season peak week"       | text      | n/a
+# "Season peak percentage" | Target.CONTINUOUS_TARGET_TYPE | "season peak percentage" | float     | n/a
+# "1 wk ahead"             | Target.CONTINUOUS_TARGET_TYPE | "ILI percent"            | float     | 1
+# "2 wk ahead"             | ""                            | ""                       | ""        | 2
+# "3 wk ahead"             | ""                            | ""                       | ""        | 3
+# "4 wk ahead"             | ""                            | ""                       | ""        | 4
+# -------------------------+-------------------------------+--------------------------+-----------+----------------
 #
 # Note that the "Season onset" target is nominal and not date. This is due to how the CDC decided to represent the
 # case when predicting no season onset, i.e., the threshold is not exceeded. This is done via a "none" bin where
 # both Bin_start_incl and Bin_end_notincl are the strings "none" and not an EW week number. Thus, we have to store
-# all bin starts as strings and not dates.
+# all bin starts as strings and not dates. At one point the lab was going to represent this case by splitting the
+# "Season onset" target into two: "season_onset_binary" (a Target.BINARY that indicates whether there is an onset or
+# not) and "season_onset_date" (a Target.DATE_TARGET_TYPE that is the onset date if "season_onset_binary" is true).
+# But we dropped that idea and stayed with the original single nominal target.
 #
 
 

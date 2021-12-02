@@ -133,10 +133,10 @@ test_that("targets() returns a data.frame", {
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/project/1/targets/")
     expect_is(the_targets, "data.frame")
-    expect_equal(names(the_targets), c("id", "url", "name", "description", "type", "is_step_ahead",
-                                       "step_ahead_increment", "unit"))
+    expect_equal(names(the_targets), c("id", "url", "name", "type", "description", "outcome_variable",
+                                       "is_step_ahead", "numeric_horizon", "reference_date_type"))
     expect_equal(nrow(the_targets), 5)  # 5 targets
-    expect_equal(ncol(the_targets), 8)
+    expect_equal(ncol(the_targets), 9)
   })
 })
 

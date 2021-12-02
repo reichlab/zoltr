@@ -147,28 +147,34 @@ data_frame_from_targets_json <- function(targets_json) {
   id_column <- c()                    # integer
   url_column <- c()                   # character
   name_column <- c()                  # ""
-  description_column <- c()           # ""
   type_column <- c()                  # ""
+  description_column <- c()           # ""
+  outcome_variable_column <- c()      # character
   is_step_ahead_column <- c()         # logical
-  step_ahead_increment_column <- c()  # numeric (NULL if not is_step_ahead)
-  unit_column <- c()                  # character (NULL for some target types)
+  numeric_horizon_column <- c()       # numeric (NULL if not is_step_ahead)
+  reference_date_type_column <- c()   # character ("")
   for (target_json in targets_json) {
     id_column <- append(id_column, target_json$id)
     url_column <- append(url_column, target_json$url)
     name_column <- append(name_column, target_json$name)
-    description_column <- append(description_column, target_json$description)
     type_column <- append(type_column, target_json$type)
+    description_column <- append(description_column, target_json$description)
+
+    outcome_variable_value <- if (is.null(target_json$outcome_variable)) NA else target_json$outcome_variable
+    outcome_variable_column <- append(outcome_variable_column, outcome_variable_value)
+
     is_step_ahead_column <- append(is_step_ahead_column, target_json$is_step_ahead)
 
-    step_ahead_value <- if (is.null(target_json$step_ahead_increment)) NA else target_json$step_ahead_increment
-    step_ahead_increment_column <- append(step_ahead_increment_column, step_ahead_value)
+    numeric_horizon_value <- if (is.null(target_json$numeric_horizon)) NA else target_json$numeric_horizon
+    numeric_horizon_column <- append(numeric_horizon_column, numeric_horizon_value)
 
-    unit_value <- if (is.null(target_json$unit)) NA else target_json$unit
-    unit_column <- append(unit_column, unit_value)
+    reference_date_type_value <- if (is.null(target_json$reference_date_type)) NA else target_json$reference_date_type
+    reference_date_type_column <- append(reference_date_type_column, reference_date_type_value)
   }
-  data.frame(id = id_column, url = url_column, name = name_column, description = description_column,
-             type = type_column, is_step_ahead = is_step_ahead_column,
-             step_ahead_increment = step_ahead_increment_column, unit = unit_column, stringsAsFactors = FALSE)
+  data.frame(id = id_column, url = url_column, name = name_column, type = type_column, description = description_column,
+             outcome_variable = outcome_variable_column, is_step_ahead = is_step_ahead_column,
+             numeric_horizon = numeric_horizon_column, reference_date_type = reference_date_type_column,
+             stringsAsFactors = FALSE)
 }
 
 
