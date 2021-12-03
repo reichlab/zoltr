@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.93</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.94</span>
       </span>
     </div>
 
@@ -153,26 +153,26 @@
 <span class="no">the_forecasts</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span>(<span class="no">zoltar_connection</span>, <span class="no">the_forecast_info</span>$<span class="no">forecast_model_url</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_forecasts</span>)
 <span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span>
-<span class="co">#&gt;  $ id                : int 41769</span>
-<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/41769/"</span>
-<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/669/"</span>
-<span class="co">#&gt;  $ source            : chr "forecast125955fa855d7.json"</span>
-<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2023/"</span>
+<span class="co">#&gt;  $ id                : int 44243</span>
+<span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/44243/"</span>
+<span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/685/"</span>
+<span class="co">#&gt;  $ source            : chr "forecast163cb72846874.json"</span>
+<span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2101/"</span>
 <span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span>
 <span class="co">#&gt;  $ data_version_date : Date, format: NA</span>
 <span class="co">#&gt;  $ is_season_start   : logi TRUE</span>
-<span class="co">#&gt;  $ created_at        : POSIXct, format: "2021-10-27 13:14:47"</span>
-<span class="co">#&gt;  $ issued_at         : POSIXct, format: "2021-10-27 13:14:47"</span>
+<span class="co">#&gt;  $ created_at        : POSIXct, format: "2021-12-03 08:28:18"</span>
+<span class="co">#&gt;  $ issued_at         : POSIXct, format: "2021-12-03 08:28:18"</span>
 <span class="co">#&gt;  $ notes             : chr ""</span>
-<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/41769/data/"</span></pre></body></html></div>
+<span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/44243/data/"</span></pre></body></html></div>
 </div>
 <div id="clean-up-by-deleting-the-sandbox-project" class="section level2">
 <h2 class="hasAnchor">
 <a href="#clean-up-by-deleting-the-sandbox-project" class="anchor"></a>Clean up by deleting the sandbox project</h2>
 <p><strong>NB: This will delete all of the data associated with the project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode"><html><body><pre class="r"><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span>(<span class="no">zoltar_connection</span>, <span class="no">project_url</span>)
-<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/298/]</span>
-<span class="co">#&gt;   Date: 2021-10-27 17:14</span>
+<span class="co">#&gt; Response [https://www.zoltardata.com/api/project/303/]</span>
+<span class="co">#&gt;   Date: 2021-12-03 13:28</span>
 <span class="co">#&gt;   Status: 204</span>
 <span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span>
 <span class="co">#&gt; &lt;EMPTY BODY&gt;</span></pre></body></html></div>

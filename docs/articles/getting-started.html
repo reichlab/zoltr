@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.93</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.94</span>
       </span>
     </div>
 
@@ -129,17 +129,17 @@
 <p>Now that you have a connection, you can use the <code><a href="../reference/projects.html">projects()</a></code> function to get all projects as a <code>data.frame</code>. Note that it will only list those that you are authorized to access, i.e., all public projects plus any private ones that you own or are a model owner.</p>
 <div class="sourceCode"><html><body><pre class="r"><span class="no">the_projects</span> <span class="kw">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span>(<span class="no">zoltar_connection</span>)
 <span class="fu"><a href="https://rdrr.io/r/utils/str.html">str</a></span>(<span class="no">the_projects</span>)
-<span class="co">#&gt; 'data.frame':    8 obs. of  10 variables:</span>
-<span class="co">#&gt;  $ id                   : int  44 218 238 4 9 41 6 239</span>
-<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/218/" "https://www.zoltardata.com/api/project/238/" "https://www.zoltardata.com/api/project/4/" ...</span>
-<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/72/" "https://www.zoltardata.com/api/user/97/" "https://www.zoltardata.com/api/user/4/" ...</span>
-<span class="co">#&gt;  $ public               : logi  TRUE TRUE TRUE FALSE TRUE TRUE ...</span>
-<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Election Forecasts" "ECDC European COVID-19 Forecast Hub" "Impetus Province Forecasts" ...</span>
-<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "Impetus Project forecasts for real-time dengue hemorrhagic fever (DHF) in Thailand. Beginning in May 2017, this"| __truncated__ ...</span>
-<span class="co">#&gt;  $ home_url             : chr  "https://covid19forecasthub.org" "https://reichlab.io" "https://github.com/epiforecasts/covid19-forecast-hub-europe" "http://www.iddynamics.jhsph.edu/projects/impetus" ...</span>
-<span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Week" "Biweek" ...</span>
-<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "Votes/voteshare (percent)" "Weighted ILI (%)" "DHF cases" ...</span>
-<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://zoltardata.com/" "https://github.com/epiforecasts/covid19-forecast-hub-europe/tree/master/data-processed" "https://github.com/reichlab/dengue-data" ...</span></pre></body></html></div>
+<span class="co">#&gt; 'data.frame':    9 obs. of  10 variables:</span>
+<span class="co">#&gt;  $ id                   : int  44 218 299 238 4 9 41 6 239</span>
+<span class="co">#&gt;  $ url                  : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/218/" "https://www.zoltardata.com/api/project/299/" "https://www.zoltardata.com/api/project/238/" ...</span>
+<span class="co">#&gt;  $ owner_url            : chr  "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/72/" "https://www.zoltardata.com/api/user/5/" "https://www.zoltardata.com/api/user/97/" ...</span>
+<span class="co">#&gt;  $ public               : logi  TRUE TRUE TRUE TRUE FALSE TRUE ...</span>
+<span class="co">#&gt;  $ name                 : chr  "COVID-19 Forecasts" "Election Forecasts" "CDC Influenza Hospitalization Forecasts 2021/2022" "ECDC European COVID-19 Forecast Hub" ...</span>
+<span class="co">#&gt;  $ description          : chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ "Forecasts of confirmed influenza hospitalization admissions during the 2021–2022 influenza season created as pa"| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ ...</span>
+<span class="co">#&gt;  $ home_url             : chr  "https://covid19forecasthub.org" "https://reichlab.io" "https://github.com/cdcepi/Flusight-forecast-data" "https://github.com/epiforecasts/covid19-forecast-hub-europe" ...</span>
+<span class="co">#&gt;  $ time_interval_type   : chr  "Week" "Week" "Week" "Week" ...</span>
+<span class="co">#&gt;  $ visualization_y_label: chr  "Weighted ILI (%)" "Votes/voteshare (percent)" "Weighted ILI (%)" "Weighted ILI (%)" ...</span>
+<span class="co">#&gt;  $ core_data            : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://zoltardata.com/" "https://github.com/cdcepi/Flusight-forecast-data/tree/master/data-forecasts" "https://github.com/epiforecasts/covid19-forecast-hub-europe/tree/master/data-processed" ...</span></pre></body></html></div>
 </div>
 <div id="get-a-project-to-work-with-and-list-its-info-and-models" class="section level2">
 <h2 class="hasAnchor">
