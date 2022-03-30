@@ -18,13 +18,13 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    data.table
+    data.table,
+    webmockr,
+    mockery
 Imports:
     httr,
     jsonlite,
     readr,
-    mockery,
-    webmockr,
     base64url,
     dplyr,
     MMWRweek,
@@ -32,6 +32,6 @@ Imports:
     rlang,
     magrittr,
     lubridate
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

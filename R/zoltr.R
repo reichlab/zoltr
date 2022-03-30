@@ -5,8 +5,6 @@
 # Suppress R CMD check note
 #' @importFrom readr read_csv
 #' @importFrom jsonlite read_json
-#' @importFrom mockery stub
-#' @importFrom webmockr stub_request
 NULL
 
 
