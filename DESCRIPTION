@@ -18,10 +18,10 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    data.table,
     webmockr,
     mockery
 Imports:
+    data.table,
     httr,
     jsonlite,
     readr,
