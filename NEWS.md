@@ -1,3 +1,7 @@
+# zoltr 0.941
+- cleaned up dependencies. thanks to Hugo Gruson
+
+
 # zoltr 0.94
 - added support for [change Target fields to support visualization #328](https://github.com/reichlab/forecast-repository/issues/328): adjusted Zoltar's [Target](Targets.md) data model to add `outcome_variable` to all targets, and to add `numeric_horizon` and `reference_date_type` fields to `is_step_ahead` ones. These changes support upcoming visualization features.
 
