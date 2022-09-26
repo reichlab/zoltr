@@ -6,11 +6,7 @@
 \alias{zoltr-package}
 \title{zoltr: Interface to the 'Zoltar' Forecast Repository API}
 \description{
-'Zoltar' <https://www.zoltardata.com/> is a website that provides a repository of model forecast results
-    in a standardized format and a central location. It supports storing, retrieving, comparing, and analyzing time
-    series forecasts for prediction challenges of interest to the modeling community. This package provides functions
-    for working with the 'Zoltar' API, including connecting and authenticating, getting meta information (projects,
-    models, and forecasts, and truth), and uploading, downloading, and deleting forecast and truth data.
+'Zoltar' \url{https://www.zoltardata.com/} is a website that provides a repository of model forecast results in a standardized format and a central location. It supports storing, retrieving, comparing, and analyzing time series forecasts for prediction challenges of interest to the modeling community. This package provides functions for working with the 'Zoltar' API, including connecting and authenticating, getting meta information (projects, models, and forecasts, and truth), and uploading, downloading, and deleting forecast and truth data.
 }
 \seealso{
 Useful links:

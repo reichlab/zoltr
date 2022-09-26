@@ -14,6 +14,7 @@ release_questions <- function() {
     "Did you update DESCRIPTION Version?",
     "Did you update vignette dates?",
     "Did you re-knit README.Rmd?",
+    "Did you run devtools::test()?",
     "Did you run devtools::check()?",
     "Did you run devtools::document()?",
     "Did you run devtools::build_vignettes()?",

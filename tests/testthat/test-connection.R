@@ -136,17 +136,17 @@ test_that("projects() returns a data.frame", {
     the_projects <- projects(zoltar_connection)
     expect_is(the_projects, "data.frame")
     expect_equal(names(the_projects), c("id", "url", "owner_url", "public", "name", "description", "home_url",
-                                        "time_interval_type", "visualization_y_label", "core_data"))
+                                        "core_data"))
     expect_equal(nrow(the_projects), 2)  # 2 projects
-    expect_equal(ncol(the_projects), 10)
+    expect_equal(ncol(the_projects), 8)
     expect_equal(length(mock_calls(m)), 1)
     expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/projects/")
 
     project_row <- the_projects[1,]
     exp_row <- data.frame(id = 1L, url = "http://example.com/api/project/1/",
                           owner_url = "http://example.com/api/user/2/", public = TRUE, name = "public project",
-                          description = "d", home_url = "http://example.com", time_interval_type = "Biweek",
-                          visualization_y_label = "label 1", core_data = "http://example.com", stringsAsFactors = FALSE)
+                          description = "d", home_url = "http://example.com", core_data = "http://example.com",
+                          stringsAsFactors = FALSE)
     rownames(project_row) <- c()
     rownames(exp_row) <- c()
     expect_equal(project_row, exp_row)
@@ -154,8 +154,7 @@ test_that("projects() returns a data.frame", {
     project_row <- the_projects[2,]
     exp_row <- data.frame(id = 2L, url = "http://example.com/api/project/2/",
                           owner_url = "http://example.com/api/user/2/", public = FALSE, name = "private project",
-                          description = "", home_url = "", time_interval_type = "Week", visualization_y_label = "label 2",
-                          core_data = "", stringsAsFactors = FALSE)
+                          description = "", home_url = "", core_data = "", stringsAsFactors = FALSE)
     rownames(project_row) <- c()
     rownames(exp_row) <- c()
     expect_equal(project_row, exp_row)
@@ -173,7 +172,6 @@ test_that("projects() can handle NULL owner in project JSON", {
     project_row <- the_projects[1,]
     exp_row <- data.frame(id = 1L, url = "http://example.com/api/project/1/", owner_url = as.character(NA),
                           public = TRUE, name = "public project", description = "d", home_url = "http://example.com",
-                          time_interval_type = "Biweek", visualization_y_label = "label 1",
                           core_data = "http://example.com", stringsAsFactors = FALSE)
     rownames(project_row) <- c()
     rownames(exp_row) <- c()

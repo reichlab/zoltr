@@ -1,3 +1,7 @@
+# zoltr 0.95
+- added support for [[prototype Covid-19-Hub-Vizualization integration #329](https://github.com/reichlab/forecast-repository/issues/329): removed visualization_y_label and time_interval_type fields.
+
+
 # zoltr 0.941
 - cleaned up dependencies. thanks to Hugo Gruson
 

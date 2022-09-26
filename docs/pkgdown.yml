@@ -1,8 +1,8 @@
-pandoc: 1.19.2.1
-pkgdown: 1.5.0
+pandoc: 2.19.2
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   getting-started: getting-started.html
   project-owners: project-owners.html
-last_built: 2022-04-04T13:51Z
+last_built: 2022-09-26T13:28Z
 

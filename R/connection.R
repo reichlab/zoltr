@@ -149,8 +149,6 @@ projects <- function(zoltar_connection) {
   name_column <- c()                   # character
   description_column <- c()            # ""
   home_url_column <- c()               # ""
-  time_interval_type_column <- c()     # ""
-  visualization_y_label_column <- c()  # ""
   core_data_column <- c()              # ""
   for (project_json in projects_json) {
     id_column <- append(id_column, project_json$id)
@@ -163,14 +161,11 @@ projects <- function(zoltar_connection) {
     name_column <- append(name_column, project_json$name)
     description_column <- append(description_column, project_json$description)
     home_url_column <- append(home_url_column, project_json$home_url)
-    time_interval_type_column <- append(time_interval_type_column, project_json$time_interval_type)
-    visualization_y_label_column <- append(visualization_y_label_column, project_json$visualization_y_label)
     core_data_column <- append(core_data_column, project_json$core_data)
   }
   data.frame(id = id_column, url = url_column, owner_url = owner_url_column, public = is_public_column, name = name_column,
-             description = description_column, home_url = home_url_column,
-             time_interval_type = time_interval_type_column, visualization_y_label = visualization_y_label_column,
-             core_data = core_data_column, stringsAsFactors = FALSE)
+             description = description_column, home_url = home_url_column, core_data = core_data_column,
+             stringsAsFactors = FALSE)
 }
 
 

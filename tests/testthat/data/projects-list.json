@@ -9,8 +9,6 @@
     "home_url": "http://example.com",
     "logo_url": "http://reichlab.io/assets/images/logo/nav-logo.png",
     "core_data": "http://example.com",
-    "time_interval_type": "Biweek",
-    "visualization_y_label": "label 1",
     "truth": "http://example.com/api/project/1/truth/",
     "model_owners": [
       "http://example.com/api/user/3/"
@@ -56,8 +54,6 @@
     "home_url": "",
     "logo_url": null,
     "core_data": "",
-    "time_interval_type": "Week",
-    "visualization_y_label": "label 2",
     "truth": "http://example.com/api/project/2/truth/",
     "model_owners": [
       "http://example.com/api/user/3/"
