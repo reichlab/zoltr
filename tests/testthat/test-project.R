@@ -194,7 +194,7 @@ test_that("submit_query() creates a Job", {
   query <- list()
   testthat::with_mock("httr::POST" = function(...) {
     called_args <<- list(...)
-    load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_forecast() call
+    load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_truth() call
     response  # actual response doesn't matter, just its class
   },
                       submit_query(zoltar_connection, "http://example.com/api/project/1/", "forecasts", query))
@@ -302,4 +302,83 @@ test_that("truth_info() returns a list", {
     expect_is(act_truth_info, "list")
     expect_equal(act_truth_info, exp_truth_info)
   })
+})
+
+
+#
+# ---- test upload functions ----
+#
+
+test_that("upload_truth() creates a Job", {
+  zoltar_connection <- new_connection("http://example.com")
+  job_json <- jsonlite::read_json("data/job-2.json")
+  mockery::stub(upload_truth, 'httr::upload_file', NULL)
+  webmockr::stub_request("post", uri = "http://example.com/api/project/1/truth/") %>%
+    to_return(
+      body = job_json,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
+  },
+                      upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                                   "data/docs-ground-truth-non-dup.csv"))
+  expect_equal(called_args$url, "http://example.com/api/project/1/truth/")
+  expect_equal(called_args$body$data_file, NULL)  # due to mockery::stub() calls elsewhere
+})
+
+
+test_that("upload_truth() returns a Job URL", {
+  zoltar_connection <- new_connection("http://example.com")
+  job_json <- jsonlite::read_json("data/job-2.json")
+  mockery::stub(upload_truth, 'httr::upload_file', NULL)
+  webmockr::stub_request("post", uri = "http://example.com/api/project/1/truth/") %>%
+    to_return(
+      body = job_json,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+  job_url <- upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                          "data/docs-ground-truth-non-dup.csv")
+  expect_equal(job_url, "http://example.com/api/job/2/")
+})
+
+
+test_that("upload_truth() calls re_authenticate_if_necessary()", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                 "data/docs-ground-truth-non-dup.csv")
+    expect_equal(length(mock_calls(m)), 1)
+  })
+})
+
+
+test_that("upload_truth() passes correct url to POST()", {
+  zoltar_connection <- new_connection("http://example.com")
+  called_args <- NULL
+  # Note: this file is a duplicate of vignettes one b/c I could not figure out how to access that directory for both
+  # devtools::test() and devtools::check() (different working dirs):
+  testthat::with_mock(
+    "httr::POST" = function(...) {
+      called_args <<- list(...)
+      load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_truth() call
+      response
+    },
+    job_url <- upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                            "data/docs-ground-truth-non-dup.csv"))
+  expect_equal(called_args$url, "http://example.com/api/project/1/truth/")
+  expect_s3_class(called_args$body$data_file, "form_file")
+})
+
+
+test_that("upload_truth() requires a existing file", {
+  # just a simple test to drive converting upload_truth() from file to list
+  zoltar_connection <- new_connection("http://example.com")
+  expect_error(upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                            "data/not-a-real-file.csv"),
+               "file.exists(path) is not TRUE", fixed = TRUE)
 })

@@ -1,3 +1,7 @@
+# zoltr 0.96
+- added `upload_truth(zoltar_connection, project_url, truth_csv_file)` function
+
+
 # zoltr 0.95
 - added support for [[prototype Covid-19-Hub-Vizualization integration #329](https://github.com/reichlab/forecast-repository/issues/329): removed visualization_y_label and time_interval_type fields.
 

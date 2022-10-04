@@ -234,6 +234,44 @@ latest_forecasts <- function(zoltar_connection, project_url) {
 
 
 #
+# ---- upload functions ----
+#
+
+#' Upload truth data
+#'
+#' Uploads the data in truth_csv_file to the project identified by project_url.
+#'
+#' @return A Job URL for the upload
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
+#' @param project_url URL of a project in zoltar_connection's projects
+#' @param truth_csv_file A CSV file as documented at https://docs.zoltardata.com/fileformats/#truth-data-format-csv
+#' @export
+#' @examples \dontrun{
+#'   job_url <- upload_truth(conn, "http://www.zoltardata.com/api/project/1/", "truth.csv")
+#' }
+#'
+upload_truth <- function(zoltar_connection, project_url, truth_csv_file) {
+  re_authenticate_if_necessary(zoltar_connection)
+  truth_url <- paste0(project_url, 'truth/')
+  message("upload_truth(): POST: ", truth_url)
+  response <- httr::POST(
+    url = truth_url,
+    httr::accept_json(),
+    add_auth_headers(zoltar_connection),
+    body = list(data_file = httr::upload_file(truth_csv_file)))
+  # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
+  # error message
+  json_response <- httr::content(response, "parsed")
+  if (response$status_code == 400) {
+    stop("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response,
+         call. = FALSE)
+  }
+
+  json_response$url  # throw away rest of job json and let job_info() reload/refresh it}
+}
+
+
+#
 # ---- query functions ----
 #
 
@@ -318,7 +356,7 @@ json_for_query <- function(query) {
 #'     c("1 wk ahead inc death"), c("2020-07-19", "2020-07-20"))
 #' }
 do_zoltar_query <- function(zoltar_connection, project_url, query_type, models = NULL, units = NULL,
-                            targets = NULL, timezeros = NULL, types = NULL, as_of=NULL, verbose = TRUE) {
+                            targets = NULL, timezeros = NULL, types = NULL, as_of = NULL, verbose = TRUE) {
   if (!query_type %in% c("forecasts", "truth")) {
     stop("invalid query_type: '", query_type, "'", call. = FALSE)
   }
