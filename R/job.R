@@ -34,8 +34,14 @@ status_as_str <- function(status_int) {
 job_info <- function(zoltar_connection, job_url) {
   job_json <- get_resource(zoltar_connection, job_url)
   job_json$status <- status_as_str(job_json$status)
-  job_json$created_at <- lubridate::parse_date_time(job_json$created_at, DATE_TIME_TZ_FORMAT, exact=TRUE)
-  job_json$updated_at <- lubridate::parse_date_time(job_json$updated_at, DATE_TIME_TZ_FORMAT, exact=TRUE)
+  job_json$created_at <- lubridate::parse_date_time(job_json$created_at, DATE_TIME_TZ_FORMAT, exact = TRUE)
+  job_json$updated_at <- lubridate::parse_date_time(job_json$updated_at, DATE_TIME_TZ_FORMAT, exact = TRUE)
+
+  # convert output_json$missing_time_zeros to dates if present (only present for jobs with "type"="UPLOAD_TRUTH")
+  if (!is.null(job_json$output_json$missing_time_zeros)) {
+    job_json$output_json$missing_time_zeros <- lapply(job_json$output_json$missing_time_zeros,
+                                                      FUN = function(x) as.Date(x, YYYY_MM_DD_DATE_FORMAT))
+  }
   job_json
 }
 

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.96</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.97</span>
       </span>
     </div>
 
@@ -60,6 +60,10 @@
       <small>Source: <a href="https://github.com/reichlab/zoltr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.97" id="zoltr-097">zoltr 0.97<a class="anchor" aria-label="anchor" href="#zoltr-097"></a></h2>
+<ul><li>changed <code>job_info(zoltar_connection, job_url)</code> to support <a href="https://github.com/reichlab/forecast-repository/issues/344" class="external-link">add missing timezero, unit, and target info to truth upload’s job.output_json </a><a href="https://github.com/reichlab/zoltr/issues/344" class="external-link">#344</a> - by parsing <code>job_json$output_json$missing_time_zeros</code> into date objects.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.96" id="zoltr-096">zoltr 0.96<a class="anchor" aria-label="anchor" href="#zoltr-096"></a></h2>
 <ul><li>added <code>upload_truth(zoltar_connection, project_url, truth_csv_file)</code> function</li>

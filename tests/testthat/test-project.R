@@ -331,18 +331,44 @@ test_that("upload_truth() creates a Job", {
 })
 
 
-test_that("upload_truth() returns a Job URL", {
+test_that("upload_truth() returns a Job URL, and job_info() is correct", {
+  # NB: following uses project/2 so that `stub_request` returns below job_json and not above project/1 one
   zoltar_connection <- new_connection("http://example.com")
-  job_json <- jsonlite::read_json("data/job-2.json")
+  job_json <- jsonlite::read_json("data/job-1.json")
   mockery::stub(upload_truth, 'httr::upload_file', NULL)
-  webmockr::stub_request("post", uri = "http://example.com/api/project/1/truth/") %>%
+  webmockr::stub_request("post", uri = "http://example.com/api/project/2/truth/") %>%
     to_return(
       body = job_json,
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
-  job_url <- upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+  job_url <- upload_truth(zoltar_connection, "http://example.com/api/project/2/",
                           "data/docs-ground-truth-non-dup.csv")
-  expect_equal(job_url, "http://example.com/api/job/2/")
+  expect_equal(job_url, "http://example.com/api/job/1/")
+
+  # test job_info()
+  exp_job_json <- job_json
+  exp_job_json$status <- "SUCCESS"
+  exp_job_json$created_at <- lubridate::parse_date_time(
+    "2022-10-24T14:02:01.679789-04:00", DATE_TIME_TZ_FORMAT, exact = TRUE)
+  exp_job_json$updated_at <- lubridate::parse_date_time(
+    "2022-10-24T14:02:02.464451-04:00", DATE_TIME_TZ_FORMAT, exact = TRUE)
+  exp_job_json$input_json <- list("type" = "UPLOAD_TRUTH", filename = "docs-ground-truth-non-dup.csv",
+                                  "project_pk" = "41")
+  exp_job_json$output_json <- list("num_rows" = 11,
+                                   "missing_units" = list("loc1x", "loc2x"),
+                                   "num_forecasts" = 3,
+                                   "missing_targets" = list("cases next weekx"),
+                                   "missing_time_zeros" = list(as.Date("2022-10-01", YYYY_MM_DD_DATE_FORMAT),
+                                                               as.Date("2022-10-02", YYYY_MM_DD_DATE_FORMAT)))
+
+  m <- mock(job_json)
+  testthat::with_mock("zoltr::get_resource" = m, {
+    the_job_info <- job_info(zoltar_connection, "http://example.com/api/job/1/")
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(mock_args(m)[[1]][[2]], "http://example.com/api/job/1/")
+    expect_is(the_job_info, "list")
+    expect_equal(the_job_info, exp_job_json)
+  })
 })
 
 

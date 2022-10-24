@@ -208,6 +208,7 @@ test_that("upload_forecast() returns a Job URL, and job_info() is correct", {
   job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
   expect_equal(job_url, "http://example.com/api/job/2/")
 
+  # test job_info()
   exp_job_json <- job_json
   exp_job_json$status <- "SUCCESS"
   exp_job_json$created_at <- lubridate::parse_date_time(
@@ -217,7 +218,6 @@ test_that("upload_forecast() returns a Job URL, and job_info() is correct", {
   exp_job_json$input_json <- list("forecast_model_pk" = 1, "timezero_pk" = 2, notes = "a few predictions")
   exp_job_json$output_json <- list("forecast_pk" = 3)
 
-  # test job_info()
   m <- mock(job_json)
   testthat::with_mock("zoltr::get_resource" = m, {
     the_job_info <- job_info(zoltar_connection, "http://example.com/api/job/2/")

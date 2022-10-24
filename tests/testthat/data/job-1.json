@@ -1,0 +1,29 @@
+{
+  "id": 1,
+  "url": "http://example.com/api/job/1/",
+  "status": 4,
+  "user": "http://example.com/api/user/3/",
+  "created_at": "2022-10-24T14:02:01.679789-04:00",
+  "updated_at": "2022-10-24T14:02:02.464451-04:00",
+  "failure_message": "",
+  "input_json": {
+    "type": "UPLOAD_TRUTH",
+    "filename": "docs-ground-truth-non-dup.csv",
+    "project_pk": "41"
+  },
+  "output_json": {
+    "num_rows": 11,
+    "missing_units": [
+      "loc1x",
+      "loc2x"
+    ],
+    "num_forecasts": 3,
+    "missing_targets": [
+      "cases next weekx"
+    ],
+    "missing_time_zeros": [
+      "2022-10-01",
+      "2022-10-02"
+    ]
+  }
+}
