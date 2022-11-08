@@ -1,3 +1,7 @@
+# zoltr 0.98
+- added `create_timezero <- function(zoltar_connection, project_url, timezero_date, data_version_date, is_season_start, season_name)` function
+
+
 # zoltr 0.97
 - changed `job_info(zoltar_connection, job_url)` to support [add missing timezero, unit, and target info to truth upload's job.output_json #344](https://github.com/reichlab/forecast-repository/issues/344) - by parsing `job_json$output_json$missing_time_zeros` into date objects.
 

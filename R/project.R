@@ -463,3 +463,52 @@ timezero_info <- function(zoltar_connection, timezero_url) {
 unit_info <- function(zoltar_connection, unit_url) {
   get_resource(zoltar_connection, unit_url)
 }
+
+
+#
+# ---- create_timezero() ----
+#
+
+#' Create a timezero
+#'
+#' Creates the timezero in the passed project using the passed list. Fails if a timezero with the passed timezero_date
+#' already exists.
+#'
+#' @return model_url of the newly-created timezero
+#' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
+#' @param project_url url of a project in zoltar_connection's projects. this is the project the new timezero will be
+#'   created in
+#' @param timezero_date The timezero's date in YYYY-MM-DD format as documented at https://docs.zoltardata.com/fileformats/#project-creation-configuration-json
+#' @param data_version_date Optional data version date in the same format. Pass NULL if the timezero does not have one
+#' @param is_season_start TRUE if this starts a season, and FALSE otherwise
+#' @param season_name Applicable when is_season_start is true, names the season, e.g., "2010-2011"
+#' @export
+#' @examples \dontrun{
+#'   new_timezero_url <- create_timezero(conn, "https://www.zoltardata.com/api/project/9/",
+#'                      "2022-11-08", "2022-11-09", TRUE, "2010-2011")
+#' }
+create_timezero <- function(zoltar_connection, project_url, timezero_date, data_version_date = NULL,
+                            is_season_start = FALSE, season_name = "") {
+  re_authenticate_if_necessary(zoltar_connection)
+  timezeros_url <- paste0(project_url, 'timezeros/')
+  timezero_config <- list('timezero_date' = timezero_date,
+                          'data_version_date' = data_version_date,
+                          'is_season_start' = is_season_start)
+  if (is_season_start) {
+    timezero_config$season_name <- season_name
+  }
+  response <- httr::POST(
+    url = timezeros_url,
+    add_auth_headers(zoltar_connection),
+    body = list(timezero_config = timezero_config),
+    encode = "json")
+  # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
+  # error message
+  json_response <- httr::content(response, "parsed")
+  if (response$status_code == 400) {
+    stop("POST status was not 400. status_code=", response$status_code, ", json_response=", json_response,
+         call. = FALSE)
+  }
+
+  json_response$url  # throw away rest of the timezero json and let timezero_info() reload/refresh it
+}

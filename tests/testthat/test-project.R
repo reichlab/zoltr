@@ -408,3 +408,74 @@ test_that("upload_truth() requires a existing file", {
                             "data/not-a-real-file.csv"),
                "file.exists(path) is not TRUE", fixed = TRUE)
 })
+
+
+#
+# ---- test create_timezero() ----
+#
+
+test_that("create_timezero() creates a TimeZero", {
+  zoltar_connection <- new_connection("http://example.com")
+  timezeros_list_json <- jsonlite::read_json("data/timezeros-list.json")
+  timezero_info <- timezeros_list_json[[1]]    # "is_season_start": true, "season_name": "2011-2012"
+
+  # test is_season_start=TRUE
+  timezero_config <- list(timezero_date = "2022-11-08", data_version_date = "2022-11-09", is_season_start = TRUE,
+                          season_name = "Fall 2022")
+  webmockr::stub_request("post", uri = "http://example.com/api/project/1/timezeros/") %>%
+    to_return(
+      body = timezero_info,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
+  },
+                      create_timezero(zoltar_connection, "http://example.com/api/project/1/",
+                                      timezero_config$timezero_date, timezero_config$data_version_date,
+                                      timezero_config$is_season_start, timezero_config$season_name))
+  expect_equal(called_args$url, "http://example.com/api/project/1/timezeros/")
+  expect_equal(called_args$body$timezero_config, timezero_config)
+
+  # test is_season_start=FALSE
+  timezero_info <- timezeros_list_json[[2]]  # "is_season_start": false
+  timezero_config <- list(timezero_date = "2022-11-08", data_version_date = "2022-11-09", is_season_start = FALSE)
+  webmockr::stub_request("post", uri = "http://example.com/api/project/1/timezeros/") %>%
+    to_return(
+      body = timezero_info,
+      status = 200,
+      headers = list('Content-Type' = 'application/json; charset=utf-8'))
+  testthat::with_mock("httr::POST" = function(...) {
+    called_args <<- list(...)
+    load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
+    response  # actual response doesn't matter, just its class
+  },
+                      create_timezero(zoltar_connection, "http://example.com/api/project/1/",
+                                      timezero_config$timezero_date, timezero_config$data_version_date,
+                                      timezero_config$is_season_start))  # no season_name
+  expect_equal(called_args$url, "http://example.com/api/project/1/timezeros/")
+  expect_equal(called_args$body$timezero_config, timezero_config)
+})
+
+
+test_that("create_timezero() calls re_authenticate_if_necessary() and returns a TimeZero URL", {
+  zoltar_connection <- new_connection("http://example.com")
+  m <- mock()
+  timezeros_list_json <- jsonlite::read_json("data/timezeros-list.json")
+  timezero_info <- timezeros_list_json[[1]]    # "is_season_start": true, "season_name": "2011-2012"
+  timezero_config <- list(timezero_date = "2022-11-08", data_version_date = "2022-11-09", is_season_start = TRUE,
+                          season_name = "Fall 2022")
+  testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
+    webmockr::stub_request("post", uri = "http://example.com/api/project/1/timezeros/") %>%
+      to_return(
+        body = timezero_info,
+        status = 200,
+        headers = list('Content-Type' = 'application/json; charset=utf-8'))
+    timezero_url <- create_timezero(zoltar_connection, "http://example.com/api/project/1/",
+                                    timezero_config$timezero_date, timezero_config$data_version_date,
+                                    timezero_config$is_season_start, timezero_config$season_name)
+    expect_equal(length(mock_calls(m)), 1)
+    expect_equal(timezero_url, "http://example.com/api/timezero/5/")
+  })
+})
