@@ -20,8 +20,8 @@ install.packages("zoltr")
 And the development version from [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("reichlab/zoltr")
+# install.packages("remotes")
+remotes::install_github("reichlab/zoltr")
 ```
 
 > Note: Due to the rapid pace of zoltr development, CRAN version lags behind development. We highly suggest you install the development version to get the latest features.
