@@ -487,7 +487,7 @@ unit_info <- function(zoltar_connection, unit_url) {
 #'   new_timezero_url <- create_timezero(conn, "https://www.zoltardata.com/api/project/9/",
 #'                      "2022-11-08", "2022-11-09", TRUE, "2010-2011")
 #' }
-create_timezero <- function(zoltar_connection, project_url, timezero_date, data_version_date = NULL,
+create_timezero <- function(zoltar_connection, project_url, timezero_date, data_version_date = NA,
                             is_season_start = FALSE, season_name = "") {
   re_authenticate_if_necessary(zoltar_connection)
   timezeros_url <- paste0(project_url, 'timezeros/')
