@@ -196,7 +196,8 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
     url = forecasts_url,
     httr::accept_json(),
     add_auth_headers(zoltar_connection),
-    body = list(data_file = httr::upload_file(temp_json_file), timezero_date = timezero_date, notes = notes))
+    body = list(data_file = httr::upload_file(temp_json_file), format='json', timezero_date = timezero_date,
+                notes = notes))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")
