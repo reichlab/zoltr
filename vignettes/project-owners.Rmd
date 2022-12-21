@@ -89,7 +89,7 @@ Here we will upload the `docs-predictions.json` file. Note that the passed `time
 
 ```{r}
 forecast_data <- jsonlite::read_json("docs-predictions.json")
-job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02", forecast_data)
+job_url <- upload_forecast(zoltar_connection, model_url, "2011-10-02", forecast_data, TRUE)
 busy_poll_job(zoltar_connection, job_url)
 ```
 

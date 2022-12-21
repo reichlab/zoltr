@@ -189,7 +189,7 @@ test_that("upload_forecast() creates a Job", {
     load("data/get_token_response.rda")  # 'response' contains a 200 response from a sample `get_token()` call via `zoltar_authenticate()`
     response  # actual response doesn't matter, just its class
   },
-                      upload_forecast(zoltar_connection, "http://example.com/api/model/1/", "2020-02-22", list())) # timezero_date, forecast_data
+                      upload_forecast(zoltar_connection, "http://example.com/api/model/1/", "2020-02-22", list(), TRUE))
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
   expect_equal(called_args$body$data_file, NULL)  # due to mockery::stub() calls elsewhere
   expect_equal(called_args$body$timezero_date, "2020-02-22")
@@ -205,7 +205,7 @@ test_that("upload_forecast() returns a Job URL, and job_info() is correct", {
       body = job_json,
       status = 200,
       headers = list('Content-Type' = 'application/json; charset=utf-8'))
-  job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
+  job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list(), TRUE)
   expect_equal(job_url, "http://example.com/api/job/2/")
 
   # test job_info()
@@ -233,7 +233,7 @@ test_that("upload_forecast() calls re_authenticate_if_necessary()", {
   zoltar_connection <- new_connection("http://example.com")
   m <- mock()
   testthat::with_mock("zoltr::re_authenticate_if_necessary" = m, {
-    upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list())  # timezero_date, forecast_data
+    upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, list(), TRUE)
     expect_equal(length(mock_calls(m)), 1)
   })
 })
@@ -252,8 +252,7 @@ test_that("upload_forecast() passes correct url to POST()", {
       load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_forecast() call
       response
     },
-    job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", timezero_date,
-                               forecast_data))
+    job_url <- upload_forecast(zoltar_connection, "http://example.com/api/model/1/", timezero_date, forecast_data, TRUE))
   expect_equal(called_args$url, "http://example.com/api/model/1/forecasts/")
   expect_equal(called_args$body$timezero_date, timezero_date)
   expect_s3_class(called_args$body$data_file, "form_file")
@@ -263,7 +262,7 @@ test_that("upload_forecast() passes correct url to POST()", {
 test_that("upload_forecast() accepts a `list` and not a file", {
   # just a simple test to drive converting upload_forecast() from file to list
   zoltar_connection <- new_connection("http://example.com")
-  expect_error(upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, NULL),  # timezero_date, forecast_data
+  expect_error(upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, NULL, TRUE),
                "forecast_data was not a `list`", fixed = TRUE)
 })
 

@@ -9,6 +9,7 @@ upload_forecast(
   model_url,
   timezero_date,
   forecast_data,
+  is_json = TRUE,
   notes = ""
 )
 }
@@ -19,7 +20,9 @@ upload_forecast(
 
 \item{timezero_date}{The date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
-\item{forecast_data}{Forecast data as a \code{list} in the Zoltar standard format}
+\item{forecast_data}{Forecast data in Zoltar format as a \code{list} or \code{dataframe}, depending on is_json}
+
+\item{is_json}{TRUE if forecast_data is JSON (list) format, and FALSE if it is CSV (dataframe) format}
 
 \item{notes}{Optional user notes for the new forecast}
 }
@@ -34,6 +37,6 @@ up, which depends on the number of current uploads in the queue. Zoltar tracks t
 \dontrun{
   forecast_data <- jsonlite::read_json("docs-predictions.json")
   job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
-                             "2017-01-17", forecast_data, "a mid-January forecast")
+                             "2017-01-17", forecast_data, TRUE, "a mid-January forecast")
 }
 }
