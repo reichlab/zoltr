@@ -1,3 +1,7 @@
+# zoltr 0.99
+- added support for [[Add support of uploading in zoltar CSV format #345]](https://github.com/reichlab/forecast-repository/issues/345) by changing the `upload_forecast()` function to accept a new `is_json` argument, making the new signature:  `upload_forecast(zoltar_connection, model_url, timezero_date, forecast_data, is_json = TRUE, notes = "")`
+
+
 # zoltr 0.98
 - added `create_timezero <- function(zoltar_connection, project_url, timezero_date, data_version_date, is_season_start, season_name)` function
 

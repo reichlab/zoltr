@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.98</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99</span>
       </span>
     </div>
 
@@ -60,6 +60,11 @@
       <small>Source: <a href="https://github.com/reichlab/zoltr/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.99" id="zoltr-099">zoltr 0.99<a class="anchor" aria-label="anchor" href="#zoltr-099"></a></h2>
+<ul><li>added support for <a href="https://github.com/reichlab/forecast-repository/issues/345" class="external-link">[Add support of uploading in zoltar CSV format </a><a href="https://github.com/reichlab/zoltr/issues/345" class="external-link">#345</a>] by changing the <code><a href="../reference/upload_forecast.html">upload_forecast()</a></code> function to accept a new <code>is_json</code> argument, making the new signature: <code>upload_forecast(zoltar_connection, model_url, timezero_date, forecast_data, is_json = TRUE, notes = "")</code>
+</li>
+</ul></div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.98" id="zoltr-098">zoltr 0.98<a class="anchor" aria-label="anchor" href="#zoltr-098"></a></h2>
 <ul><li>added <code>create_timezero &lt;- function(zoltar_connection, project_url, timezero_date, data_version_date, is_season_start, season_name)</code> function</li>

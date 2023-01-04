@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.98</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99</span>
       </span>
     </div>
 
@@ -204,18 +204,18 @@ case).</p>
 <span><span class="va">the_forecasts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">the_forecast_info</span><span class="op">$</span><span class="va">forecast_model_url</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_forecasts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span></span>
-<span><span class="co">#&gt;  $ id                : int 83748</span></span>
-<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/83748/"</span></span>
-<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/863/"</span></span>
-<span><span class="co">#&gt;  $ source            : chr "forecast93945b4c6013.json"</span></span>
-<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2802/"</span></span>
+<span><span class="co">#&gt;  $ id                : int 83749</span></span>
+<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/83749/"</span></span>
+<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/864/"</span></span>
+<span><span class="co">#&gt;  $ source            : chr "forecast97c43c19af44.json"</span></span>
+<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2805/"</span></span>
 <span><span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span></span>
 <span><span class="co">#&gt;  $ data_version_date : Date, format: NA</span></span>
 <span><span class="co">#&gt;  $ is_season_start   : logi TRUE</span></span>
-<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2023-01-04 14:11:02"</span></span>
-<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2023-01-04 14:11:02"</span></span>
+<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2023-01-04 14:27:30"</span></span>
+<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2023-01-04 14:27:30"</span></span>
 <span><span class="co">#&gt;  $ notes             : chr ""</span></span>
-<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/83748/data/"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/83749/data/"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="clean-up-by-deleting-the-sandbox-project">Clean up by deleting the sandbox project<a class="anchor" aria-label="anchor" href="#clean-up-by-deleting-the-sandbox-project"></a>
@@ -224,8 +224,8 @@ case).</p>
 project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/339/]</span></span>
-<span><span class="co">#&gt;   Date: 2023-01-04 14:11</span></span>
+<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/340/]</span></span>
+<span><span class="co">#&gt;   Date: 2023-01-04 14:27</span></span>
 <span><span class="co">#&gt;   Status: 204</span></span>
 <span><span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span></span>
 <span><span class="co">#&gt; &lt;EMPTY BODY&gt;</span></span></code></pre></div>
