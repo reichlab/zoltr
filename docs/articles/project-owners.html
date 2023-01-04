@@ -188,7 +188,7 @@ in <code>docs-project.json</code>, the file that was used to create the
 project. It is an error otherwise.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"docs-predictions.json"</span><span class="op">)</span></span>
-<span><span class="va">job_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="va">forecast_data</span><span class="op">)</span></span>
+<span><span class="va">job_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="va">forecast_data</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/busy_poll_job.html">busy_poll_job</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">job_url</span><span class="op">)</span></span></code></pre></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a
 “SUCCESS” one. (How long it takes will depend on how much other work
@@ -204,18 +204,18 @@ case).</p>
 <span><span class="va">the_forecasts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">the_forecast_info</span><span class="op">$</span><span class="va">forecast_model_url</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_forecasts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span></span>
-<span><span class="co">#&gt;  $ id                : int 77063</span></span>
-<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/77063/"</span></span>
-<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/788/"</span></span>
-<span><span class="co">#&gt;  $ source            : chr "forecast77b9594d4d1a.json"</span></span>
-<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2668/"</span></span>
+<span><span class="co">#&gt;  $ id                : int 83748</span></span>
+<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/83748/"</span></span>
+<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/863/"</span></span>
+<span><span class="co">#&gt;  $ source            : chr "forecast93945b4c6013.json"</span></span>
+<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2802/"</span></span>
 <span><span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span></span>
 <span><span class="co">#&gt;  $ data_version_date : Date, format: NA</span></span>
 <span><span class="co">#&gt;  $ is_season_start   : logi TRUE</span></span>
-<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2022-11-08 18:02:17"</span></span>
-<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2022-11-08 18:02:17"</span></span>
+<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2023-01-04 14:11:02"</span></span>
+<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2023-01-04 14:11:02"</span></span>
 <span><span class="co">#&gt;  $ notes             : chr ""</span></span>
-<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/77063/data/"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/83748/data/"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="clean-up-by-deleting-the-sandbox-project">Clean up by deleting the sandbox project<a class="anchor" aria-label="anchor" href="#clean-up-by-deleting-the-sandbox-project"></a>
@@ -224,8 +224,8 @@ case).</p>
 project without warning, including models and forecasts.</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/332/]</span></span>
-<span><span class="co">#&gt;   Date: 2022-11-08 18:02</span></span>
+<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/339/]</span></span>
+<span><span class="co">#&gt;   Date: 2023-01-04 14:11</span></span>
 <span><span class="co">#&gt;   Status: 204</span></span>
 <span><span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span></span>
 <span><span class="co">#&gt; &lt;EMPTY BODY&gt;</span></span></code></pre></div>

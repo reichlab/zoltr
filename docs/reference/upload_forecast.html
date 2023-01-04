@@ -73,6 +73,7 @@ up, which depends on the number of current uploads in the queue. Zoltar tracks t
 <span>  <span class="va">model_url</span>,</span>
 <span>  <span class="va">timezero_date</span>,</span>
 <span>  <span class="va">forecast_data</span>,</span>
+<span>  is_json <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  notes <span class="op">=</span> <span class="st">""</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
@@ -92,7 +93,11 @@ up, which depends on the number of current uploads in the queue. Zoltar tracks t
 
 
 <dt>forecast_data</dt>
-<dd><p>Forecast data as a <code>list</code> in the Zoltar standard format</p></dd>
+<dd><p>Forecast data in Zoltar format as a <code>list</code> or <code>dataframe</code>, depending on is_json</p></dd>
+
+
+<dt>is_json</dt>
+<dd><p>TRUE if forecast_data is JSON (list) format, and FALSE if it is CSV (dataframe) format</p></dd>
 
 
 <dt>notes</dt>
@@ -111,7 +116,7 @@ up, which depends on the number of current uploads in the queue. Zoltar tracks t
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"docs-predictions.json"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">job_url</span> <span class="op">&lt;-</span> <span class="fu">upload_forecast</span><span class="op">(</span><span class="va">conn</span>, <span class="st">"http://www.zoltardata.com/api/model/1/"</span>,</span></span>
-<span class="r-in"><span>                             <span class="st">"2017-01-17"</span>, <span class="va">forecast_data</span>, <span class="st">"a mid-January forecast"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>                             <span class="st">"2017-01-17"</span>, <span class="va">forecast_data</span>, <span class="cn">TRUE</span>, <span class="st">"a mid-January forecast"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
