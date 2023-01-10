@@ -1,5 +1,9 @@
+# zoltr 0.9.10
+- fixed [False error message: non-decreasing values as quantiles increase #49](https://github.com/reichlab/zoltr/issues/49)
+
+
 # zoltr 0.99
-- added support for [[Add support of uploading in zoltar CSV format #345]](https://github.com/reichlab/forecast-repository/issues/345) by changing the `upload_forecast()` function to accept a new `is_json` argument, making the new signature:  `upload_forecast(zoltar_connection, model_url, timezero_date, forecast_data, is_json = TRUE, notes = "")`
+- added support for [Add support of uploading in zoltar CSV format #345](https://github.com/reichlab/forecast-repository/issues/345) by changing the `upload_forecast()` function to accept a new `is_json` argument, making the new signature:  `upload_forecast(zoltar_connection, model_url, timezero_date, forecast_data, is_json = TRUE, notes = "")`
 
 
 # zoltr 0.98
@@ -15,7 +19,7 @@
 
 
 # zoltr 0.95
-- added support for [[prototype Covid-19-Hub-Vizualization integration #329](https://github.com/reichlab/forecast-repository/issues/329): removed visualization_y_label and time_interval_type fields.
+- added support for [prototype Covid-19-Hub-Vizualization integration #329](https://github.com/reichlab/forecast-repository/issues/329): removed visualization_y_label and time_interval_type fields.
 
 
 # zoltr 0.941

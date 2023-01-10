@@ -187,11 +187,14 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
   re_authenticate_if_necessary(zoltar_connection)
   forecasts_url <- paste0(model_url, 'forecasts/')
   message("upload_forecast(): POST: ", forecasts_url)
-  temp_json_file <- tempfile(pattern = "forecast", fileext = ".json")
+  temp_json_file <- tempfile(pattern = "forecast-", fileext = ".json")
 
   # w/out auto_unbox: primitives are written as lists of one item, e.g.,
   # {"unit":["HHS Region 1"], "target":["1 wk ahead"], "class":["bin"], "prediction":{"cat":[[0] ,[0.1]],"prob":[[0.1], [0.9]]}}
-  jsonlite::write_json(forecast_data, temp_json_file, auto_unbox = TRUE)
+  #
+  # w/out digits: some small numbers are converted to zero - see [Inconsistent treatment of digits across 1e-05 #184] -
+  # https://github.com/jeroen/jsonlite/issues/184
+  jsonlite::write_json(forecast_data, temp_json_file, auto_unbox = TRUE, digits = NA)
 
   response <- httr::POST(
     url = forecasts_url,
