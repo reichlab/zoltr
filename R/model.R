@@ -170,7 +170,8 @@ forecasts <- function(zoltar_connection, model_url) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param model_url URL of a model in zoltar_connection's projects
 #' @param timezero_date The date of the project timezero you are uploading for. it is a string in format YYYYMMDD
-#' @param forecast_data Forecast data in Zoltar format as a `list` or `dataframe`, depending on is_json
+#' @param forecast_data Forecast data to upload data to upload, either a `list` (if is_json==TRUE) or a `dataframe`
+#'   otherwise. formats are documented at https://docs.zoltardata.com/
 #' @param is_json TRUE if forecast_data is JSON (list) format, and FALSE if it is CSV (dataframe) format
 #' @param notes Optional user notes for the new forecast
 #' @export
@@ -180,27 +181,35 @@ forecasts <- function(zoltar_connection, model_url) {
 #'                              "2017-01-17", forecast_data, TRUE, "a mid-January forecast")
 #' }
 upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data, is_json = TRUE, notes = "") {
-  if (!(inherits(forecast_data, "list"))) {
-    stop("forecast_data was not a `list`", call. = FALSE)
+  # validate forecast_data and is_json combination. there are two valid cases:
+  # - forecast_data is a `list` and is_json == TRUE (Zoltar JSON format)
+  # - forecast_data is a `dataframe` and is_json == FALSE (Zoltar CSV format)
+  if ((!(inherits(forecast_data, "list")) && is_json) ||
+    (!(inherits(forecast_data, "data.frame")) && !is_json)) {
+    stop("invalid forecast_data type for is_json", call. = FALSE)
   }
 
   re_authenticate_if_necessary(zoltar_connection)
   forecasts_url <- paste0(model_url, 'forecasts/')
   message("upload_forecast(): POST: ", forecasts_url)
-  temp_json_file <- tempfile(pattern = "forecast-", fileext = ".json")
+  temp_data_file <- tempfile(pattern = "forecast-", fileext = if (is_json) '.json' else '.csv')
 
-  # w/out auto_unbox: primitives are written as lists of one item, e.g.,
-  # {"unit":["HHS Region 1"], "target":["1 wk ahead"], "class":["bin"], "prediction":{"cat":[[0] ,[0.1]],"prob":[[0.1], [0.9]]}}
-  #
+  # NB re: jsonlite::write_json(): w/out auto_unbox: primitives are written as lists of one item, e.g.,
+  #   {"unit":["HHS Region 1"], "target":["1 wk ahead"], "class":["bin"], "prediction":{"cat":[[0] ,[0.1]],"prob":[[0.1], [0.9]]}}
   # w/out digits: some small numbers are converted to zero - see [Inconsistent treatment of digits across 1e-05 #184] -
-  # https://github.com/jeroen/jsonlite/issues/184
-  jsonlite::write_json(forecast_data, temp_json_file, auto_unbox = TRUE, digits = NA)
+  #   https://github.com/jeroen/jsonlite/issues/184
+  if (is_json) {
+    jsonlite::write_json(forecast_data, temp_data_file, auto_unbox = TRUE, digits = NA)
+  } else {
+    utils::write.table(forecast_data, temp_data_file, col.names = TRUE, row.names = FALSE, sep = ",", na = '',
+                       quote = FALSE)
+  }
 
   response <- httr::POST(
     url = forecasts_url,
     httr::accept_json(),
     add_auth_headers(zoltar_connection),
-    body = list(data_file = httr::upload_file(temp_json_file), format = if (is_json) 'json' else 'csv',
+    body = list(data_file = httr::upload_file(temp_data_file), format = if (is_json) 'json' else 'csv',
                 timezero_date = timezero_date, notes = notes))
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message

@@ -20,7 +20,8 @@ upload_forecast(
 
 \item{timezero_date}{The date of the project timezero you are uploading for. it is a string in format YYYYMMDD}
 
-\item{forecast_data}{Forecast data in Zoltar format as a \code{list} or \code{dataframe}, depending on is_json}
+\item{forecast_data}{Forecast data to upload data to upload, either a \code{list} (if is_json==TRUE) or a \code{dataframe}
+otherwise. formats are documented at https://docs.zoltardata.com/}
 
 \item{is_json}{TRUE if forecast_data is JSON (list) format, and FALSE if it is CSV (dataframe) format}
 

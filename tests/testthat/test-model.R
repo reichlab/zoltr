@@ -259,11 +259,14 @@ test_that("upload_forecast() passes correct url to POST()", {
 })
 
 
-test_that("upload_forecast() accepts a `list` and not a file", {
-  # just a simple test to drive converting upload_forecast() from file to list
+test_that("upload_forecast() forecast_data/is_json mismatches", {
   zoltar_connection <- new_connection("http://example.com")
-  expect_error(upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL, NULL, TRUE),
-               "forecast_data was not a `list`", fixed = TRUE)
+  expect_error(upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL,
+                               data.frame(), TRUE),
+               "invalid forecast_data type for is_json", fixed = TRUE)  # `dataframe` but is_json
+  expect_error(upload_forecast(zoltar_connection, "http://example.com/api/model/1/", NULL,
+                               list(), FALSE),
+               "invalid forecast_data type for is_json", fixed = TRUE)  # `list` but not is_json
 })
 
 

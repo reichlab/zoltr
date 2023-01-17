@@ -1,3 +1,7 @@
+# zoltr 0.9.11
+- fixed bug introduced in [Add support of uploading in zoltar CSV format #345](https://github.com/reichlab/forecast-repository/issues/345)
+
+
 # zoltr 0.9.10
 - fixed [False error message: non-decreasing values as quantiles increase #49](https://github.com/reichlab/zoltr/issues/49)
 
