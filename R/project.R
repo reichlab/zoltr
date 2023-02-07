@@ -245,20 +245,27 @@ latest_forecasts <- function(zoltar_connection, project_url) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @param truth_csv_file A CSV file as documented at https://docs.zoltardata.com/fileformats/#truth-data-format-csv
+#' @param issued_at optional datetime to use for the uploaded truth forecasts' issued_at value (defaults on the server
+#'   to the datetime at time of upload). the value must obey the constraints documented at
+#'   https://docs.zoltardata.com/forecastversions/#forecast-version-rules
 #' @export
 #' @examples \dontrun{
 #'   job_url <- upload_truth(conn, "http://www.zoltardata.com/api/project/1/", "truth.csv")
 #' }
 #'
-upload_truth <- function(zoltar_connection, project_url, truth_csv_file) {
+upload_truth <- function(zoltar_connection, project_url, truth_csv_file, issued_at = NULL) {
   re_authenticate_if_necessary(zoltar_connection)
   truth_url <- paste0(project_url, 'truth/')
   message("upload_truth(): POST: ", truth_url)
+  body <- list(data_file = httr::upload_file(truth_csv_file))
+  if (!is.null(issued_at)) {
+    body[['issued_at']] <- issued_at
+  }
   response <- httr::POST(
     url = truth_url,
     httr::accept_json(),
     add_auth_headers(zoltar_connection),
-    body = list(data_file = httr::upload_file(truth_csv_file)))
+    body = body)
   # the Zoltar API returns 400 if there was an error POSTing. the content is JSON with a $error key that contains the
   # error message
   json_response <- httr::content(response, "parsed")

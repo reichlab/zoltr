@@ -401,6 +401,37 @@ test_that("upload_truth() passes correct url to POST()", {
 })
 
 
+test_that("upload_truth() passes correct body to POST() for issued_at combinations", {
+  zoltar_connection <- new_connection("http://example.com")
+  called_args <- NULL
+  # Note: this file is a duplicate of vignettes one b/c I could not figure out how to access that directory for both
+  # devtools::test() and devtools::check() (different working dirs):
+
+  # case: issued_at = NULL
+  testthat::with_mock(
+    "httr::POST" = function(...) {
+      called_args <<- list(...)
+      load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_truth() call
+      response
+    },
+    job_url <- upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                            "data/docs-ground-truth-non-dup.csv"))
+  expect_false("issued_at" %in% names(called_args))
+
+  # case: issued_at = datetime
+  issued_at <- "the issued_at"
+  testthat::with_mock(
+    "httr::POST" = function(...) {
+      called_args <<- list(...)
+      load("data/upload_response.rda")  # 'response' contains 200 response from sample upload_truth() call
+      response
+    },
+    job_url <- upload_truth(zoltar_connection, "http://example.com/api/project/1/",
+                            "data/docs-ground-truth-non-dup.csv", issued_at = issued_at))
+  expect_equal(called_args$body$issued_at, issued_at)
+})
+
+
 test_that("upload_truth() requires a existing file", {
   # just a simple test to drive converting upload_truth() from file to list
   zoltar_connection <- new_connection("http://example.com")

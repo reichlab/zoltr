@@ -4,7 +4,7 @@
 \alias{upload_truth}
 \title{Upload truth data}
 \usage{
-upload_truth(zoltar_connection, project_url, truth_csv_file)
+upload_truth(zoltar_connection, project_url, truth_csv_file, issued_at = NULL)
 }
 \arguments{
 \item{zoltar_connection}{A \code{ZoltarConnection} object as returned by \code{\link[=new_connection]{new_connection()}}}
@@ -12,6 +12,10 @@ upload_truth(zoltar_connection, project_url, truth_csv_file)
 \item{project_url}{URL of a project in zoltar_connection's projects}
 
 \item{truth_csv_file}{A CSV file as documented at https://docs.zoltardata.com/fileformats/#truth-data-format-csv}
+
+\item{issued_at}{optional datetime to use for the uploaded truth forecasts' issued_at value (defaults on the server
+to the datetime at time of upload). the value must obey the constraints documented at
+https://docs.zoltardata.com/forecastversions/#forecast-version-rules}
 }
 \value{
 A Job URL for the upload

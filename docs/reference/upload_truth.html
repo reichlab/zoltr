@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.9.11</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
@@ -66,7 +66,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">upload_truth</span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span>, <span class="va">truth_csv_file</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">upload_truth</span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span>, <span class="va">truth_csv_file</span>, issued_at <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -81,6 +81,12 @@
 
 <dt>truth_csv_file</dt>
 <dd><p>A CSV file as documented at https://docs.zoltardata.com/fileformats/#truth-data-format-csv</p></dd>
+
+
+<dt>issued_at</dt>
+<dd><p>optional datetime to use for the uploaded truth forecasts' issued_at value (defaults on the server
+to the datetime at time of upload). the value must obey the constraints documented at
+https://docs.zoltardata.com/forecastversions/#forecast-version-rules</p></dd>
 
 </dl></div>
     <div id="value">
