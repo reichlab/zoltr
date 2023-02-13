@@ -245,9 +245,9 @@ latest_forecasts <- function(zoltar_connection, project_url) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param project_url URL of a project in zoltar_connection's projects
 #' @param truth_csv_file A CSV file as documented at https://docs.zoltardata.com/fileformats/#truth-data-format-csv
-#' @param issued_at optional datetime to use for the uploaded truth forecasts' issued_at value (defaults on the server
-#'   to the datetime at time of upload). the value must obey the constraints documented at
-#'   https://docs.zoltardata.com/forecastversions/#forecast-version-rules
+#' @param issued_at optional datetime to use for the uploaded truth forecasts' issued_at value in ISO 8601 format. NB:
+#'   it must include timezone information. (the default issued_at is the time of upload.) the value must obey the
+#'   constraints documented at https://docs.zoltardata.com/forecastversions/#forecast-version-rules
 #' @export
 #' @examples \dontrun{
 #'   job_url <- upload_truth(conn, "http://www.zoltardata.com/api/project/1/", "truth.csv")
