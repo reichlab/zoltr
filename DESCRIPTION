@@ -1,6 +1,6 @@
 Package: zoltr
 Title: Interface to the 'Zoltar' Forecast Repository API
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person("Matthew", "Cornell", role = c("aut", "cre"), email = "cornell@umass.edu"),
     person("Nicholas", "Reich", role = c("aut", "cph"), email = "nick@schoolph.umass.edu"))
@@ -32,6 +32,6 @@ Imports:
     rlang,
     magrittr,
     lubridate
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)

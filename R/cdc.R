@@ -65,7 +65,7 @@ forecast_data_from_cdc_data_frame <- function(season_start_year, cdc_data_frame)
 
   predictions <- list()
   cdc_data_frame_grouped <- cdc_data_frame %>%
-    dplyr::group_by(.data$location, .data$target, .data$type) %>%
+    dplyr::group_by(location, target, type) %>%
     dplyr::group_data()
   for (group_idx in seq_len(nrow(cdc_data_frame_grouped))) {
     group_row <- cdc_data_frame_grouped[group_idx,]  # group_row$location,  group_row$target,  group_row$type

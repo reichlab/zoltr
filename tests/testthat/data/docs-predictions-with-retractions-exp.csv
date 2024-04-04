@@ -1,5 +1,8 @@
 unit,target,class,value,cat,prob,sample,quantile,family,param1,param2,param3
 loc1,pct next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
+loc1,pct next week,mean,NA,NA,NA,NA,NA,NA,NA,NA,NA
+loc1,pct next week,median,NA,NA,NA,NA,NA,NA,NA,NA,NA
+loc1,pct next week,mode,NA,NA,NA,NA,NA,NA,NA,NA,NA
 loc1,pct next week,named,NA,NA,NA,NA,NA,NA,NA,NA,NA
 loc2,pct next week,point,NA,NA,NA,NA,NA,NA,NA,NA,NA
 loc2,pct next week,bin,NA,NA,NA,NA,NA,NA,NA,NA,NA

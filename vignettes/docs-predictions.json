@@ -1,173 +1,6 @@
 {
-  "meta": {
-    "forecast": {
-      "id": 3,
-      "url": "http://127.0.0.1:8000/api/forecast/3/",
-      "forecast_model": "http://127.0.0.1:8000/api/model/5/",
-      "source": "docs-predictions.json",
-      "time_zero": {
-        "id": 5,
-        "url": "http://127.0.0.1:8000/api/timezero/5/",
-        "timezero_date": "2011-10-02",
-        "data_version_date": null,
-        "is_season_start": true,
-        "season_name": "2011-2012"
-      },
-      "created_at": "2020-03-05T15:47:47.369231-05:00",
-      "forecast_data": "http://127.0.0.1:8000/api/forecast/3/data/"
-    },
-    "units": [
-      {
-        "id": 23,
-        "url": "http://127.0.0.1:8000/api/unit/23/",
-        "abbreviation": "loc1",
-        "name": "location1"
-      },
-      {
-        "id": 24,
-        "url": "http://127.0.0.1:8000/api/unit/24/",
-        "abbreviation": "loc2",
-        "name": "location2"
-      },
-      {
-        "id": 25,
-        "url": "http://127.0.0.1:8000/api/unit/25/",
-        "abbreviation": "loc3",
-        "name": "location3"
-      }
-    ],
-    "targets": [
-      {
-        "id": 19,
-        "url": "http://127.0.0.1:8000/api/target/19/",
-        "name": "Season peak week",
-        "type": "date",
-        "description": "The week in which the peak y value is observed. Given dates represent the Sunday that begin the peak week. Externally to Zoltar, weeks will be calculated using standard definitions of MMWR weeks.",
-        "outcome_variable": "season peak week",
-        "is_step_ahead": false,
-        "cats": [
-          "2019-12-15",
-          "2019-12-22",
-          "2019-12-29",
-          "2020-01-05"
-        ]
-      },
-      {
-        "id": 18,
-        "url": "http://127.0.0.1:8000/api/target/18/",
-        "name": "above baseline",
-        "type": "binary",
-        "description": "Whether or not a region-specific threshold will be exceeded in a given season.",
-        "outcome_variable": "above baseline",
-        "is_step_ahead": false
-      },
-      {
-        "id": 16,
-        "url": "http://127.0.0.1:8000/api/target/16/",
-        "name": "cases next week",
-        "type": "discrete",
-        "description": "A forecasted integer number of cases for a future week.",
-        "outcome_variable": "cases",
-        "is_step_ahead": true,
-        "numeric_horizon": 1,
-        "reference_date_type": "MMWR_WEEK_LAST_TIMEZERO_MONDAY",
-        "range": [
-          0,
-          100000
-        ],
-        "cats": [
-          0,
-          2,
-          50
-        ]
-      },
-      {
-        "id": 15,
-        "url": "http://127.0.0.1:8000/api/target/15/",
-        "name": "pct next week",
-        "type": "continuous",
-        "description": "The forecasted percentage of positive tests for the next week",
-        "outcome_variable": "percentage positive tests",
-        "is_step_ahead": true,
-        "numeric_horizon": 1,
-        "reference_date_type": "MMWR_WEEK_LAST_TIMEZERO_MONDAY",
-        "range": [
-          0.0,
-          100.0
-        ],
-        "cats": [
-          0.0,
-          1.0,
-          1.1,
-          2.0,
-          2.2,
-          3.0,
-          3.3,
-          5.0,
-          10.0,
-          50.0
-        ]
-      },
-      {
-        "id": 17,
-        "url": "http://127.0.0.1:8000/api/target/17/",
-        "name": "season severity",
-        "type": "nominal",
-        "description": "The forecasted severity for a given season.",
-        "outcome_variable": "season severity",
-        "is_step_ahead": false,
-        "cats": [
-          "high",
-          "mild",
-          "moderate",
-          "severe"
-        ]
-      }
-    ]
-  },
+  "meta": {},
   "predictions": [
-    {
-      "unit": "loc1",
-      "target": "Season peak week",
-      "class": "point",
-      "prediction": {
-        "value": "2019-12-22"
-      }
-    },
-    {
-      "unit": "loc1",
-      "target": "Season peak week",
-      "class": "bin",
-      "prediction": {
-        "cat": ["2019-12-15", "2019-12-22", "2019-12-29"],
-        "prob": [0.01, 0.1, 0.89]
-      }
-    },
-    {
-      "unit": "loc1",
-      "target": "Season peak week",
-      "class": "sample",
-      "prediction": {
-        "sample": ["2020-01-05", "2019-12-15"]
-      }
-    },
-    {
-      "unit": "loc1",
-      "target": "above baseline",
-      "class": "point",
-      "prediction": {
-        "value": true
-      }
-    },
-    {
-      "unit": "loc1",
-      "target": "cases next week",
-      "class": "named",
-      "prediction": {
-        "family": "pois",
-        "param1": 1.1
-      }
-    },
     {
       "unit": "loc1",
       "target": "pct next week",
@@ -179,87 +12,35 @@
     {
       "unit": "loc1",
       "target": "pct next week",
+      "class": "mean",
+      "prediction": {
+        "value": 2.11
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "pct next week",
+      "class": "median",
+      "prediction": {
+        "value": 2.12
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "pct next week",
+      "class": "mode",
+      "prediction": {
+        "value": 2.13
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "pct next week",
       "class": "named",
       "prediction": {
         "family": "norm",
         "param1": 1.1,
         "param2": 2.2
-      }
-    },
-    {
-      "unit": "loc1",
-      "target": "season severity",
-      "class": "point",
-      "prediction": {
-        "value": "mild"
-      }
-    },
-    {
-      "unit": "loc1",
-      "target": "season severity",
-      "class": "bin",
-      "prediction": {
-        "cat": ["mild", "moderate", "severe"],
-        "prob": [0.0, 0.1, 0.9]
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "Season peak week",
-      "class": "point",
-      "prediction": {
-        "value": "2020-01-05"
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "Season peak week",
-      "class": "bin",
-      "prediction": {
-        "cat": ["2019-12-15", "2019-12-22", "2019-12-29", "2020-01-05"],
-        "prob": [0.01, 0.05, 0.05, 0.89]
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "Season peak week",
-      "class": "quantile",
-      "prediction": {
-        "quantile": [0.5, 0.75, 0.975],
-        "value": ["2019-12-22", "2019-12-29", "2020-01-05"]
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "above baseline",
-      "class": "bin",
-      "prediction": {
-        "cat": [true, false],
-        "prob": [0.9, 0.1]
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "above baseline",
-      "class": "sample",
-      "prediction": {
-        "sample": [true, false, true]
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "cases next week",
-      "class": "point",
-      "prediction": {
-        "value": 5
-      }
-    },
-    {
-      "unit": "loc2",
-      "target": "cases next week",
-      "class": "sample",
-      "prediction": {
-        "sample": [0, 2, 5]
       }
     },
     {
@@ -289,42 +70,44 @@
       }
     },
     {
-      "unit": "loc2",
-      "target": "season severity",
+      "unit": "loc3",
+      "target": "pct next week",
       "class": "point",
       "prediction": {
-        "value": "moderate"
+        "value": 3.567
+      }
+    },
+    {
+      "unit": "loc3",
+      "target": "pct next week",
+      "class": "sample",
+      "prediction": {
+        "sample": [2.3, 6.5, 0.0, 10.0234, 0.0001]
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "cases next week",
+      "class": "named",
+      "prediction": {
+        "family": "pois",
+        "param1": 1.1
       }
     },
     {
       "unit": "loc2",
-      "target": "season severity",
-      "class": "sample",
-      "prediction": {
-        "sample": ["moderate", "severe", "high", "moderate", "mild"]
-      }
-    },
-    {
-      "unit": "loc3",
-      "target": "Season peak week",
+      "target": "cases next week",
       "class": "point",
       "prediction": {
-        "value": "2019-12-29"
+        "value": 5
       }
     },
     {
-      "unit": "loc3",
-      "target": "Season peak week",
+      "unit": "loc2",
+      "target": "cases next week",
       "class": "sample",
       "prediction": {
-        "sample": ["2020-01-06", "2019-12-16"]}
-    },
-    {
-      "unit": "loc3",
-      "target": "above baseline",
-      "class": "sample",
-      "prediction": {
-        "sample": [false, true, true]
+        "sample": [0, 2, 5]
       }
     },
     {
@@ -354,19 +137,136 @@
       }
     },
     {
-      "unit": "loc3",
-      "target": "pct next week",
+      "unit": "loc1",
+      "target": "season severity",
       "class": "point",
       "prediction": {
-        "value": 3.567
+        "value": "mild"
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "season severity",
+      "class": "bin",
+      "prediction": {
+        "cat": ["mild", "moderate", "severe"],
+        "prob": [0.0, 0.1, 0.9]
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "season severity",
+      "class": "point",
+      "prediction": {
+        "value": "moderate"
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "season severity",
+      "class": "sample",
+      "prediction": {
+        "sample": ["moderate", "severe", "high", "moderate", "mild"]
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "above baseline",
+      "class": "point",
+      "prediction": {
+        "value": true
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "above baseline",
+      "class": "bin",
+      "prediction": {
+        "cat": [true, false],
+        "prob": [0.9, 0.1]
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "above baseline",
+      "class": "sample",
+      "prediction": {
+        "sample": [true, false, true]
       }
     },
     {
       "unit": "loc3",
-      "target": "pct next week",
+      "target": "above baseline",
       "class": "sample",
       "prediction": {
-        "sample": [2.3, 6.5, 0.0, 10.0234, 0.0001]
+        "sample": [false, true, true]
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "Season peak week",
+      "class": "point",
+      "prediction": {
+        "value": "2019-12-22"
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "Season peak week",
+      "class": "bin",
+      "prediction": {
+        "cat": ["2019-12-15", "2019-12-22", "2019-12-29"],
+        "prob": [0.01, 0.1, 0.89]
+      }
+    },
+    {
+      "unit": "loc1",
+      "target": "Season peak week",
+      "class": "sample",
+      "prediction": {
+        "sample": ["2020-01-05", "2019-12-15"]
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "Season peak week",
+      "class": "point",
+      "prediction": {
+        "value": "2020-01-05"
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "Season peak week",
+      "class": "bin",
+      "prediction": {
+        "cat": ["2019-12-15", "2019-12-22", "2019-12-29", "2020-01-05"],
+        "prob": [0.01, 0.05, 0.05, 0.89]
+      }
+    },
+    {
+      "unit": "loc2",
+      "target": "Season peak week",
+      "class": "quantile",
+      "prediction": {
+        "quantile": [0.5, 0.75, 0.975],
+        "value": ["2019-12-22", "2019-12-29", "2020-01-05"]
+      }
+    },
+    {
+      "unit": "loc3",
+      "target": "Season peak week",
+      "class": "point",
+      "prediction": {
+        "value": "2019-12-29"
+      }
+    },
+    {
+      "unit": "loc3",
+      "target": "Season peak week",
+      "class": "sample",
+      "prediction": {
+        "sample": ["2020-01-06", "2019-12-16"]
       }
     }
   ]
