@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
 
 Welcome to the zoltr vignette for project owners and forecasters. You should read this if you are interested in creating and managing your own [zoltardata.com](https://www.zoltardata.com/) projects using this package to access them via the Zoltar API. Building on the _Getting Started_ vignette, this one covers creating projects and models, and uploading forecasts.
 
-Before starting you should have an account on [zoltardata.com](https://www.zoltardata.com/), and an [`.Renviron`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html) file set up as described in _Getting Started_.
+Before starting, you should have an account on [zoltardata.com](https://www.zoltardata.com/), and an [`.Renviron`](https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html) file set up as described in _Getting Started_.
 
 
 ## Connect to the host and authenticate
@@ -51,7 +51,7 @@ zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_P
 
 ## Create a sandbox project to play with
 
-Let's use the `create_project()` function to make a temporary project to work with. (Note that if you're repeating this step and need to delete a previously-created project, you can either use the web UI's delete button on the project detail page or call the zoltr `delete_project()` function to do it programmatically.) `create_project()` takes a `project_config` parameter that is a `list` specifying everything Zoltar needs to create a project, including meta information like name, whether it's public, etc. In addition it lists the units, targets, and timezeros to create. The new project's URL is returned, which you can pass to other functions. Here we use `docs-project.json`, which is the one that creates the example documentation project.
+Let's use the `create_project()` function to make a temporary project to work with. (Note that if you're repeating this step and need to delete a previously-created project, you can either use the web UI's delete button on the project detail page or call the zoltr `delete_project()` function to do it programmatically.) `create_project()` takes a `project_config` parameter that is a `list` specifying everything Zoltar needs to create a project, including meta information like name, whether it's public, etc. In addition, it lists the units, targets, and timezeros to create. The new project's URL is returned, which you can pass to other functions. Here we use `docs-project.json`, which is the one that creates the example documentation project.
 
 ```{r}
 project_config <- jsonlite::read_json("docs-project.json")  # "name": "My project"
@@ -108,7 +108,7 @@ str(the_forecasts)
 
 ## Clean up by deleting the sandbox project
 
-**NB: This will delete all of the data associated with the project without warning, including models and forecasts.** 
+**NB: This will delete all the data associated with the project without warning, including models and forecasts.** 
 
 ```{r}
 delete_project(zoltar_connection, project_url)

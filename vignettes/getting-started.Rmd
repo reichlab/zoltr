@@ -34,7 +34,7 @@ Z_USERNAME=insert-your-username-here
 Z_PASSWORD=insert-your-password-here
 ```
 
-Note that the Zoltar service uses a "token"-based scheme for authentication. These tokens have a five minute expiration for security, which requires re-authentication after that period of time. The zoltr library takes care of re-authenticating as needed by passing your username and password back to the server to get another token. Note that the connection object returned by the `new_connection` function stores a token internally, so be careful if saving that object into a file.
+Note that the Zoltar service uses a "token"-based scheme for authentication. These tokens have a five-minute expiration for security, which requires re-authentication after that period of time. The zoltr library takes care of re-authenticating as needed by passing your username and password back to the server to get another token. Note that the connection object returned by the `new_connection` function stores a token internally, so be careful if saving that object into a file.
 
 
 ## Connect to the host and authenticate
@@ -97,7 +97,7 @@ There is other project-related information that you can access, such as its conf
 
 ## Query a project's forecast data
 
-You can query a project's forecast data using the `submit_query()` function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `submit_query()` function _block_ until the query is done, you instead get a quick response in the form of a `Job` URL that you can pass to the `job_info()` function to check its status and find out if the upload is pending, successfully finished, or failed). (This is called _polling_ the host to ask the status.) Here we poll every second using the `busy_poll_job()` helper function. Then we use the `job_data()` function when the query is successfully completed to get the results as a `data.frame`.
+You can query a project's forecast data using the `submit_query()` function. Keep in mind that Zoltar enqueues long operations like querying and uploading forecasts, which keeps the site responsive but makes the Zoltar API a little more complicated. Rather than having the `submit_query()` function _block_ until the query is done, you instead get a quick response in the form of a `Job` URL that you can pass to the `job_info()` function to check its status and find out if the upload is pending, successfully finished, or failed. (This is called _polling_ the host to ask the status.) Here we poll every second using the `busy_poll_job()` helper function. Then we use the `job_data()` function when the query is successfully completed to get the results as a `data.frame`.
 
 > Note: You may find the `do_zoltar_query()` function helpful, which combines `submit_query()`, `busy_poll_job()`, and `job_data()` in one call.
 
@@ -113,7 +113,7 @@ the_job_data
 ```
 
 ```{r}
-forecast_data <- do_zoltar_query(zoltar_connection, project_url, "forecasts", "docs forecast model", 
+forecast_data <- do_zoltar_query(zoltar_connection, project_url, "forecasts", "docs_mod", 
                                  c("loc1", "loc2"), c("pct next week", "cases next week"),
                                  c("2011-10-02", "2011-10-09", "2011-10-16"), types = c("point", "quantile"))
 forecast_data

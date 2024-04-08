@@ -12,7 +12,7 @@
 #' @importFrom rlang .data
 quantile_data_frame_from_forecast_data <- function(forecast_data) {
   data_frame_from_forecast_data(forecast_data) %>%
-    dplyr::select(.data$unit, .data$target, .data$class, .data$quantile, .data$value) %>%
-    dplyr::rename(location = .data$unit, type = class) %>%
-    dplyr::filter(.data$type == "point" | .data$type == "quantile")
+    dplyr::select(unit, target, class, quantile, value) %>%
+    dplyr::rename(location = unit, type = class) %>%
+    dplyr::filter(type == "point" | type == "quantile")
 }
