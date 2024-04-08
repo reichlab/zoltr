@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
@@ -103,7 +103,7 @@ should read this if you are interested in creating and managing your own
 this package to access them via the Zoltar API. Building on the
 <em>Getting Started</em> vignette, this one covers creating projects and
 models, and uploading forecasts.</p>
-<p>Before starting you should have an account on <a href="https://www.zoltardata.com/" class="external-link">zoltardata.com</a>, and an <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html" class="external-link"><code>.Renviron</code></a>
+<p>Before starting, you should have an account on <a href="https://www.zoltardata.com/" class="external-link">zoltardata.com</a>, and an <a href="https://stat.ethz.ch/R-manual/R-devel/library/base/html/Startup.html" class="external-link"><code>.Renviron</code></a>
 file set up as described in <em>Getting Started</em>.</p>
 <div class="section level3">
 <h3 id="connect-to-the-host-and-authenticate">Connect to the host and authenticate<a class="anchor" aria-label="anchor" href="#connect-to-the-host-and-authenticate"></a>
@@ -127,7 +127,7 @@ web UI’s delete button on the project detail page or call the zoltr
 <code><a href="../reference/create_project.html">create_project()</a></code> takes a <code>project_config</code>
 parameter that is a <code>list</code> specifying everything Zoltar needs
 to create a project, including meta information like name, whether it’s
-public, etc. In addition it lists the units, targets, and timezeros to
+public, etc. In addition, it lists the units, targets, and timezeros to
 create. The new project’s URL is returned, which you can pass to other
 functions. Here we use <code>docs-project.json</code>, which is the one
 that creates the example documentation project.</p>
@@ -204,28 +204,28 @@ case).</p>
 <span><span class="va">the_forecasts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">the_forecast_info</span><span class="op">$</span><span class="va">forecast_model_url</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_forecasts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span></span>
-<span><span class="co">#&gt;  $ id                : int 97486</span></span>
-<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/97486/"</span></span>
-<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/883/"</span></span>
-<span><span class="co">#&gt;  $ source            : chr "forecast-34a1b703e68.json"</span></span>
-<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/2933/"</span></span>
+<span><span class="co">#&gt;  $ id                : int 109745</span></span>
+<span><span class="co">#&gt;  $ url               : chr "https://rl-zoltar-staging.herokuapp.com/api/forecast/109745/"</span></span>
+<span><span class="co">#&gt;  $ forecast_model_url: chr "https://rl-zoltar-staging.herokuapp.com/api/model/992/"</span></span>
+<span><span class="co">#&gt;  $ source            : chr "forecast-19da771fe35e.json"</span></span>
+<span><span class="co">#&gt;  $ timezero_url      : chr "https://rl-zoltar-staging.herokuapp.com/api/timezero/3753/"</span></span>
 <span><span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span></span>
 <span><span class="co">#&gt;  $ data_version_date : Date, format: NA</span></span>
 <span><span class="co">#&gt;  $ is_season_start   : logi TRUE</span></span>
-<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2023-02-13 14:06:29"</span></span>
-<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2023-02-13 14:06:29"</span></span>
+<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2024-04-08 12:53:01"</span></span>
+<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2024-04-08 12:53:01"</span></span>
 <span><span class="co">#&gt;  $ notes             : chr ""</span></span>
-<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/97486/data/"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ forecast_data_url : chr "https://rl-zoltar-staging.herokuapp.com/api/forecast/109745/data/"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="clean-up-by-deleting-the-sandbox-project">Clean up by deleting the sandbox project<a class="anchor" aria-label="anchor" href="#clean-up-by-deleting-the-sandbox-project"></a>
 </h3>
-<p><strong>NB: This will delete all of the data associated with the
-project without warning, including models and forecasts.</strong></p>
+<p><strong>NB: This will delete all the data associated with the project
+without warning, including models and forecasts.</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/356/]</span></span>
-<span><span class="co">#&gt;   Date: 2023-02-13 14:06</span></span>
+<span><span class="co">#&gt; Response [https://rl-zoltar-staging.herokuapp.com/api/project/369/]</span></span>
+<span><span class="co">#&gt;   Date: 2024-04-08 12:53</span></span>
 <span><span class="co">#&gt;   Status: 204</span></span>
 <span><span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span></span>
 <span><span class="co">#&gt; &lt;EMPTY BODY&gt;</span></span></code></pre></div>
@@ -250,7 +250,7 @@ project without warning, including models and forecasts.</strong></p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

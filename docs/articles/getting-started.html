@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
       </span>
     </div>
 
@@ -116,10 +116,10 @@ The lines of code in this vignette will work if you have the following
 two lines somewhere in your <code>.Renviron</code> file (where you
 replace your username and password in the appropriate locations). Note
 there is no space around the <code>=</code> sign:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">Z_USERNAME</span><span class="op">=</span>insert-your-username-here</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">Z_PASSWORD</span><span class="op">=</span>insert-your-password-here</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="va">Z_USERNAME</span><span class="op">=</span>insert-your-username-here</span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="va">Z_PASSWORD</span><span class="op">=</span>insert-your-password-here</span></code></pre></div>
 <p>Note that the Zoltar service uses a “token”-based scheme for
-authentication. These tokens have a five minute expiration for security,
+authentication. These tokens have a five-minute expiration for security,
 which requires re-authentication after that period of time. The zoltr
 library takes care of re-authenticating as needed by passing your
 username and password back to the server to get another token. Note that
@@ -167,15 +167,15 @@ that you own or are a model owner.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">the_projects</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/projects.html">projects</a></span><span class="op">(</span><span class="va">zoltar_connection</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_projects</span><span class="op">)</span></span>
-<span><span class="co">#&gt; 'data.frame':    12 obs. of  8 variables:</span></span>
-<span><span class="co">#&gt;  $ id         : int  44 299 239 218 238 316 4 328 41 6 ...</span></span>
-<span><span class="co">#&gt;  $ url        : chr  "https://www.zoltardata.com/api/project/44/" "https://www.zoltardata.com/api/project/299/" "https://www.zoltardata.com/api/project/239/" "https://www.zoltardata.com/api/project/218/" ...</span></span>
-<span><span class="co">#&gt;  $ owner_url  : chr  "https://www.zoltardata.com/api/user/22/" "https://www.zoltardata.com/api/user/288/" "https://www.zoltardata.com/api/user/108/" "https://www.zoltardata.com/api/user/4/" ...</span></span>
-<span><span class="co">#&gt;  $ public     : logi  TRUE TRUE TRUE TRUE TRUE TRUE ...</span></span>
-<span><span class="co">#&gt;  $ name       : chr  "COVID-19 Forecasts" "CDC Influenza Hospitalization Forecasts" "Aggregating Statistical Models and Human Judgment" "Election Forecasts" ...</span></span>
-<span><span class="co">#&gt;  $ description: chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "Forecasts of confirmed influenza hospitalization admissions during the 2022–2023 influenza season, created as p"| __truncated__ "This project aims to provide public health officials forecasts of the COVID-19 outbreak using human judgment.\r"| __truncated__ "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ ...</span></span>
-<span><span class="co">#&gt;  $ home_url   : chr  "https://covid19forecasthub.org" "https://github.com/cdcepi/Flusight-forecast-data" "https://github.com/computationalUncertaintyLab/aggStatModelsAndHumanJudgment_PUBL" "https://reichlab.io" ...</span></span>
-<span><span class="co">#&gt;  $ core_data  : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://github.com/cdcepi/Flusight-forecast-data/tree/master/data-forecasts" "https://dataverse.harvard.edu/dataverse/aggregating_statistical_models_and_human_judgment" "https://zoltardata.com/" ...</span></span></code></pre></div>
+<span><span class="co">#&gt; 'data.frame':    13 obs. of  8 variables:</span></span>
+<span><span class="co">#&gt;  $ id         : int  44 239 316 218 238 4 360 299 328 41 ...</span></span>
+<span><span class="co">#&gt;  $ url        : chr  "https://rl-zoltar-staging.herokuapp.com/api/project/44/" "https://rl-zoltar-staging.herokuapp.com/api/project/239/" "https://rl-zoltar-staging.herokuapp.com/api/project/316/" "https://rl-zoltar-staging.herokuapp.com/api/project/218/" ...</span></span>
+<span><span class="co">#&gt;  $ owner_url  : chr  "https://rl-zoltar-staging.herokuapp.com/api/user/22/" "https://rl-zoltar-staging.herokuapp.com/api/user/108/" "https://rl-zoltar-staging.herokuapp.com/api/user/5/" "https://rl-zoltar-staging.herokuapp.com/api/user/4/" ...</span></span>
+<span><span class="co">#&gt;  $ public     : logi  TRUE TRUE TRUE TRUE TRUE FALSE ...</span></span>
+<span><span class="co">#&gt;  $ name       : chr  "COVID-19 Forecasts" "Aggregating Statistical Models and Human Judgment" "COVID-19 Forecasts Viz Test" "Election Forecasts" ...</span></span>
+<span><span class="co">#&gt;  $ description: chr  "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "This project aims to provide public health officials forecasts of the COVID-19 outbreak using human judgment.\r"| __truncated__ "The goal of this repository is to create a standardized set of data on forecasts from experienced teams making "| __truncated__ "This project stores forecasts from multiple election forecast sites, including FiveThirtyEight and the Economis"| __truncated__ ...</span></span>
+<span><span class="co">#&gt;  $ home_url   : chr  "https://covid19forecasthub.org" "https://github.com/computationalUncertaintyLab/aggStatModelsAndHumanJudgment_PUBL" "https://covid19forecasthub.org" "https://reichlab.io" ...</span></span>
+<span><span class="co">#&gt;  $ core_data  : chr  "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://dataverse.harvard.edu/dataverse/aggregating_statistical_models_and_human_judgment" "https://github.com/reichlab/covid19-death-forecasts/tree/master/data-processed" "https://zoltardata.com/" ...</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="get-a-project-to-work-with-and-list-its-info-and-models">Get a project to work with and list its info and models<a class="anchor" aria-label="anchor" href="#get-a-project-to-work-with-and-list-its-info-and-models"></a>
@@ -199,11 +199,11 @@ details, and then pass it to the <code><a href="../reference/models.html">models
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_models</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    1 obs. of  10 variables:</span></span>
 <span><span class="co">#&gt;  $ id          : int 139</span></span>
-<span><span class="co">#&gt;  $ url         : chr "https://www.zoltardata.com/api/model/139/"</span></span>
-<span><span class="co">#&gt;  $ project_url : chr "https://www.zoltardata.com/api/project/41/"</span></span>
+<span><span class="co">#&gt;  $ url         : chr "https://rl-zoltar-staging.herokuapp.com/api/model/139/"</span></span>
+<span><span class="co">#&gt;  $ project_url : chr "https://rl-zoltar-staging.herokuapp.com/api/project/41/"</span></span>
 <span><span class="co">#&gt;  $ owner_url   : logi NA</span></span>
 <span><span class="co">#&gt;  $ name        : chr "docs forecast model"</span></span>
-<span><span class="co">#&gt;  $ model_abbr  : chr "docs forecast model"</span></span>
+<span><span class="co">#&gt;  $ model_abbr  : chr "docs_mod"</span></span>
 <span><span class="co">#&gt;  $ notes       : chr ""</span></span>
 <span><span class="co">#&gt;  $ description : chr "The example project for the documentation site https://docs.zoltardata.com/ ."</span></span>
 <span><span class="co">#&gt;  $ home_url    : chr "https://docs.zoltardata.com/"</span></span>
@@ -225,7 +225,7 @@ Rather than having the <code><a href="../reference/submit_query.html">submit_que
 <em>block</em> until the query is done, you instead get a quick response
 in the form of a <code>Job</code> URL that you can pass to the
 <code><a href="../reference/job_info.html">job_info()</a></code> function to check its status and find out if the
-upload is pending, successfully finished, or failed). (This is called
+upload is pending, successfully finished, or failed. (This is called
 <em>polling</em> the host to ask the status.) Here we poll every second
 using the <code><a href="../reference/busy_poll_job.html">busy_poll_job()</a></code> helper function. Then we use the
 <code><a href="../reference/job_data.html">job_data()</a></code> function when the query is successfully
@@ -246,23 +246,22 @@ but use <code><a href="../reference/do_zoltar_query.html">do_zoltar_query()</a><
 <span><span class="va">the_job_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/job_data.html">job_data</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">job_url</span><span class="op">)</span></span>
 <span><span class="va">the_job_data</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs forecast model"</span>, </span>
+<code class="sourceCode R"><span><span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/do_zoltar_query.html">do_zoltar_query</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span>, <span class="st">"forecasts"</span>, <span class="st">"docs_mod"</span>, </span>
 <span>                                 <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"loc1"</span>, <span class="st">"loc2"</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pct next week"</span>, <span class="st">"cases next week"</span><span class="op">)</span>,</span>
 <span>                                 <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2011-10-02"</span>, <span class="st">"2011-10-09"</span>, <span class="st">"2011-10-16"</span><span class="op">)</span>, types <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"point"</span>, <span class="st">"quantile"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">forecast_data</span></span>
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 8 × 15</span></span></span>
-<span><span class="co">#&gt;   model    timezero   season unit  target class value cat   prob  sample quant…¹</span></span>
-<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> docs fo… 2011-10-02 2011-… loc1  pct n… point   2.1 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> docs fo… 2011-10-02 2011-… loc2  pct n… point   2   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> docs fo… 2011-10-02 2011-… loc2  pct n… quan…   1   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       0.025</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> docs fo… 2011-10-02 2011-… loc2  pct n… quan…   2.2 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       0.25 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> docs fo… 2011-10-02 2011-… loc2  pct n… quan…   2.2 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       0.5  </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> docs fo… 2011-10-02 2011-… loc2  pct n… quan…   5   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       0.75 </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> docs fo… 2011-10-02 2011-… loc2  pct n… quan…  50   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       0.975</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> docs fo… 2011-10-02 2011-… loc2  cases… point   5   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>    </span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># … with 4 more variables: family &lt;lgl&gt;, param1 &lt;lgl&gt;, param2 &lt;lgl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   param3 &lt;lgl&gt;, and abbreviated variable name ¹​quantile</span></span></span></code></pre></div>
+<span><span class="co">#&gt;   model   timezero   season unit  target class value cat   prob  sample quantile</span></span>
+<span><span class="co">#&gt;   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;date&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> docs_m… 2011-10-16 2011-… loc1  pct n… point   2.1 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> docs_m… 2011-10-16 2011-… loc2  pct n… point   2   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> docs_m… 2011-10-16 2011-… loc2  pct n… quan…   1   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        0.025</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> docs_m… 2011-10-16 2011-… loc2  pct n… quan…   2.2 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        0.25 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> docs_m… 2011-10-16 2011-… loc2  pct n… quan…   2.2 <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        0.5  </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> docs_m… 2011-10-16 2011-… loc2  pct n… quan…   5   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        0.75 </span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">7</span> docs_m… 2011-10-16 2011-… loc2  pct n… quan…  50   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>        0.975</span></span>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">8</span> docs_m… 2011-10-16 2011-… loc2  cases… point   5   <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>    <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>    </span></span>
+<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 4 more variables: family &lt;lgl&gt;, param1 &lt;lgl&gt;, param2 &lt;lgl&gt;, param3 &lt;lgl&gt;</span></span></span></code></pre></div>
 <p>Hopefully you’ll see “SUCCESS” eventually printed and then the
 resulting data itself.</p>
 <blockquote>
@@ -316,7 +315,7 @@ columns to retrieve, such as ‘forecast_model_id’, ‘time_zero_id’,
 <span><span class="co">#&gt; <span style="color: #949494;"># A tibble: 1 × 2</span></span></span>
 <span><span class="co">#&gt;   forecast_id source               </span></span>
 <span><span class="co">#&gt;         <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>        <span style="text-decoration: underline;">9</span>753 docs-predictions.json</span></span></code></pre></div>
+<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span>      <span style="text-decoration: underline;">109</span>739 docs-predictions.json</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="get-a-model-to-work-with-and-list-its-info-and-forecasts">Get a model to work with and list its info and forecasts<a class="anchor" aria-label="anchor" href="#get-a-model-to-work-with-and-list-its-info-and-forecasts"></a>
@@ -340,18 +339,18 @@ provided in the <code>url</code> column of <code>the_models</code>.</p>
 <span><span class="va">the_forecasts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">model_url</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_forecasts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span></span>
-<span><span class="co">#&gt;  $ id                : int 9753</span></span>
-<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/9753/"</span></span>
-<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/139/"</span></span>
+<span><span class="co">#&gt;  $ id                : int 109739</span></span>
+<span><span class="co">#&gt;  $ url               : chr "https://rl-zoltar-staging.herokuapp.com/api/forecast/109739/"</span></span>
+<span><span class="co">#&gt;  $ forecast_model_url: chr "https://rl-zoltar-staging.herokuapp.com/api/model/139/"</span></span>
 <span><span class="co">#&gt;  $ source            : chr "docs-predictions.json"</span></span>
-<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/495/"</span></span>
-<span><span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span></span>
+<span><span class="co">#&gt;  $ timezero_url      : chr "https://rl-zoltar-staging.herokuapp.com/api/timezero/497/"</span></span>
+<span><span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-16"</span></span>
 <span><span class="co">#&gt;  $ data_version_date : Date, format: NA</span></span>
-<span><span class="co">#&gt;  $ is_season_start   : logi TRUE</span></span>
-<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2020-04-13 18:27:27"</span></span>
-<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2020-04-13 12:00:00"</span></span>
-<span><span class="co">#&gt;  $ notes             : chr NA</span></span>
-<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/9753/data/"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ is_season_start   : logi FALSE</span></span>
+<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2024-04-04 18:27:56"</span></span>
+<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2024-04-04 18:27:56"</span></span>
+<span><span class="co">#&gt;  $ notes             : chr ""</span></span>
+<span><span class="co">#&gt;  $ forecast_data_url : chr "https://rl-zoltar-staging.herokuapp.com/api/forecast/109739/data/"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="finally-download-the-forecasts-data-in-three-formats">Finally, download the forecast’s data in three formats<a class="anchor" aria-label="anchor" href="#finally-download-the-forecasts-data-in-three-formats"></a>
@@ -371,12 +370,12 @@ format details.</p>
 <span><span class="va">forecast_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forecast_info.html">forecast_info</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">forecast_url</span><span class="op">)</span></span>
 <span><span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/download_forecast.html">download_forecast</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">forecast_url</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">forecast_data</span><span class="op">$</span><span class="va">predictions</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 29</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 32</span></span></code></pre></div>
 <p>As a <code>data.frame</code>:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">forecast_data_frame</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data_frame_from_forecast_data.html">data_frame_from_forecast_data</a></span><span class="op">(</span><span class="va">forecast_data</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">forecast_data_frame</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Classes 'data.table' and 'data.frame':   62 obs. of  12 variables:</span></span>
+<span><span class="co">#&gt; Classes 'data.table' and 'data.frame':   64 obs. of  12 variables:</span></span>
 <span><span class="co">#&gt;  $ unit    : chr  "loc1" "loc1" "loc1" "loc1" ...</span></span>
 <span><span class="co">#&gt;  $ target  : chr  "Season peak week" "Season peak week" "Season peak week" "Season peak week" ...</span></span>
 <span><span class="co">#&gt;  $ class   : chr  "bin" "bin" "bin" "point" ...</span></span>
@@ -422,7 +421,7 @@ format details.</p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>
