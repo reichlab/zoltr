@@ -1,44 +1,23 @@
-## Test environments
-- local OS X install, R 3.6.0
-- rhub::check_for_cran()
-- rhub::check_on_fedora()
-- devtools::check_win_release()
-- devtools::check_win_devel()
-- devtools::check_win_oldrelease()
+# Test environments
 
+## Local development (Mac)
 
-## R CMD check results
-0 ERRORs | 0 WARNINGs | 0 NOTES
+Versions: macOS Sonoma Version 14.5 (23F79), R version 4.4.1 (2024-06-14)
 
-- `rhub::check_for_cran()` had one error about "Package suggested but not available", but it looks to us like a configuration issue on their end and not a zoltr package issue:
+Result: 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 
+## R-hub v2
 
-    E  checking package dependencies
-       Package suggested but not available: 'data.table'
-       
-       The suggested packages are required for a complete check.
-       Checking can be attempted without them by setting the environment
-       variable _R_CHECK_FORCE_SUGGESTS_ to a false value.
-       
-       See section 'The DESCRIPTION file' in the 'Writing R Extensions'
-       manual.
+Ran `rhub::rhub_check()` on these platforms:
 
+- 1 🖥 linux R-* (any version)    ubuntu-latest on GitHub
+- 4 🖥 windows R-* (any version)  windows-latest on GitHub
 
-- `devtools::submit_cran()` had one warning about "CRAN Package Check Results for Package zoltr" , but it looks to us like an OS configuration issue in `r-patched-osx-x86_64` and not a zoltr package issue:
+Result: no errors, warnings, or notes in the repo's [GitHub Action](https://github.com/reichlab/zoltr/actions) artifacts
 
-    
-    Error(s) in re-building vignettes:
-    --- re-building ‘getting-started.Rmd’ using rmarkdown
-    dyld: lazy symbol binding failed: Symbol not found: ____chkstk_darwin
-    Referenced from: /usr/local/bin/pandoc (which was built for Mac OS X 10.15)
-    Expected in: /usr/lib/libSystem.B.dylib
+# Vignette build requirements
 
-
-## Vignette build requirements
-Per your policies [1], this package's vignettes and README are enabled only on the maintainer’s machine because: 1) they
-take a long time (more than a few seconds) to run, and 2) they execute destructive database operations and so operate on
-a development server (rather than modify our production database). However, the unit tests do exercise all the features
-of the package.
+Per your policies [1], this package's vignettes and README are enabled only on the maintainer’s machine because: 1) they take a long time (more than a few seconds) to run, and 2) they execute destructive database operations and so operate on a development server (rather than modify our production database). However, the unit tests do exercise all the features of the package.
 
 [1] https://cran.r-project.org/web/packages/policies.html
 
