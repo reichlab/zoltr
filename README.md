@@ -1,5 +1,5 @@
 
-<!-- README.md is generated from README.Rmd. Please edit this file -->
+<!-- README.md is generated from README.Rmd. Please edit the .Rmd file. -->
 
 # zoltr - An R client for the Zoltar data repository API
 
@@ -34,8 +34,8 @@ devtools::install_github("reichlab/zoltr")
 
 ## Getting started
 
-For those starting out we recommend you begin with the [Getting Started
-vignette](articles/getting-started.html).
+For those starting out we recommend you begin with the “Getting Started”
+vignette.
 
 ## Usage
 
@@ -51,7 +51,7 @@ library(zoltr)
 zoltar_connection <- new_connection()
 zoltar_authenticate(zoltar_connection, Sys.getenv("Z_USERNAME"), Sys.getenv("Z_PASSWORD"))
 zoltar_connection
-#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2024-04-08 13:29:49 UTC)
+#> ZoltarConnection 'https://zoltardata.com' authenticated (exp=2024-06-27 15:55:21 UTC)
 
 the_projects <- projects(zoltar_connection)
 project_url <- the_projects[the_projects$name == "Docs Example Project", "url"]
@@ -76,5 +76,15 @@ package) from the CDC’s CSV file format \[1\] via the
 support bidirectional conversion, as well as support for a more general
 CSV format.
 
-\[1\] Details about the CDC CSV format can be found at
-[flu_challenge_2016-17_update.docx](https://predict.cdc.gov/api/v1/attachments/flusight/flu_challenge_2016-17_update.docx).
+\[1\] Details about the CDC CSV format were formerly found in a Word
+document (“flu_challenge_2016-17_update.docx”) that’s since been
+deleted. From that document’s “Objectives” section:
+
+> For each week during the season, participants will be asked to provide
+> national and regional probabilistic forecasts for the entire influenza
+> season (seasonal targets) and for the next four weeks (four-week ahead
+> targets). The seasonal targets are the onset week, the peak week, and
+> the peak intensity of the 2016-2017 influenza season. The four-week
+> ahead targets are the percent of outpatient visits experiencing
+> influenza-like illness (ILI) one week, two weeks, three weeks, and
+> four weeks ahead from date of the forecast.

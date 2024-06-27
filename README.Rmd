@@ -2,7 +2,7 @@
 output: github_document
 ---
 
-<!-- README.md is generated from README.Rmd. Please edit this file -->
+<!-- README.md is generated from README.Rmd. Please edit the .Rmd file. -->
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
@@ -42,7 +42,7 @@ devtools::install_github("reichlab/zoltr")
 
 ## Getting started
 
-For those starting out we recommend you begin with the [Getting Started vignette](articles/getting-started.html).
+For those starting out we recommend you begin with the "Getting Started" vignette.
 
 
 ## Usage
@@ -67,4 +67,6 @@ the_project_info$name
 
 The native forecast data format supported by the Zoltar API is a `list`. See [docs.zoltardata.com](https://docs.zoltardata.com/) for format details. You can find an example at vignettes/docs-predictions.json . By convention this package referred to this as `forecast_data`. This package supports conversion to this format (which is used throughout the package) from the CDC's CSV file format [1] via the `forecast_data_from_cdc_csv_file`() function. Future versions will support bidirectional conversion, as well as support for a more general CSV format. 
 
-[1] Details about the CDC CSV format can be found at [flu_challenge_2016-17_update.docx](https://predict.cdc.gov/api/v1/attachments/flusight/flu_challenge_2016-17_update.docx).
+[1] Details about the CDC CSV format were formerly found in a Word document ("flu_challenge_2016-17_update.docx") that's since been deleted. From that document's "Objectives" section:
+
+> For each week during the season, participants will be asked to provide national and regional probabilistic forecasts for the entire influenza season (seasonal targets) and for the next four weeks (four-week ahead targets). The seasonal targets are the onset week, the peak week, and the peak intensity of the 2016-2017 influenza season. The four-week ahead targets are the percent of outpatient visits experiencing influenza-like illness (ILI) one week, two weeks, three weeks, and four weeks ahead from date of the forecast.
