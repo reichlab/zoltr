@@ -8,7 +8,7 @@ create_timezero(
   zoltar_connection,
   project_url,
   timezero_date,
-  data_version_date = NULL,
+  data_version_date = NA,
   is_season_start = FALSE,
   season_name = ""
 )
