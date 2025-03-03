@@ -30,8 +30,7 @@ test_that("forecast_info() returns a list", {
   # test case 2/2: yes data_version_date
   forecast_info_json <- jsonlite::read_json("data/forecast-71.json")
   forecast_info_json$time_zero$data_version_date <- as.Date("2011-10-03")
-  m <- mock(forecast_info_json)
-  local_mocked_bindings(get_resource = m)
+  local_mocked_bindings(get_resource = function(...) { forecast_info_json })
   exp_forecast_info <- jsonlite::read_json("data/forecast-71.json")
   exp_forecast_info$forecast_model_url <- exp_forecast_info$forecast_model
   exp_forecast_info$forecast_model <- NULL

@@ -19,10 +19,9 @@ test_that("job_data() calls are correct", {
 
 test_that("job_data() column types are correct for forecast CSV data", {  # JSON data tested many other places
   zoltar_connection <- new_connection("http://example.com")
-  mock_reauthenticate <- mock()
   mock_from_json <- mock()
   mock_read_csv <- mock()
-  local_mocked_bindings(re_authenticate_if_necessary = mock_reauthenticate)
+  local_mocked_bindings(re_authenticate_if_necessary = function(...) { })
   local_mocked_bindings(fromJSON = mock_from_json)
   local_mocked_bindings(read_csv = mock_read_csv)
   webmockr::stub_request("get", uri = "http://example.com/api/job/2/data/") %>%
@@ -40,10 +39,9 @@ test_that("job_data() column types are correct for forecast CSV data", {  # JSON
 
 test_that("job_data() column types are correct for truth CSV data", {  # JSON data tested many other places
   zoltar_connection <- new_connection("http://example.com")
-  mock_reauthenticate <- mock()
   mock_from_json <- mock()
   mock_read_csv <- mock()
-  local_mocked_bindings(re_authenticate_if_necessary = mock_reauthenticate)
+  local_mocked_bindings(re_authenticate_if_necessary = function(...) { })
   local_mocked_bindings(fromJSON = mock_from_json)
   local_mocked_bindings(read_csv = mock_read_csv)
   webmockr::stub_request("get", uri = "http://example.com/api/job/2/data/") %>%

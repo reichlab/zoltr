@@ -155,8 +155,7 @@ test_that("projects() can handle NULL owner in project JSON", {
   zoltar_connection <- new_connection("http://example.com")
   two_projects_json_no_owner_json <- TWO_PROJECTS_JSON
   two_projects_json_no_owner_json[[1]]$owner <- NULL
-  m <- mock(two_projects_json_no_owner_json)
-  local_mocked_bindings(get_resource = m)
+  local_mocked_bindings(get_resource = function(...) { two_projects_json_no_owner_json })
   the_projects <- projects(zoltar_connection)
   project_row <- the_projects[1,]
   exp_row <- data.frame(id = 1L, url = "http://example.com/api/project/1/", owner_url = as.character(NA),
