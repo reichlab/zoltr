@@ -2,7 +2,7 @@
 
 ## Local development (Mac)
 
-Versions: macOS Sonoma Version 14.5 (23F79), R version 4.4.1 (2024-06-14)
+Versions: macOS Sonoma Version 14.6.1 (23G93), R version 4.4.1 (2024-06-14)
 
 Result: 0 errors ✔ | 0 warnings ✔ | 0 notes ✔
 

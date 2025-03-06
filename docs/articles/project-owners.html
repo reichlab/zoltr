@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Project Owners • zoltr</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">zoltr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.2</span>
       </span>
     </div>
 
@@ -132,7 +132,7 @@ create. The new project’s URL is returned, which you can pass to other
 functions. Here we use <code>docs-project.json</code>, which is the one
 that creates the example documentation project.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">project_config</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"docs-project.json"</span><span class="op">)</span>  <span class="co"># "name": "My project"</span></span>
+<code class="sourceCode R"><span><span class="va">project_config</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"docs-project.json"</span><span class="op">)</span>  <span class="co"># "name": "My project"</span></span>
 <span><span class="va">project_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_project.html">create_project</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_config</span><span class="op">)</span></span>
 <span><span class="va">the_project_info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/project_info.html">project_info</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -187,7 +187,7 @@ that the passed <code>timezero_date</code> matches one of the timezeros
 in <code>docs-project.json</code>, the file that was used to create the
 project. It is an error otherwise.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"docs-predictions.json"</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">forecast_data</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://jeroen.r-universe.dev/jsonlite/reference/read_json.html" class="external-link">read_json</a></span><span class="op">(</span><span class="st">"docs-predictions.json"</span><span class="op">)</span></span>
 <span><span class="va">job_url</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/upload_forecast.html">upload_forecast</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">model_url</span>, <span class="st">"2011-10-02"</span>, <span class="va">forecast_data</span>, <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/busy_poll_job.html">busy_poll_job</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">job_url</span><span class="op">)</span></span></code></pre></div>
 <p>Hopefully you’ll see some number of “QUEUED” entries followed by a
@@ -204,18 +204,18 @@ case).</p>
 <span><span class="va">the_forecasts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/forecasts.html">forecasts</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">the_forecast_info</span><span class="op">$</span><span class="va">forecast_model_url</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">the_forecasts</span><span class="op">)</span></span>
 <span><span class="co">#&gt; 'data.frame':    1 obs. of  12 variables:</span></span>
-<span><span class="co">#&gt;  $ id                : int 109913</span></span>
-<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/109913/"</span></span>
-<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/987/"</span></span>
-<span><span class="co">#&gt;  $ source            : chr "forecast-22397cc338c8.json"</span></span>
-<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/3746/"</span></span>
+<span><span class="co">#&gt;  $ id                : int 111616</span></span>
+<span><span class="co">#&gt;  $ url               : chr "https://www.zoltardata.com/api/forecast/111616/"</span></span>
+<span><span class="co">#&gt;  $ forecast_model_url: chr "https://www.zoltardata.com/api/model/1067/"</span></span>
+<span><span class="co">#&gt;  $ source            : chr "forecast-7c6e5486429f.json"</span></span>
+<span><span class="co">#&gt;  $ timezero_url      : chr "https://www.zoltardata.com/api/timezero/4296/"</span></span>
 <span><span class="co">#&gt;  $ timezero_date     : Date, format: "2011-10-02"</span></span>
 <span><span class="co">#&gt;  $ data_version_date : Date, format: NA</span></span>
 <span><span class="co">#&gt;  $ is_season_start   : logi TRUE</span></span>
-<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2024-04-08 13:25:51"</span></span>
-<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2024-04-08 13:25:51"</span></span>
+<span><span class="co">#&gt;  $ created_at        : POSIXct, format: "2025-03-06 14:09:00"</span></span>
+<span><span class="co">#&gt;  $ issued_at         : POSIXct, format: "2025-03-06 14:09:00"</span></span>
 <span><span class="co">#&gt;  $ notes             : chr ""</span></span>
-<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/109913/data/"</span></span></code></pre></div>
+<span><span class="co">#&gt;  $ forecast_data_url : chr "https://www.zoltardata.com/api/forecast/111616/data/"</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="clean-up-by-deleting-the-sandbox-project">Clean up by deleting the sandbox project<a class="anchor" aria-label="anchor" href="#clean-up-by-deleting-the-sandbox-project"></a>
@@ -224,8 +224,8 @@ case).</p>
 without warning, including models and forecasts.</strong></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/delete_project.html">delete_project</a></span><span class="op">(</span><span class="va">zoltar_connection</span>, <span class="va">project_url</span><span class="op">)</span></span>
-<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/365/]</span></span>
-<span><span class="co">#&gt;   Date: 2024-04-08 13:25</span></span>
+<span><span class="co">#&gt; Response [https://www.zoltardata.com/api/project/442/]</span></span>
+<span><span class="co">#&gt;   Date: 2025-03-06 14:09</span></span>
 <span><span class="co">#&gt;   Status: 204</span></span>
 <span><span class="co">#&gt;   Content-Type: &lt;unknown&gt;</span></span>
 <span><span class="co">#&gt; &lt;EMPTY BODY&gt;</span></span></code></pre></div>
@@ -250,7 +250,7 @@ without warning, including models and forecasts.</strong></p>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
       </footer>
