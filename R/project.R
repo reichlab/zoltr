@@ -15,11 +15,12 @@
 #' @examples \dontrun{
 #'   new_project_url <- create_project(conn, jsonlite::read_json("cdc-project.json"))
 #' }
+#' @importFrom httr POST
 create_project <- function(zoltar_connection, project_config) {
   re_authenticate_if_necessary(zoltar_connection)
   projects_url <- url_for_projects(zoltar_connection)
   json_body <- jsonlite::toJSON(list(project_config = project_config), auto_unbox = TRUE, null = "null")
-  response <- httr::POST(
+  response <- POST(
     url = projects_url,
     add_auth_headers(zoltar_connection),
     body = json_body,
@@ -253,6 +254,7 @@ latest_forecasts <- function(zoltar_connection, project_url) {
 #'   job_url <- upload_truth(conn, "http://www.zoltardata.com/api/project/1/", "truth.csv")
 #' }
 #'
+#' @importFrom httr POST
 upload_truth <- function(zoltar_connection, project_url, truth_csv_file, issued_at = NULL) {
   re_authenticate_if_necessary(zoltar_connection)
   truth_url <- paste0(project_url, 'truth/')
@@ -261,7 +263,7 @@ upload_truth <- function(zoltar_connection, project_url, truth_csv_file, issued_
   if (!is.null(issued_at)) {
     body[['issued_at']] <- issued_at
   }
-  response <- httr::POST(
+  response <- POST(
     url = truth_url,
     httr::accept_json(),
     add_auth_headers(zoltar_connection),
@@ -300,6 +302,7 @@ upload_truth <- function(zoltar_connection, project_url, truth_csv_file, issued_
 #'                           "targets"=list(1894, 1897), "timezeros"=list("2020-05-14", "2020-05-09"),
 #'                           "types"=list("point", "quantile")))
 #' }
+#' @importFrom httr POST content
 submit_query <- function(zoltar_connection, project_url, query_type, query) {
   if (!query_type %in% c("forecasts", "truth")) {
     stop("invalid query_type: '", query_type, "'", call. = FALSE)
@@ -310,12 +313,12 @@ submit_query <- function(zoltar_connection, project_url, query_type, query) {
                            "truth" = "truth_queries/")[query_type]
   queries_url <- paste0(project_url, queries_url_part)
   json_body <- json_for_query(query)
-  response <- httr::POST(
+  response <- POST(
     url = queries_url,
     add_auth_headers(zoltar_connection),
     body = json_body,
     httr::content_type_json())
-  json_response <- httr::content(response, "parsed")
+  json_response <- content(response, "parsed")
   if (response$status_code != 200) {
     stop("POST status was not 200. status_code=", response$status_code, ", json_response=", json_response,
          call. = FALSE)
@@ -494,6 +497,7 @@ unit_info <- function(zoltar_connection, unit_url) {
 #'   new_timezero_url <- create_timezero(conn, "https://www.zoltardata.com/api/project/9/",
 #'                      "2022-11-08", "2022-11-09", TRUE, "2010-2011")
 #' }
+#' @importFrom httr POST
 create_timezero <- function(zoltar_connection, project_url, timezero_date, data_version_date = NULL,
                             is_season_start = FALSE, season_name = "") {
   re_authenticate_if_necessary(zoltar_connection)
@@ -504,7 +508,7 @@ create_timezero <- function(zoltar_connection, project_url, timezero_date, data_
   if (is_season_start) {
     timezero_config$season_name <- season_name
   }
-  response <- httr::POST(
+  response <- POST(
     url = timezeros_url,
     add_auth_headers(zoltar_connection),
     body = list(timezero_config = timezero_config),

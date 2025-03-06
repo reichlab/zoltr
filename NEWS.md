@@ -1,8 +1,14 @@
+# zoltr 1.0.2
+- removed `with_mock()` calls ("with_mock() is deprecated and will be made defunct soon")
+
+
 # zoltr 1.0.1
 - added support for [create new prediction_types for mean and median #367](https://github.com/reichlab/forecast-repository/issues/367)
 
+
 # zoltr 1.0.0
 - added support for [add capacity to specify the issued_at date for an uploaded truth data batch #50](https://github.com/reichlab/zoltr/issues/50) by adding optional `issued_at` argument to `upload_truth()`
+
 
 # zoltr 0.9.11
 - fixed bug introduced in [Add support of uploading in zoltar CSV format #345](https://github.com/reichlab/forecast-repository/issues/345)

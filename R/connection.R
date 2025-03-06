@@ -29,16 +29,18 @@ add_auth_headers <- function(zoltar_connection) {
 #' @param zoltar_connection A `ZoltarConnection` object as returned by [new_connection()]
 #' @param url A string of the resource's URL
 #' @param col_types Same as readr::read_csv takes
+#' @importFrom jsonlite fromJSON
+#' @importFrom readr read_csv
 get_resource <- function(zoltar_connection, url, col_types = NULL) {
   re_authenticate_if_necessary(zoltar_connection)
   message("get_resource(): GET: ", url)
   response <- httr::GET(url = url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
   if (httr::http_type(response) == "application/json") {
-    jsonlite::fromJSON(httr::content(response, "text", encoding = "UTF-8"), simplifyVector = FALSE)
+    fromJSON(httr::content(response, "text", encoding = "UTF-8"), simplifyVector = FALSE)
   } else if (httr::http_type(response) == "text/csv") {
-    readr::read_csv(httr::content(response, "raw"), col_types = col_types,
-                    locale = readr::locale(encoding = "UTF-8"))
+    read_csv(httr::content(response, "raw"), col_types = col_types,
+             locale = readr::locale(encoding = "UTF-8"))
   } else {
     stop("un-handled content type: '", httr::http_type(response), "'", call. = FALSE)
   }
@@ -46,10 +48,11 @@ get_resource <- function(zoltar_connection, url, col_types = NULL) {
 
 
 # deletes the resource at the passed URL
+#' @importFrom httr DELETE
 delete_resource <- function(zoltar_connection, url) {
   re_authenticate_if_necessary(zoltar_connection)
   message("delete_resource(): DELETE: ", url)
-  response <- httr::DELETE(url = url, add_auth_headers(zoltar_connection))
+  response <- DELETE(url = url, add_auth_headers(zoltar_connection))
   httr::stop_for_status(response)
   response
 }
@@ -184,12 +187,13 @@ new_session <- function(zoltar_connection) {
 # POSTs to obtain and return a new JWT token string from zoltar. it has decoded contents that look like this:
 # - header:  {"typ": "JWT", "alg": "HS256"}
 # - payload: {"user_id": 3, "username": "model_owner1", "exp": 1558442805, "email": ""}
+#' @importFrom httr POST
 get_token <- function(zoltar_session) {
   zoltar_connection <- zoltar_session$zoltar_connection
   token_auth_url <- url_for_token_auth(zoltar_connection)
   message("get_token(): POST: ", token_auth_url)
   response <-
-    httr::POST(
+    POST(
       url = token_auth_url,
       httr::accept_json(),
       body = list(

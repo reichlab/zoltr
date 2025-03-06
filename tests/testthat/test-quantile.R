@@ -1,8 +1,6 @@
 context("quantile")
 
 library(jsonlite)
-library(testthat)
-library(zoltr)
 
 
 test_that("quantile_data_frame_from_forecast_data() is correct", {

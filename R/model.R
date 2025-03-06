@@ -37,10 +37,11 @@ model_info <- function(zoltar_connection, model_url) {
 #'   new_model_url <- create_model(conn, "https://www.zoltardata.com/api/project/9/",
 #'                      jsonlite::read_json("example-model-config.json"))
 #' }
+#' @importFrom httr POST
 create_model <- function(zoltar_connection, project_url, model_config) {
   re_authenticate_if_necessary(zoltar_connection)
   models_url <- paste0(project_url, 'models/')
-  response <- httr::POST(
+  response <- POST(
     url = models_url,
     add_auth_headers(zoltar_connection),
     body = list(model_config = model_config),
@@ -71,9 +72,10 @@ create_model <- function(zoltar_connection, project_url, model_config) {
 #'   edit_model(conn, "https://www.zoltardata.com/api/model/2/",
 #'     jsonlite::read_json("example-model-config.json"))
 #' }
+#' @importFrom httr PUT
 edit_model <- function(zoltar_connection, model_url, model_config) {
   re_authenticate_if_necessary(zoltar_connection)
-  response <- httr::PUT(
+  response <- PUT(
     url = model_url,
     add_auth_headers(zoltar_connection),
     body = list(model_config = model_config),
@@ -180,6 +182,7 @@ forecasts <- function(zoltar_connection, model_url) {
 #'   job_url <- upload_forecast(conn, "http://www.zoltardata.com/api/model/1/",
 #'                              "2017-01-17", forecast_data, TRUE, "a mid-January forecast")
 #' }
+#' @importFrom httr POST
 upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecast_data, is_json = TRUE, notes = "") {
   # validate forecast_data and is_json combination. there are two valid cases:
   # - forecast_data is a `list` and is_json == TRUE (Zoltar JSON format)
@@ -205,7 +208,7 @@ upload_forecast <- function(zoltar_connection, model_url, timezero_date, forecas
                        quote = FALSE)
   }
 
-  response <- httr::POST(
+  response <- POST(
     url = forecasts_url,
     httr::accept_json(),
     add_auth_headers(zoltar_connection),

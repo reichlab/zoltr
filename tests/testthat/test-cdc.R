@@ -1,8 +1,6 @@
 context("cdc")
 
 library(jsonlite)
-library(testthat)
-library(zoltr)
 
 
 test_that("forecast_data_from_cdc_csv_file() is correct", {
